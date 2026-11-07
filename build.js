@@ -14,9 +14,10 @@ const loginBlock = "function loginMarkup() {\n  return `<div class=\"admin-login
 const dynamicLoginPattern = /function loginMarkup\(\)\{return `[^]*?`;\}\s*function bindLogin\(\)\{[^]*?\}\s*function renderAdmin\(\)\{/;
 html = replaceRegexExactly(html, dynamicLoginPattern, loginBlock, 'dynamic admin login block');
 const staticLoginPattern = /\$\('loginForm'\)\.addEventListener\('submit',async e=>\{e\.preventDefault\(\);\$\('loginMessage'\)\.textContent='Signing in…';[^]*?currentAdmin=data\.user;renderAdmin\(\);\}\);/;
-html = replaceRegexExactly(html, staticLoginPattern, '    bindLogin();', 'static password login handler');
+html = replaceRegexExactly(html, "    $('adminBody').innerHTML = loginMarkup();\\n    bindLogin();", 'static password login handler');
 
 html = replaceExactly(html, "function openAdmin(){ $('adminModal').classList.add('show'); $('adminModal').setAttribute('aria-hidden','false'); }", "function openAdmin(){ $('adminModal').classList.add('show'); $('adminModal').setAttribute('aria-hidden','false'); if (!currentAdmin) { $('adminBody').innerHTML = loginMarkup(); bindLogin(); } }", 'admin portal open handler');
+html = replaceExactly(html, "db.auth.getSession().then(async({data})=>{if(data?.session){const email=data.session.user.email;const {data:allowed}=await db.from('oa_admins').select('email').eq('email',email.toLowerCase()).maybeSingle();if(allowed){currentAdmin=data.session.user;}}});", "db.auth.getSession().then(async({data})=>{if(data?.session){const {data:accountRole,error}=await db.from('oa_users').select('role').eq('user_id',data.session.user.id).maybeSingle();if(!error && accountRole?.role==='admin'){currentAdmin=data.session.user;renderAdmin();}else{await db.auth.signOut();currentAdmin=null;}}});", 'admin session role check');
 const recoveryHandler = [
   "    db.auth.onAuthStateChange((event, session) => {",
   "      if (event === 'PASSWORD_RECOVERY' && session) setTimeout(() => showPasswordRecoveryForm(session), 0);",
