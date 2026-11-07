@@ -118,7 +118,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         ['bio_en', 'Biography (English)', false, 'area'],
         ['phone', 'Contact number'],
         ['email', 'Email address'],
-        ['address', 'Address', false, 'area']
+        ['address', 'Address', false, 'area'],
         ['bio_np', 'परिचय (नेपाली)', false, 'area']
       ],
       label: (row) => row.name,
