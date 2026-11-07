@@ -41,6 +41,8 @@ style.textContent = [
   '.oa-staff-role{display:inline-flex;align-items:center;margin-bottom:10px;padding:5px 10px;border-radius:99px;background:#f5f0e4;color:#896625;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}',
   '.oa-staff-details p{margin:0;color:#647488;font-size:12px;line-height:1.8;white-space:pre-line}',
   '.oa-staff-empty{grid-column:1/-1;padding:24px;border:1px dashed #cbd5df;border-radius:16px;color:#647488;text-align:center;background:#fff;font-size:13px}',
+  '@media(max-width:760px){.oa-staff-photo{aspect-ratio:16/10;background:#f4f6f8}.oa-staff-photo img{object-fit:contain;object-position:center center;background:#f4f6f8}.oa-post-cover{aspect-ratio:4/3;background:#f5f7f9}.oa-post-cover img{object-fit:contain;background:#f5f7f9}}',
+  '@media(max-width:420px){.brand{max-width:calc(100% - 108px);gap:6px}.brand-name{font-size:14px}.brand-place{font-size:7px;letter-spacing:.09em}.brand-mark{width:39px;height:39px;flex-basis:39px}}',
 
   '@media(min-width:761px){.hero{min-height:660px}.hero:before{background-position:center center;background-size:cover}}',
   '@media(max-width:760px){',
