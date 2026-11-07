@@ -23,6 +23,7 @@ create table if not exists public.oa_notices (
   id uuid primary key default gen_random_uuid(),
   title_en text not null, title_np text not null default '',
   category text not null default 'Notice',
+  image_url text not null default '',
   body_en text not null default '', body_np text not null default '',
   is_published boolean not null default false, created_at timestamptz not null default now()
 );
