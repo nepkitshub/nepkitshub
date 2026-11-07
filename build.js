@@ -197,7 +197,7 @@ const contentPageStyles = `
   a{color:inherit;text-decoration:none}.page-top{background:#102b4e;color:#fff;padding:17px 22px}
   .page-top-inner{max-width:1160px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
   .page-brand{display:flex;align-items:center;gap:11px;font-weight:900}
-  .page-mark{width:42px;height:42px;border:1px solid rgba(213,173,92,.8);border-radius:12px;display:grid;place-items:center;color:#f0d99e;font:800 19px Georgia}
+  .page-mark{width:42px;height:42px;border:1px solid rgba(213,173,92,.8);border-radius:12px;display:grid;place-items:center;color:#f0d99e;font:800 19px Georgia}.page-mark img{display:block;width:100%;height:100%;object-fit:contain;border-radius:inherit;background:#fff;padding:2px}.page-brand-name{display:block}
   .page-brand small{display:block;color:#d4dfeb;font-size:10px;letter-spacing:.1em}
   .page-home{color:#f0d99e;font-size:12px;font-weight:900}
   .page-main{width:min(1160px,calc(100% - 36px));margin:42px auto 70px}
@@ -210,6 +210,16 @@ const contentPageStyles = `
   .content-cover img,.content-detail-cover img{display:block;width:100%;height:100%;object-fit:cover}
   .content-cover.is-empty,.content-detail-cover.is-empty{display:grid;place-items:center;color:#91a0af;font-size:46px}
   .content-card-body{padding:19px 20px 22px}
+  .team-member-card .team-avatar{width:148px;height:148px;aspect-ratio:1/1;margin:23px auto 0;overflow:hidden;border-radius:50%;border:5px solid #f5f0e4;background:#edf2f6;box-shadow:0 8px 22px rgba(16,43,78,.1)}
+  .team-member-card .team-avatar img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+  .team-member-card .content-card-body{text-align:center}
+  .team-member-card .content-meta{justify-content:center}
+  .team-member-card .team-member-bio{white-space:pre-line;text-align:left}
+  .team-contact-details{display:grid;gap:8px;margin-top:17px;text-align:left}
+  .team-contact-details a,.team-contact-details .team-address{display:block;min-width:0;padding:10px 12px;border-radius:10px;background:#f5f7f9;overflow-wrap:anywhere}
+  .team-contact-details span{display:block;margin-bottom:3px;color:#7b8998;font-size:9px;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+  .team-contact-details strong{display:block;color:#173d67;font-size:12px;line-height:1.55}
+
   .content-meta{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:10px;color:#8b6c2d;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}
   .content-meta time{color:#7b8998;letter-spacing:0;text-transform:none}
   .content-card h2{font:700 21px/1.25 Georgia,serif;color:var(--navy);margin:0 0 9px}
@@ -226,7 +236,7 @@ const contentPageStyles = `
   @media(max-width:480px){#content-list{grid-template-columns:1fr}.page-brand{font-size:14px}.page-brand small{font-size:9px}}
   `;
 const contentPageHtml = (mode) => '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b4e"><title>Oxford Academy</title><style>' + contentPageStyles + '</style></head><body>' +
-  '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span>Oxford Academy<small>KUSHMA, PARBAT</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
+  '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academy<small>KUSHMA, PARBAT</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb" id="content-breadcrumb"></nav>' +
   (mode === 'detail' ? '<div id="content-detail"><div class="content-empty">Loading content…</div></div>' :
     '<h1 id="content-heading">Academy updates</h1><div id="content-list"><div class="content-empty">Loading content…</div></div>') +
