@@ -151,8 +151,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       '.oa-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.oa-field{display:grid;gap:6px;margin-bottom:12px}.oa-field.full{grid-column:1/-1}.oa-field label{font-size:11px;color:#506176;font-weight:800}.oa-field input,.oa-field textarea{width:100%;border:1px solid #d8e1e9;border-radius:9px;padding:10px 11px;font-size:12px;color:#17283b}.oa-field textarea{min-height:85px;resize:vertical}',
       '.oa-upload{padding:10px;border:1px dashed #cbd6e0;border-radius:10px;background:#f8fafc}.oa-upload small{display:block;font-size:10px;color:#718096;margin-bottom:6px}.oa-preview{max-width:200px;max-height:120px;object-fit:contain;border:1px dashed #ccd5df;border-radius:9px;padding:5px;margin-top:8px}.oa-preview.hide{display:none}',
       '.oa-check{font-size:11px;font-weight:800;color:#506176;display:flex;align-items:center;gap:7px;margin:10px 0}.oa-records{display:grid;gap:8px}.oa-record{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #e4eaf0;border-radius:11px;padding:12px}.oa-record b{display:block;font-size:13px;color:#102b4e}.oa-record small{display:block;font-size:10px;color:#718096;overflow-wrap:anywhere}.oa-status{display:inline-block;padding:3px 7px;border-radius:30px;background:#edf5ed;color:#467345;font-size:9px;font-weight:900;margin-top:5px}.oa-status.draft{background:#fff3dd;color:#91671b}.oa-empty{padding:22px;border:1px dashed #cbd5df;border-radius:11px;text-align:center;color:#718096;font-size:12px}',
-      '.oa-enquiries-list{display:grid;gap:15px;margin-top:12px}.oa-enquiry-card{min-width:0;padding:18px;border:1px solid #dfe7ee;border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(16,43,78,.055)}.oa-enquiry-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.oa-enquiry-kicker{font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#9b782f}.oa-enquiry-card h3{margin:5px 0 3px;color:#102b4e;font:700 21px/1.25 Georgia,serif}.oa-enquiry-guardian{font-size:12px;color:#647488}.oa-enquiry-status-wrap{display:grid;gap:5px;min-width:120px;font-size:10px;font-weight:900;color:#647488}.oa-enquiry-status-wrap select{width:100%}.oa-enquiry-contact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}.oa-enquiry-contact{min-width:0;padding:11px 12px;border-radius:11px;background:#f5f7f9}.oa-enquiry-contact>span{display:block;margin-bottom:4px;color:#7b8997;font-size:9px;font-weight:900;letter-spacing:.09em}.oa-enquiry-contact a,.oa-enquiry-contact strong{color:#173d67;font-size:12px;font-weight:800;overflow-wrap:anywhere}.oa-enquiry-contact>span+span{font-size:12px}.oa-enquiry-message{margin-top:12px;padding:14px;border:1px solid #e8edf1;border-radius:12px;background:#fbfcfd}.oa-enquiry-message strong{display:block;margin-bottom:7px;color:#526579;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em}.oa-enquiry-message p{margin:0;color:#263b50;font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}.oa-enquiry-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.oa-enquiry-action{display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;border:1px solid #dbe4eb;border-radius:9px;color:#173d67;background:#fff;font-size:11px;font-weight:900}.oa-enquiry-action.whatsapp{border-color:#d4eadb;background:#eef8f1;color:#176b37}.oa-enquiry-action:hover{filter:brightness(.97)}',
-      '@media(max-width:680px){.oa-enquiry-card-head{flex-direction:column}.oa-enquiry-status-wrap{width:100%;grid-template-columns:auto minmax(0,1fr);align-items:center}.oa-enquiry-contact-grid{grid-template-columns:1fr}.oa-enquiry-card{padding:14px}.oa-enquiry-actions{display:grid;grid-template-columns:1fr}.oa-enquiry-action{width:100%}}',
+      '.oa-admissions-tools{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:10px;margin-top:16px}.oa-admissions-tools input,.oa-admissions-tools select{width:100%;min-width:0;padding:11px 12px;border:1px solid #d8e1e9;border-radius:10px;background:#fff;color:#17283b;font-size:12px}.oa-enquiries-list{display:grid;gap:15px;margin-top:12px}.oa-enquiry-card{min-width:0;padding:18px;border:1px solid #dfe7ee;border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(16,43,78,.055)}.oa-enquiry-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.oa-enquiry-kicker{font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#9b782f}.oa-enquiry-card h3{margin:5px 0 3px;color:#102b4e;font:700 21px/1.25 Georgia,serif}.oa-enquiry-guardian{font-size:12px;color:#647488}.oa-enquiry-status-wrap{display:grid;gap:5px;min-width:120px;font-size:10px;font-weight:900;color:#647488}.oa-enquiry-status-wrap select{width:100%}.oa-enquiry-contact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}.oa-enquiry-contact{min-width:0;padding:11px 12px;border-radius:11px;background:#f5f7f9}.oa-enquiry-contact>span{display:block;margin-bottom:4px;color:#7b8997;font-size:9px;font-weight:900;letter-spacing:.09em}.oa-enquiry-contact a,.oa-enquiry-contact strong{color:#173d67;font-size:12px;font-weight:800;overflow-wrap:anywhere}.oa-enquiry-contact>span+span{font-size:12px}.oa-enquiry-message{margin-top:12px;padding:14px;border:1px solid #e8edf1;border-radius:12px;background:#fbfcfd}.oa-enquiry-message strong{display:block;margin-bottom:7px;color:#526579;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em}.oa-enquiry-message p{margin:0;color:#263b50;font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}.oa-enquiry-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.oa-enquiry-action{display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;border:1px solid #dbe4eb;border-radius:9px;color:#173d67;background:#fff;font-size:11px;font-weight:900}.oa-enquiry-action.whatsapp{border-color:#d4eadb;background:#eef8f1;color:#176b37}.oa-enquiry-action:hover{filter:brightness(.97)}',
+      '@media(max-width:680px){.oa-admissions-tools{grid-template-columns:1fr}.oa-enquiry-card-head{flex-direction:column}.oa-enquiry-status-wrap{width:100%;grid-template-columns:auto minmax(0,1fr);align-items:center}.oa-enquiry-contact-grid{grid-template-columns:1fr}.oa-enquiry-card{padding:14px}.oa-enquiry-actions{display:grid;grid-template-columns:1fr}.oa-enquiry-action{width:100%}}',
       '.oa-msg{position:fixed;right:22px;bottom:20px;z-index:99;background:#102b4e;color:#fff;padding:11px 15px;border-radius:10px;font-size:12px;opacity:0;pointer-events:none;transition:.2s}.oa-msg.show{opacity:1}',
       '@media(max-width:900px){.oa-app{grid-template-columns:1fr}.oa-side{padding:14px;gap:12px}.oa-brand{padding-bottom:10px}.oa-nav{display:flex;overflow:auto}.oa-nav button{white-space:nowrap}.oa-side>a{display:none}.oa-main{padding:18px 14px}.oa-stats{grid-template-columns:repeat(2,1fr)}}',
       '@media(max-width:560px){.oa-top{align-items:flex-start;flex-direction:column}.oa-top h1{font-size:25px}.oa-grid{grid-template-columns:1fr}.oa-field.full{grid-column:1}.oa-record{align-items:flex-start;flex-direction:column}.oa-stats{gap:7px}.oa-stat{padding:12px}.oa-stat strong{font-size:22px}}'
@@ -498,44 +498,122 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   }
 
   async function renderAdmissions() {
-    const view=$('#oa-view');
-    view.innerHTML="<div class='oa-card'><div class='oa-admissions-heading'><div><h2>Admission enquiries</h2><p>Read each request clearly and contact the parent or guardian by phone, WhatsApp or email.</p></div><button type='button' class='oa-button light' id='oa-refresh-enquiries'>Refresh ↻</button></div><div id='oa-enquiries-summary' class='oa-enquiries-summary'>Loading…</div><div id='oa-enquiries' class='oa-enquiries-list'></div></div>";
-    const dateLabel=value=>{const date=value?new Date(value):null;return date&&!Number.isNaN(date.getTime())?date.toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'}):'Date unavailable';};
-    const waNumber=value=>String(value||'').replace(/\D/g,'');
-    async function reload(){
-      const node=$('#oa-enquiries'),summary=$('#oa-enquiries-summary');
-      node.innerHTML="<div class='oa-empty'>Loading enquiries…</div>";
-      const {data,error,count}=await db.from('oa_admissions').select('*',{count:'exact'}).order('created_at',{ascending:false}).limit(200);
-      if(error){summary.textContent='Could not load enquiries: '+error.message;node.innerHTML="<div class='oa-empty'>Permission error: "+esc(error.message)+"</div>";return;}
-      const rows=data||[];
-      summary.textContent=(count??rows.length)+' enquiry record(s) saved';
-      if(!rows.length){node.innerHTML="<div class='oa-empty'>No enquiries have been received yet. New submissions will appear here.</div>";return;}
-      node.innerHTML=rows.map(row=>{
-        const phone=String(row.phone||'').trim();
-        const digits=waNumber(phone);
-        const email=String(row.email||'').trim();
-        const message=String(row.message||'').trim();
-        const guardian=String(row.guardian_name||'').trim();
-        const phoneLink=phone?"<a href='tel:"+esc(phone.replace(/[^\d+]/g,''))+"'>"+esc(phone)+"</a>":"<span>Not provided</span>";
-        const emailLink=email?"<a href='mailto:"+esc(email)+"'>"+esc(email)+"</a>":"<span>Not provided</span>";
-        const whatsapp=digits?"<a class='oa-enquiry-action whatsapp' href='https://wa.me/"+esc(digits)+"?text="+encodeURIComponent('Namaste, we are contacting you regarding your admission enquiry for '+(row.student_name||'your child')+'.')+"' target='_blank' rel='noopener noreferrer'>Message on WhatsApp ↗</a>":'';
-        const emailAction=email?"<a class='oa-enquiry-action' href='mailto:"+esc(email)+"?subject="+encodeURIComponent('Oxford Academy admission enquiry')+"'>Send email ↗</a>":'';
-        const status=row.status||'new';
-        return "<article class='oa-enquiry-card'>"+
-          "<div class='oa-enquiry-card-head'><div><div class='oa-enquiry-kicker'>"+esc(row.branch_name||'Kushma Branch')+" · "+esc(dateLabel(row.created_at))+"</div><h3>"+esc(row.student_name||'Student name not provided')+"</h3><div class='oa-enquiry-guardian'>Parent / guardian: <strong>"+esc(guardian||'Not provided')+"</strong></div></div>"+
-          "<label class='oa-enquiry-status-wrap'><span>Status</span><select class='oa-button light' data-status='"+esc(row.id)+"'><option value='new' "+(status==='new'?'selected':'')+">New</option><option value='contacted' "+(status==='contacted'?'selected':'')+">Contacted</option><option value='closed' "+(status==='closed'?'selected':'')+">Closed</option></select></label></div>"+
-          "<div class='oa-enquiry-contact-grid'><div class='oa-enquiry-contact'><span>PHONE NUMBER</span>"+phoneLink+"</div><div class='oa-enquiry-contact'><span>EMAIL ADDRESS</span>"+emailLink+"</div><div class='oa-enquiry-contact'><span>BRANCH</span><strong>"+esc(row.branch_name||'Kushma Branch')+"</strong></div></div>"+
-          "<div class='oa-enquiry-message'><strong>Message from parent / guardian</strong><p>"+(message?esc(message):'No additional message was provided.')+"</p></div>"+
-          "<div class='oa-enquiry-actions'>"+(phone?"<a class='oa-enquiry-action' href='tel:"+esc(phone.replace(/[^\d+]/g,''))+"'>Call parent ↗</a>":'')+whatsapp+emailAction+"</div></article>";
+    const view = $('#oa-view');
+    view.innerHTML =
+      "<div class='oa-card'><div class='oa-admissions-heading'><div><h2>Admission enquiries</h2><p>Search enquiries, review contact details and messages, and update each enquiry’s status.</p></div><button type='button' class='oa-button light' id='oa-refresh-enquiries'>Refresh ↻</button></div>" +
+      "<div id='oa-enquiries-summary' class='oa-enquiries-summary'>Loading enquiries…</div>" +
+      "<div class='oa-admissions-tools'><input id='oa-enquiry-search' type='search' placeholder='Search student, parent, phone, email or message' aria-label='Search enquiries'><select id='oa-enquiry-filter' aria-label='Filter enquiries by status'><option value='all'>All enquiries</option><option value='new'>New</option><option value='contacted'>Contacted</option><option value='closed'>Closed</option></select></div>" +
+      "<div id='oa-enquiries' class='oa-enquiries-list'></div></div>";
+
+    const dateLabel = (value) => {
+      const date = value ? new Date(value) : null;
+      return date && !Number.isNaN(date.getTime())
+        ? date.toLocaleString('en-GB', { dateStyle:'medium', timeStyle:'short' })
+        : 'Date unavailable';
+    };
+    const waNumber = (value) => String(value || '').replace(/\\D/g, '');
+    let rows = [];
+    let loading = false;
+
+    const node = $('#oa-enquiries');
+    const summary = $('#oa-enquiries-summary');
+    const search = $('#oa-enquiry-search');
+    const filter = $('#oa-enquiry-filter');
+
+    const render = () => {
+      const term = search.value.trim().toLowerCase();
+      const statusFilter = filter.value;
+      const visible = rows.filter((row) => {
+        const haystack = [
+          row.student_name, row.guardian_name, row.phone, row.email,
+          row.branch_name, row.message, row.grade
+        ].join(' ').toLowerCase();
+        return (!term || haystack.includes(term)) &&
+          (statusFilter === 'all' || (row.status || 'new') === statusFilter);
+      });
+      const newCount = rows.filter((row) => (row.status || 'new') === 'new').length;
+      const contactedCount = rows.filter((row) => row.status === 'contacted').length;
+      const closedCount = rows.filter((row) => row.status === 'closed').length;
+      summary.textContent = rows.length + ' total · ' + newCount + ' new · ' + contactedCount + ' contacted · ' + closedCount + ' closed';
+      if (!visible.length) {
+        node.innerHTML = "<div class='oa-empty'>" +
+          (rows.length ? 'No enquiries match your search or selected status.' : 'No enquiries have been received yet. New submissions will appear here.') +
+          "</div>";
+        return;
+      }
+      node.innerHTML = visible.map((row) => {
+        const phone = String(row.phone || '').trim();
+        const digits = waNumber(phone);
+        const email = String(row.email || '').trim();
+        const message = String(row.message || '').trim();
+        const guardian = String(row.guardian_name || '').trim();
+        const status = row.status || 'new';
+        const phoneLink = phone
+          ? "<a href='tel:" + esc(phone.replace(/[^\\d+]/g, '')) + "'>" + esc(phone) + "</a>"
+          : "<span>Not provided</span>";
+        const emailLink = email
+          ? "<a href='mailto:" + esc(email) + "'>" + esc(email) + "</a>"
+          : "<span>Not provided</span>";
+        const whatsapp = digits
+          ? "<a class='oa-enquiry-action whatsapp' href='https://wa.me/" + esc(digits) + "?text=" + encodeURIComponent('Namaste, we are contacting you regarding your admission enquiry for ' + (row.student_name || 'your child') + '.') + "' target='_blank' rel='noopener noreferrer'>Message on WhatsApp ↗</a>"
+          : '';
+        const emailAction = email
+          ? "<a class='oa-enquiry-action' href='mailto:" + esc(email) + "?subject=" + encodeURIComponent('Oxford Academy admission enquiry') + "'>Send email ↗</a>"
+          : '';
+        return "<article class='oa-enquiry-card'>" +
+          "<div class='oa-enquiry-card-head'><div><div class='oa-enquiry-kicker'>" + esc(row.branch_name || 'Kushma Branch') + " · " + esc(dateLabel(row.created_at)) + "</div><h3>" + esc(row.student_name || 'Student name not provided') + "</h3><div class='oa-enquiry-guardian'>Parent / guardian: <strong>" + esc(guardian || 'Not provided') + "</strong></div></div>" +
+          "<label class='oa-enquiry-status-wrap'><span>Status</span><select class='oa-button light' data-status='" + esc(row.id) + "'><option value='new' " + (status === 'new' ? 'selected' : '') + ">New</option><option value='contacted' " + (status === 'contacted' ? 'selected' : '') + ">Contacted</option><option value='closed' " + (status === 'closed' ? 'selected' : '') + ">Closed</option></select></label></div>" +
+          "<div class='oa-enquiry-contact-grid'><div class='oa-enquiry-contact'><span>PHONE NUMBER</span>" + phoneLink + "</div><div class='oa-enquiry-contact'><span>EMAIL ADDRESS</span>" + emailLink + "</div><div class='oa-enquiry-contact'><span>BRANCH</span><strong>" + esc(row.branch_name || 'Kushma Branch') + "</strong></div></div>" +
+          (row.grade ? "<div class='oa-enquiry-contact' style='margin-top:10px'><span>CLASS / GRADE (PREVIOUS ENQUIRY)</span><strong>" + esc(row.grade) + "</strong></div>" : '') +
+          "<div class='oa-enquiry-message'><strong>Message from parent / guardian</strong><p>" + (message ? esc(message) : 'No additional message was provided.') + "</p></div>" +
+          "<div class='oa-enquiry-actions'>" + (phone ? "<a class='oa-enquiry-action' href='tel:" + esc(phone.replace(/[^\\d+]/g, '')) + "'>Call parent ↗</a>" : '') + whatsapp + emailAction + "</div></article>";
       }).join('');
-      node.querySelectorAll('[data-status]').forEach(select=>select.addEventListener('change',async()=>{
-        select.disabled=true;
-        const {error}=await db.from('oa_admissions').update({status:select.value}).eq('id',select.dataset.status);
-        showMessage(error?error.message:'Enquiry status updated.');
-        if(error)select.disabled=false;
-      }));
+
+      node.querySelectorAll('[data-status]').forEach((select) => {
+        select.addEventListener('change', async () => {
+          const row = rows.find((item) => item.id === select.dataset.status);
+          if (!row) return;
+          const previous = row.status || 'new';
+          select.disabled = true;
+          const { error } = await db.from('oa_admissions')
+            .update({ status:select.value }).eq('id', row.id);
+          if (error) {
+            showMessage(error.message);
+            select.value = previous;
+            select.disabled = false;
+            return;
+          }
+          row.status = select.value;
+          showMessage('Enquiry status updated.');
+          render();
+        });
+      });
+    };
+
+    async function reload() {
+      if (loading) return;
+      loading = true;
+      node.innerHTML = "<div class='oa-empty'>Loading enquiries…</div>";
+      const { data, error, count } = await db.from('oa_admissions')
+        .select('id,student_name,guardian_name,phone,email,grade,message,branch_name,status,created_at', { count:'exact' })
+        .order('created_at', { ascending:false })
+        .limit(300);
+      loading = false;
+      if (error) {
+        summary.textContent = 'Could not load enquiries: ' + error.message;
+        node.innerHTML = "<div class='oa-empty'>Permission error: " + esc(error.message) + "</div>";
+        return;
+      }
+      rows = data || [];
+      render();
+      if (typeof count === 'number' && count > rows.length) {
+        summary.textContent += ' · Showing the latest ' + rows.length;
+      }
     }
-    $('#oa-refresh-enquiries').addEventListener('click',reload);
+
+    search.addEventListener('input', render);
+    filter.addEventListener('change', render);
+    $('#oa-refresh-enquiries').addEventListener('click', reload);
     await reload();
   }
 
