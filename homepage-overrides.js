@@ -133,6 +133,7 @@ if (!isAdminRoute) {
   const programmeRoot = document.getElementById('programCards');
   const loadProgrammes = async () => {
     if (!programmeRoot) return;
+    if (window.oaPublicContentReady) await window.oaPublicContentReady;
     programmeRoot.innerHTML = '<div class="oa-program-empty">Loading our programmes…</div>';
     try {
       const { data, error } = await db.from('oa_programs')
@@ -233,6 +234,7 @@ if (!isAdminRoute) {
   const staffRoot = document.getElementById('facultyCards');
   const loadAcademyTeam = async () => {
     if (!staffRoot) return;
+    if (window.oaPublicContentReady) await window.oaPublicContentReady;
     staffRoot.classList.add('oa-public-staff-grid');
     staffRoot.setAttribute('aria-live', 'polite');
     staffRoot.innerHTML = '<div class="oa-staff-empty">Loading our academy team…</div>';
