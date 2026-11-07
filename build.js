@@ -214,6 +214,38 @@ const newAdmissionHandler = `async function loadAdmissionBranches(){
     });`;
 html = replaceExactly(html, oldAdmissionHandler, newAdmissionHandler, 'validated admission enquiry submission handler');
 
+
+html = replaceExactly(html, '<button class="lang-btn" id="langToggle" aria-label="Change language">नेपाली</button>', '', 'remove the language switch');
+const legacyAdminPatches = [
+  ["field('Title (English)','title_en','Notice title')+field('शीर्षक (नेपाली)','title_np','सूचनाको शीर्षक')+field('Category','category','General')+textarea('Message (English)','body_en',true)+textarea('सन्देश (नेपाली)','body_np',true)",
+   "field('Post title','title_en','Notice title')+field('Category','category','General')+textarea('Post message','body_en',true)", "legacy notice form"],
+  ["payload:f=>({title_en:f.title_en,title_np:f.title_np,category:f.category,body_en:f.body_en,body_np:f.body_np,is_published:f.is_published==='on'})",
+   "payload:f=>({title_en:f.title_en,category:f.category,body_en:f.body_en,is_published:f.is_published==='on'})", "legacy notice payload"],
+  ["field('Programme title (English)','title_en','Programme name')+field('कार्यक्रमको नाम (नेपाली)','title_np','कार्यक्रमको नाम')+field('Class / grade range','grade_range','e.g. Update official range')+textarea('Description (English)','description_en',true)+textarea('विवरण (नेपाली)','description_np',true)",
+   "field('Programme title','title_en','Programme name')+field('Age group / level','grade_range','e.g. Early childhood')+textarea('Description','description_en',true)", "legacy programme form"],
+  ["payload:f=>({title_en:f.title_en,title_np:f.title_np,grade_range:f.grade_range,description_en:f.description_en,description_np:f.description_np,is_published:f.is_published==='on'})",
+   "payload:f=>({title_en:f.title_en,grade_range:f.grade_range,description_en:f.description_en,is_published:f.is_published==='on'})", "legacy programme payload"],
+  ["field('Role (English)','role_en','Teacher / Staff')+field('भूमिका (नेपाली)','role_np','पद')+field('Photo URL','photo_url','https://…',true)+textarea('Short biography (English)','bio_en',true)+textarea('परिचय (नेपाली)','bio_np',true)",
+   "field('Role / position','role_en','Teacher / Staff')+field('Photo URL','photo_url','https://…',true)+textarea('Short biography','bio_en',true)", "legacy staff form"],
+  ["payload:f=>({name:f.name,role_en:f.role_en,role_np:f.role_np,photo_url:f.photo_url,bio_en:f.bio_en,bio_np:f.bio_np,is_published:f.is_published==='on'})",
+   "payload:f=>({name:f.name,role_en:f.role_en,photo_url:f.photo_url,bio_en:f.bio_en,is_published:f.is_published==='on'})", "legacy staff payload"],
+  ["field('Image title (English)','title_en','Activity / event')+field('शीर्षक (नेपाली)','title_np','कार्यक्रम')+field('Image URL','image_url','https://…',true)+textarea('Caption (English)','caption_en',true)+textarea('क्याप्सन (नेपाली)','caption_np',true)",
+   "field('Image title','title_en','Activity / event')+field('Image URL','image_url','https://…',true)+textarea('Caption','caption_en',true)", "legacy gallery form"],
+  ["payload:f=>({title_en:f.title_en,title_np:f.title_np,image_url:f.image_url,caption_en:f.caption_en,caption_np:f.caption_np,is_published:f.is_published==='on'})",
+   "payload:f=>({title_en:f.title_en,image_url:f.image_url,caption_en:f.caption_en,is_published:f.is_published==='on'})", "legacy gallery payload"],
+  ["Update key sections in both English and Nepali. Changes appear on the public website.",
+   "Update the text visitors see on the public website.", "legacy homepage content description"],
+  ["<div class=\"field\"><label>English</label><textarea name=\"value_en\">${esc(r.value_en||'')}</textarea></div><div class=\"field\"><label>नेपाली</label><textarea name=\"value_np\">${esc(r.value_np||'')}</textarea></div>",
+   "<div class=\"field full\"><label>Website text</label><textarea name=\"value_en\">${esc(r.value_en||'')}</textarea></div>", "legacy homepage content fields"],
+  ["value_en:f.get('value_en'),value_np:f.get('value_np'),updated_at:new Date().toISOString()",
+   "value_en:f.get('value_en'),updated_at:new Date().toISOString()", "legacy homepage content save"],
+  ["contentCache[key+'_en']=f.get('value_en');contentCache[key+'_np']=f.get('value_np');applyLanguage();",
+   "contentCache[key+'_en']=f.get('value_en');applyLanguage();", "legacy homepage content cache"]
+];
+for (const [needle, replacement, label] of legacyAdminPatches) {
+  html = replaceExactly(html, needle, replacement, label);
+}
+
 html = html.replace(/\sdata-np="[^"]*"/g, '');
 
 const adminManagerSource = fs.readFileSync(path.join(__dirname, 'admin-manager.js'), 'utf8');
