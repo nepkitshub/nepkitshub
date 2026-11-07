@@ -26,9 +26,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const nameEn=map.brand_name?.value_en||'Oxford Academy',nameNp=map.brand_name?.value_np||nameEn;
     document.querySelectorAll('.brand-name').forEach(node=>{node.dataset.en=nameEn;node.dataset.np=nameNp;node.textContent=document.body.classList.contains('np')?nameNp:nameEn;});
     const logo=safeUrl(map.logo_url?.value_en||'');
-    document.querySelectorAll('.brand-mark').forEach(node=>{
+    document.querySelectorAll('.brand-mark,.oa-mark').forEach(node=>{
       if(!logo){node.textContent='OA';return;}
-      const image=document.createElement('img');image.src=logo;image.alt=nameEn+' logo';image.style.cssText='width:100%;height:100%;object-fit:contain;padding:3px;border-radius:inherit';node.replaceChildren(image);node.style.background='#fff';
+      const image=document.createElement('img');image.src=logo;image.alt=nameEn+' logo';image.style.cssText='width:100%;height:100%;object-fit:contain;padding:3px;border-radius:inherit';node.replaceChildren(image);node.style.background='#fff';node.style.overflow='hidden';
     });
     const desktop=Math.max(40,Math.min(160,Number(map.logo_size_desktop?.value_en||48)));
     const mobile=Math.max(34,Math.min(60,Number(map.logo_size_mobile?.value_en||42)));
@@ -116,6 +116,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         ['role_np', 'पद (नेपाली)'],
         ['photo_url', 'Profile photo', false, 'image'],
         ['bio_en', 'Biography (English)', false, 'area'],
+        ['phone', 'Contact number'],
+        ['email', 'Email address'],
+        ['address', 'Address', false, 'area']
         ['bio_np', 'परिचय (नेपाली)', false, 'area']
       ],
       label: (row) => row.name,
@@ -190,6 +193,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       window.location.assign('/');
     });
     openSection('overview');
+    applyBranding();
   }
 
   const titles = {
