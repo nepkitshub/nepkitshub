@@ -151,9 +151,9 @@ for (const [needle, replacement, label] of publicMarkupPatches) {
   }
 }
 
-const admissionGradeField = '<div class="field full"><label for="grade" data-en="Class / grade of interest">Class / grade of interest</label><input id="grade" name="grade" maxlength="60" placeholder="Enter class or grade" /></div>';
+const admissionGradePattern = /<div class="field full"><label for="grade"[^>]*>[\s\S]*?<\/div>/;
 const admissionBranchField = '<div class="field full"><label for="admissionBranch">Preferred branch *</label><select id="admissionBranch" name="branch_name" required><option value="">Choose a branch</option></select><small class="field-hint">Choose the academy branch you want to contact.</small></div>';
-html = replaceExactly(html, admissionGradeField, admissionBranchField, 'admission branch selector field');
+html = replaceRegexExactly(html, admissionGradePattern, admissionBranchField, 'admission branch selector field');
 const oldAdmissionHandler = `$('admissionForm').addEventListener('submit',async e=>{
       e.preventDefault(); const f=new FormData(e.currentTarget); if(f.get('website'))return;
       const payload={student_name:f.get('student_name'),guardian_name:f.get('guardian_name')||null,phone:f.get('phone'),email:f.get('email')||null,grade:f.get('grade')||null,message:f.get('message')||null};
