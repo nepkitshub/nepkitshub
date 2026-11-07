@@ -210,7 +210,7 @@ const contentPageStyles = `
   .content-cover img,.content-detail-cover img{display:block;width:100%;height:100%;object-fit:cover}
   .content-cover.is-empty,.content-detail-cover.is-empty{display:grid;place-items:center;color:#91a0af;font-size:46px}
   .content-card-body{padding:19px 20px 22px}
-  .team-member-card .team-avatar{width:148px;height:148px;aspect-ratio:1/1;margin:23px auto 0;overflow:hidden;border-radius:50%;border:5px solid #f5f0e4;background:#edf2f6;box-shadow:0 8px 22px rgba(16,43,78,.1)}
+  .team-member-card .team-avatar{width:148px;height:148px;aspect-ratio:1/1;margin:23px auto 0;overflow:hidden;border-radius:50%;border:5px solid #f5f0e4;background:#edf2f6;box-shadow:0 8px 22px rgba(16,43,78,.1)}.team-member-card .team-avatar.is-empty{display:grid;place-items:center;color:#91a0af;font-size:38px}
   .team-member-card .team-avatar img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
   .team-member-card .content-card-body{text-align:center}
   .team-member-card .content-meta{justify-content:center}
