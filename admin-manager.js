@@ -174,7 +174,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       "<button data-section='programs'>▦ &nbsp; Programmes</button>" +
       "<button data-section='faculty'>♙ &nbsp; Teachers & staff</button>" +
       "<button data-section='gallery'>▧ &nbsp; Photo gallery</button>" +
-      "<button data-section='admissions'>✉ &nbsp; Admissions</button></nav>" +
+      "<button data-section='admissions'>✉ &nbsp; Admissions</button><button data-section='branches'>⌖ &nbsp; Branches & contacts</button></nav>" +
       "<a href='/' target='_blank' rel='noopener'>View live website ↗</a></aside>" +
       "<main class='oa-main'><div class='oa-top'><div><small>OXFORD ACADEMY / ADMIN</small><h1 id='oa-title'>Dashboard overview</h1></div>" +
       "<div class='oa-actions'><a class='oa-button light' href='/' target='_blank'>View website</a><button class='oa-button' id='oa-signout'>Sign out</button></div></div>" +
@@ -198,7 +198,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     programs: 'Academic programmes',
     faculty: 'Teachers & staff',
     gallery: 'Photo gallery',
-    admissions: 'Admission enquiries'
+    admissions: 'Admission enquiries',
+    branches: 'Branches & contact details'
   };
   function setTitle(name) {
     $('#oa-title').textContent = titles[name];
@@ -212,6 +213,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     if (name === 'branding') return renderBranding();
     if (name === 'homepage') return renderHomepage();
     if (name === 'admissions') return renderAdmissions();
+    if (name === 'branches') return renderBranches();
     if (collections[name]) return renderCollection(name);
   }
 
@@ -494,31 +496,167 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   }
 
   async function renderAdmissions() {
-    const view = $('#oa-view');
-    view.innerHTML = "<div class='oa-card'><h2>Admission enquiries</h2><p>Review requests and update their follow-up status.</p><div id='oa-enquiries'>Loading…</div></div>";
-    const { data, error } = await db.from('oa_admissions').select('*').order('created_at', { ascending: false }).limit(150);
-    const node = $('#oa-enquiries');
-    if (error) { node.textContent = error.message; return; }
-    node.innerHTML = data?.length ? data.map((row) =>
-      "<div class='oa-record'><div><b>" + esc(row.student_name) + " · " + esc(row.grade || 'Grade not specified') + "</b>" +
-      "<small>Guardian: " + esc(row.guardian_name || '—') + " · Phone: " + esc(row.phone) + " · Email: " + esc(row.email || '—') + "</small>" +
-      "<small>" + esc(row.message || 'No message') + " · " + new Date(row.created_at).toLocaleString() + "</small></div>" +
-      "<select class='oa-button light' data-status='" + esc(row.id) + "'><option value='new' " + (row.status === 'new' ? 'selected' : '') + ">New</option>" +
-      "<option value='contacted' " + (row.status === 'contacted' ? 'selected' : '') + ">Contacted</option>" +
-      "<option value='closed' " + (row.status === 'closed' ? 'selected' : '') + ">Closed</option></select></div>"
-    ).join('') : "<div class='oa-empty'>No admission enquiries received yet.</div>";
-    node.querySelectorAll('[data-status]').forEach((select) => {
-      select.addEventListener('change', async () => {
-        const { error } = await db.from('oa_admissions').update({ status: select.value }).eq('id', select.dataset.status);
-        showMessage(error ? error.message : 'Enquiry status updated.');
-      });
+    const view=$('#oa-view');
+    view.innerHTML="<div class='oa-card'><div class='oa-admissions-heading'><div><h2>Admission enquiries</h2><p>Refresh to check for new submissions. The selected branch is shown on each request.</p></div><button type='button' class='oa-button light' id='oa-refresh-enquiries'>Refresh ↻</button></div><div id='oa-enquiries-summary' class='oa-enquiries-summary'>Loading…</div><div id='oa-enquiries' class='oa-records'></div></div>";
+    async function reload(){
+      const node=$('#oa-enquiries'),summary=$('#oa-enquiries-summary');node.textContent='Loading enquiries…';
+      const {data,error,count}=await db.from('oa_admissions').select('*',{count:'exact'}).order('created_at',{ascending:false}).limit(200);
+      if(error){summary.textContent='Could not load enquiries: '+error.message;node.innerHTML="<div class='oa-empty'>Permission error: "+esc(error.message)+"</div>";return;}
+      summary.textContent=(count??data?.length??0)+' enquiry record(s) saved';
+      node.innerHTML=data?.length?data.map(row=>
+        "<div class='oa-record'><div><b>"+esc(row.student_name)+"</b><small><strong>Branch:</strong> "+esc(row.branch_name||'Kushma Branch')+" · <strong>Phone:</strong> "+esc(row.phone)+" · <strong>Email:</strong> "+esc(row.email||'—')+"</small><small><strong>Parent / guardian:</strong> "+esc(row.guardian_name||'—')+"</small><small>"+esc(row.message||'No message')+" · "+new Date(row.created_at).toLocaleString()+"</small><span class='oa-status "+(row.status==='new'?'draft':'')+"'>"+esc(row.status||'new')+"</span></div><select class='oa-button light' data-status='"+esc(row.id)+"'><option value='new' "+(row.status==='new'?'selected':'')+">New</option><option value='contacted' "+(row.status==='contacted'?'selected':'')+">Contacted</option><option value='closed' "+(row.status==='closed'?'selected':'')+">Closed</option></select></div>"
+      ).join(''):"<div class='oa-empty'>No enquiries have been received yet. New submissions will appear here.</div>";
+      node.querySelectorAll('[data-status]').forEach(select=>select.addEventListener('change',async()=>{
+        const {error}=await db.from('oa_admissions').update({status:select.value}).eq('id',select.dataset.status);
+        showMessage(error?error.message:'Enquiry status updated.');
+      }));
+    }
+    $('#oa-refresh-enquiries').addEventListener('click',reload);
+    await reload();
+  }
+
+  async function renderBranches() {
+    const view=$('#oa-view');
+    view.innerHTML="<div class='oa-card'><h2>Branches & contact details</h2><p>Update each branch's address, phone, WhatsApp, email and social media accounts separately.</p><div id='oa-branch-loader'>Loading branches…</div></div>";
+    const {data,error}=await db.from('oa_branches').select('*').order('sort_order');
+    if(error){$('#oa-branch-loader').textContent=error.message;return;}
+    const rows=data||[];
+    function field(name,label,value,type='text'){return "<div class='oa-field'><label>"+esc(label)+"</label><input name='"+esc(name)+"' type='"+type+"' value='"+esc(value||'')+"'></div>";}
+    const formMarkup=row=>"<form class='oa-card oa-branch-form' data-id='"+esc(row.id)+"'><h2>"+esc(row.branch_name)+"</h2><p>Branch key: "+esc(row.slug)+"</p><div class='oa-grid'>"+
+      field('branch_name','Branch name',row.branch_name)+field('address','Address',row.address)+field('phone','Phone number',row.phone,'tel')+
+      field('whatsapp_number','WhatsApp number',row.whatsapp_number,'tel')+field('email','Email address',row.email,'email')+
+      field('facebook_url','Facebook URL',row.facebook_url,'url')+field('instagram_url','Instagram URL',row.instagram_url,'url')+
+      field('tiktok_url','TikTok URL',row.tiktok_url,'url')+field('sort_order','Display order',row.sort_order,'number')+
+      "</div><label class='oa-check'><input type='checkbox' name='is_active' "+(row.is_active?'checked':'')+"> Show on the public website</label><button class='oa-button'>Save branch details</button></form>";
+    view.innerHTML="<div class='oa-card'><h2>Branches & contact details</h2><p>Only active branches appear in the public branch selector. Saved details display in the Contact section and WhatsApp button.</p></div>"+
+      rows.map(formMarkup).join('')+
+      "<div class='oa-card'><h2>Add another branch</h2><form id='oa-add-branch'><div class='oa-grid'>"+
+      field('branch_name','Branch name','New branch')+field('address','Address','City, District, Province')+field('phone','Phone number','','tel')+
+      field('whatsapp_number','WhatsApp number','','tel')+field('email','Email address','','email')+field('facebook_url','Facebook URL','','url')+
+      field('instagram_url','Instagram URL','','url')+field('tiktok_url','TikTok URL','','url')+field('sort_order','Display order',rows.length+1,'number')+
+      "</div><label class='oa-check'><input type='checkbox' name='is_active' checked> Show on the public website</label><button class='oa-button'>Add branch</button></form></div>";
+    document.querySelectorAll('.oa-branch-form').forEach(form=>form.addEventListener('submit',async event=>{
+      event.preventDefault();const f=new FormData(form);
+      const payload={branch_name:f.get('branch_name')||'',address:f.get('address')||'',phone:f.get('phone')||'',whatsapp_number:f.get('whatsapp_number')||'',email:f.get('email')||'',facebook_url:f.get('facebook_url')||'',instagram_url:f.get('instagram_url')||'',tiktok_url:f.get('tiktok_url')||'',sort_order:Number(f.get('sort_order')||0),is_active:f.get('is_active')==='on',updated_at:new Date().toISOString()};
+      const {error}=await db.from('oa_branches').update(payload).eq('id',form.dataset.id);
+      showMessage(error?error.message:'Branch details saved.');
+    }));
+    $('#oa-add-branch').addEventListener('submit',async event=>{
+      event.preventDefault();const f=new FormData(event.currentTarget),name=f.get('branch_name')||'New Branch';
+      const slug=name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      const {error}=await db.from('oa_branches').insert({slug,branch_name:name,address:f.get('address')||'',phone:f.get('phone')||'',whatsapp_number:f.get('whatsapp_number')||'',email:f.get('email')||'',facebook_url:f.get('facebook_url')||'',instagram_url:f.get('instagram_url')||'',tiktok_url:f.get('tiktok_url')||'',sort_order:Number(f.get('sort_order')||0),is_active:f.get('is_active')==='on'});
+      if(error)showMessage(error.message);else{showMessage('Branch added.');await openSection('branches');}
     });
+  }
+
+  async function renderPublicBranches() {
+    const grid=$('.contact-grid');if(!grid)return;
+    const left=grid.children[0],map=grid.querySelector('.map-panel');
+    const {data,error}=await db.from('oa_branches').select('*').eq('is_active',true).order('sort_order');
+    if(error){console.warn('Branch contact information could not be loaded:',error.message);return;}
+    const branches=data||[];if(!branches.length)return;
+    left.innerHTML="<div class='oa-branch-picker'><label for='oa-public-branch'>Choose a branch</label><select id='oa-public-branch'></select></div><div id='oa-public-branch-details'></div>";
+    const picker=$('#oa-public-branch'),details=$('#oa-public-branch-details');
+    picker.innerHTML=branches.map(b=>"<option value='"+esc(b.id)+"'>"+esc(b.branch_name)+"</option>").join('');
+    const form=$('#admissionForm');
+    if(form){
+      form.querySelector('#grade')?.closest('.field')?.remove();
+      const messageField=form.querySelector('#message')?.closest('.field');
+      let branchField=form.querySelector('#admissionBranch')?.closest('.field');
+      if(!branchField){
+        branchField=document.createElement('div');branchField.className='field full';
+        branchField.innerHTML="<label for='admissionBranch'>Choose branch *</label><select id='admissionBranch' name='branch_name' required></select>";
+        if(messageField)messageField.before(branchField);else form.querySelector('.form-grid')?.append(branchField);
+      }
+      const branchSelect=branchField.querySelector('select');
+      branchSelect.innerHTML=branches.map(b=>"<option value='"+esc(b.branch_name)+"'>"+esc(b.branch_name)+"</option>").join('');
+    }
+    function display(){
+      const b=branches.find(item=>item.id===picker.value)||branches[0];
+      const phone=b.phone||'',email=b.email||'',whats=String(b.whatsapp_number||phone).replace(/\D/g,'');
+      const mail=email?"<a id='contactEmail' href='mailto:"+encodeURIComponent(email)+"'>"+esc(email)+"</a>":"<span id='contactEmail'>Email details not added yet</span>";
+      const tel=phone?"<a id='contactPhone' href='tel:"+encodeURIComponent(phone.replace(/[^\d+]/g,''))+"'>"+esc(phone)+"</a>":"<span id='contactPhone'>Phone details not added yet</span>";
+      const whatsapp=whats?"<a class='oa-social-link oa-whatsapp' href='https://wa.me/"+whats+"?text="+encodeURIComponent('Namaste, I would like to enquire about '+b.branch_name)+"' target='_blank' rel='noopener'>Message on WhatsApp ↗</a>":'';
+      const socials=[['Facebook',b.facebook_url],['Instagram',b.instagram_url],['TikTok',b.tiktok_url]]
+        .filter(item=>safeUrl(item[1]))
+        .map(item=>"<a class='oa-social-link' href='"+esc(safeUrl(item[1]))+"' target='_blank' rel='noopener noreferrer'>"+item[0]+" ↗</a>").join('');
+      details.innerHTML="<div class='contact-card'><div class='contact-icon'>⌖</div><div><b>Visit us</b><span id='contactAddress'>"+esc(b.address||'Address not added yet')+"</span></div></div>"+
+        "<div class='contact-card'><div class='contact-icon'>✉</div><div><b>Email</b>"+mail+"</div></div>"+
+        "<div class='contact-card'><div class='contact-icon'>☎</div><div><b>Phone</b>"+tel+"</div></div><div class='oa-social-links'>"+whatsapp+socials+"</div>";
+      if(map){const heading=map.querySelector('b'),paragraph=map.querySelector('p'),link=map.querySelector('a');if(heading)heading.textContent=b.branch_name;if(paragraph)paragraph.textContent=b.address||b.branch_name;if(link)link.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(b.address||b.branch_name);}
+      if(form){const select=form.querySelector('[name=branch_name]');if(select)select.value=b.branch_name;}
+      const footer=$('.footer-grid > div:last-child .footer-links');
+      if(footer){let social=$('#oa-footer-socials');if(!social){social=document.createElement('span');social.id='oa-footer-socials';footer.appendChild(social);}social.innerHTML=socials;}
+    }
+    picker.addEventListener('change',display);
+    if(form){const select=form.querySelector('[name=branch_name]');if(select)select.addEventListener('change',()=>{const branch=branches.find(item=>item.branch_name===select.value);if(branch){picker.value=branch.id;display();}});}
+    const lang=$('#langToggle');if(lang)lang.addEventListener('click',()=>setTimeout(display,0));
+    display();
+    bindAdmissionForm();
+  }
+
+  function bindAdmissionForm() {
+    const form=$('#admissionForm');if(!form||form.dataset.oaBranchBound==='true')return;
+    form.dataset.oaBranchBound='true';
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();
+      const fields=new FormData(form);
+      if(String(fields.get('website')||'').trim())return;
+      const studentName=String(fields.get('student_name')||'').trim();
+      const phone=String(fields.get('phone')||'').trim();
+      if(!studentName||!phone){$('#admissionMessage').textContent='Please enter the student name and contact number.';return;}
+      const button=$('#admissionSubmit'),message=$('#admissionMessage');
+      button.disabled=true;button.textContent='Sending enquiry…';message.textContent='';
+      const payload={
+        student_name:studentName,
+        guardian_name:String(fields.get('guardian_name')||'').trim()||null,
+        phone,
+        email:String(fields.get('email')||'').trim()||null,
+        message:String(fields.get('message')||'').trim()||null,
+        branch_name:String(fields.get('branch_name')||'Kushma Branch').trim(),
+        status:'new'
+      };
+      try{
+        const {error}=await db.from('oa_admissions').insert(payload);
+        if(error)throw error;
+        form.reset();
+        const selected=$('#oa-public-branch option:checked')?.textContent;
+        const branchSelect=form.querySelector('[name=branch_name]');
+        if(branchSelect&&selected)branchSelect.value=selected;
+        message.textContent='Thank you. Your enquiry has been sent to the academy.';
+      }catch(error){
+        console.error('Admission enquiry insert failed:',error);
+        message.textContent='We could not submit the enquiry: '+(error.message||'Please try again or contact the branch.');
+      }finally{
+        button.disabled=false;button.textContent='Send enquiry →';
+      }
+    },true);
+  }
+
+  function addSupplementalStyles(){
+    const style=document.createElement('style');
+    style.id='oa-supplemental-styles';
+    style.textContent=[
+      '.oa-crop-overlay{position:fixed;inset:0;z-index:10000;background:rgba(6,18,33,.78);display:flex;align-items:center;justify-content:center;padding:14px}',
+      '.oa-crop-dialog{width:min(460px,100%);background:#fff;border-radius:18px;padding:17px;box-shadow:0 25px 90px #0007}.oa-crop-dialog header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.oa-crop-dialog h2{font:700 20px Georgia;color:#102b4e;margin:0 0 4px}.oa-crop-dialog p{font-size:11px;color:#647488;margin:0}.oa-crop-close{border:0;background:#edf1f5;color:#102b4e;border-radius:9px;width:34px;height:34px;font-size:21px}',
+      '.oa-crop-stage{width:min(320px,100%);aspect-ratio:1;margin:12px auto 15px;position:relative;overflow:hidden;touch-action:none;background-color:#f5f7fa;background-image:linear-gradient(45deg,#e9edf2 25%,transparent 25%),linear-gradient(-45deg,#e9edf2 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e9edf2 75%),linear-gradient(-45deg,transparent 75%,#e9edf2 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0;border:1px solid #d7e0e9;border-radius:12px;cursor:grab}.oa-crop-stage img{position:absolute;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}.oa-crop-zoom{display:grid;grid-template-columns:auto 1fr 48px;align-items:center;gap:9px;font-size:11px;color:#506176;font-weight:800}.oa-crop-zoom span{text-align:right}.oa-crop-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}',
+      '.oa-branch-picker{background:#fff;border:1px solid #e2e8ef;border-radius:13px;padding:14px;margin-bottom:13px}.oa-branch-picker label{display:block;font-size:11px;font-weight:900;color:#506176;margin-bottom:7px}.oa-branch-picker select{width:100%;border:1px solid #d8e1e9;background:#fff;border-radius:9px;padding:11px;font-size:13px;color:#17283b}',
+      '.oa-social-links{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 20px}.oa-social-link{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:9px 12px;background:#eaf0f5;color:#173d67;font-size:11px;font-weight:800}.oa-social-link.oa-whatsapp{background:#e5f5e8;color:#176b37}',
+      '.oa-admissions-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.oa-admissions-heading p{margin:4px 0 12px}.oa-enquiries-summary{font-size:11px;font-weight:800;color:#526579;padding:10px 0}',
+      '.oa-app,.oa-main{min-width:0;max-width:100%}.oa-record small{line-height:1.65}',
+      '@media(max-width:900px){.oa-side{position:sticky;top:0;z-index:50}.oa-nav{scrollbar-width:thin;max-width:100%;padding-bottom:4px}.oa-nav button{flex:0 0 auto}.oa-main{overflow:hidden}.oa-record{flex-direction:column;align-items:stretch}}',
+      '@media(max-width:560px){.oa-main{padding:15px 11px}.oa-card{padding:14px}.oa-admissions-heading{flex-direction:column}.oa-admissions-heading .oa-button{width:100%}.oa-crop-overlay{padding:8px}.oa-crop-dialog{padding:12px}.oa-crop-stage{width:min(300px,100%)}}',
+      '@media(max-width:680px){.contact-grid{grid-template-columns:1fr!important}.contact-grid .map-panel{min-height:250px}.contact-card{align-items:flex-start}.oa-social-links a{flex:1 1 auto}.admission-grid{grid-template-columns:1fr!important}.admission-panel{padding:18px!important}.form-grid{grid-template-columns:1fr!important}.form-grid .field{grid-column:1/-1}.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.navbar{gap:10px}.brand{min-width:0}.brand-name{font-size:17px}.brand-place{font-size:9px}}',
+      '@media(max-width:420px){.gallery-grid{grid-template-columns:1fr!important}.nav-actions .btn{display:none}.section{padding-left:0;padding-right:0}.container{width:calc(100% - 28px)}.hero h1{font-size:clamp(36px,11vw,54px)}.program-cards,.program-grid{grid-template-columns:1fr!important}}'
+    ].join('');
+    document.head.appendChild(style);
   }
 
   async function init() {
     try {
       await applyBranding();
-      if (!isAdminRoute) return;
+      addSupplementalStyles();
+      if (!isAdminRoute) { await renderPublicBranches(); return; }
       const { data } = await db.auth.getSession();
       const user = data?.session?.user;
       if (!user) return;
