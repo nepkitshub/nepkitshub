@@ -17,19 +17,18 @@ const staticLoginPattern = /\$\('loginForm'\)\.addEventListener\('submit',async 
 html = replaceRegexExactly(html, staticLoginPattern, '    bindLogin();', 'static password login handler');
 
 html = replaceExactly(html, "function openAdmin(){ $('adminModal').classList.add('show'); $('adminModal').setAttribute('aria-hidden','false'); }", "function openAdmin(){ $('adminModal').classList.add('show'); $('adminModal').setAttribute('aria-hidden','false'); if (!currentAdmin) { $('adminBody').innerHTML = loginMarkup(); bindLogin(); } }", 'admin portal open handler');
-html = replaceExactly(
-  html,
-  '    loadPublic();\\n  </script>',
-  "    db.auth.onAuthStateChange((event, session) => {\\n" +
-  "      if (event === 'PASSWORD_RECOVERY' && session) setTimeout(() => showPasswordRecoveryForm(session), 0);\\n" +
-  "    });\\n" +
-  "    const recoveryParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));\\n" +
-  "    if (recoveryParams.get('type') === 'recovery') {\\n" +
-  "      db.auth.getSession().then(({ data }) => { if (data?.session) showPasswordRecoveryForm(data.session); });\\n" +
-  "    }\\n" +
-  '    loadPublic();\\n  </script>',
-  'password recovery event handler'
-);
+const recoveryHandler = [
+  "    db.auth.onAuthStateChange((event, session) => {",
+  "      if (event === 'PASSWORD_RECOVERY' && session) setTimeout(() => showPasswordRecoveryForm(session), 0);",
+  "    });",
+  "    const recoveryParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));",
+  "    if (recoveryParams.get('type') === 'recovery') {",
+  "      db.auth.getSession().then(({ data }) => { if (data?.session) showPasswordRecoveryForm(data.session); });",
+  "    }",
+  "    loadPublic();",
+  "  </script>"
+].join('\n');
+html = replaceExactly(html, '    loadPublic();\n  </script>', recoveryHandler, 'password recovery event handler');
 const output = path.join(process.cwd(), 'dist');
 fs.mkdirSync(output, { recursive: true });
 fs.writeFileSync(path.join(output, 'index.html'), html);
