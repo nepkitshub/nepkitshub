@@ -224,13 +224,13 @@ const contentPageStyles = `
   .content-empty{padding:28px;border:1px dashed #cbd5df;border-radius:16px;background:#fff;color:#647488;text-align:center}
   @media(max-width:760px){.page-top{padding:13px 15px}.page-main{width:calc(100% - 28px);margin:27px auto 48px}#content-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.content-card{border-radius:15px}.content-card-body{padding:14px}.content-card h2{font-size:18px}.content-card p{font-size:11px}.content-detail-cover{aspect-ratio:4/3}}
   @media(max-width:480px){#content-list{grid-template-columns:1fr}.page-brand{font-size:14px}.page-brand small{font-size:9px}}
-\`;
+  `;
 const contentPageHtml = (mode) => '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b4e"><title>Oxford Academy</title><style>' + contentPageStyles + '</style></head><body>' +
   '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span>Oxford Academy<small>KUSHMA, PARBAT</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb" id="content-breadcrumb"></nav>' +
   (mode === 'detail' ? '<div id="content-detail"><div class="content-empty">Loading content…</div></div>' :
     '<h1 id="content-heading">Academy updates</h1><div id="content-list"><div class="content-empty">Loading content…</div></div>') +
-  '</main><script type="module">\\n' + contentPageSource + '\\n</script></body></html>';
+  '</main><script type="module">\n' + contentPageSource + '\n</script></body></html>';
 for (const [folder, mode] of [['read','detail'],['all','listing']]) {
   const target = path.join(output, folder);
   fs.mkdirSync(target, { recursive:true });
