@@ -128,11 +128,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 </script>
 `;
 
-const noticePattern = /function renderNotices\\(rows\\)\\{[\\s\\S]*?\\}\\s*function renderFaculty/;
+const noticePattern = /function renderNotices\(rows\)\{[\s\S]*?\}\s*function renderFaculty/;
 const noticeReplacement = "function renderNotices(rows){\n      $('noticeList').innerHTML=rows.length?rows.map(r=>{\n        const d=new Date(r.created_at||Date.now());\n        const image=r.image_url&&/^https:\\/\\//.test(r.image_url)?'<img src=\"'+esc(r.image_url)+'\" alt=\"'+esc(r.title_en||'')+'\" loading=\"lazy\" style=\"width:min(100%,420px);max-height:220px;object-fit:cover;border-radius:12px;margin:0 0 12px\">':'';\n        return '<article class=\"notice\"><div class=\"notice-date\"><div><b>'+d.getDate()+'</b><small>'+d.toLocaleString('en',{month:'short'}).toUpperCase()+'</small></div></div><div style=\"min-width:0\">'+image+'<span class=\"notice-tag\">'+esc(r.category||'Notice')+'</span><h3>'+esc(t(r.title_en,r.title_np))+'</h3><p>'+esc(t(r.body_en,r.body_np))+'</p></div></article>';\n      }).join(''):'<div class=\"empty-note\">No notices have been published yet. Please check again soon.</div>';\n    }\n    function renderFaculty";
 html = replaceRegexExactly(html, noticePattern, noticeReplacement, 'notice renderer with post images');
 const adminManagerSource = fs.readFileSync(path.join(__dirname, 'admin-manager.js'), 'utf8');
-const adminManagerScript = '<script type="module">\\n' + adminManagerSource + '\\n</script>';
+const adminManagerScript = '<script type="module">\n' + adminManagerSource + '\n</script>';
 html = replaceExactly(html, '</body>', adminManagerScript + '</body>', 'academy admin manager script');
 
 if (!html.includes('</body>')) throw new Error('Could not find the page body close tag.');
