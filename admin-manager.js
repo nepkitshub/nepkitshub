@@ -448,6 +448,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       config.fields.forEach((field) => {
         payload[field[0]] = form.querySelector('[name="' + field[0] + '"]')?.value.trim() || '';
       });
+      const missing = config.fields.find((field) => field[2] && !payload[field[0]]);
+      if (missing) {
+        showMessage(missing[1] + ' is required.');
+        return;
+      }
       payload.is_published = form.querySelector('[name=is_published]').checked;
       const id = form.dataset.recordId;
       const result = id
