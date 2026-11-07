@@ -20,44 +20,22 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const maxFileBytes = 5 * 1024 * 1024;
 
   async function applyBranding() {
-    const { data, error } = await db.from('oa_site_content').select('content_key,value_en,value_np');
-    if (error) return;
-    const map = {};
-    (data || []).forEach((row) => { map[row.content_key] = row; });
-
-    const nameEn = map.brand_name?.value_en || 'Oxford Academy';
-    const nameNp = map.brand_name?.value_np || nameEn;
-    document.querySelectorAll('.brand-name').forEach((node) => {
-      node.dataset.en = nameEn;
-      node.dataset.np = nameNp;
-      node.textContent = document.body.classList.contains('np') ? nameNp : nameEn;
+    const {data,error}=await db.from('oa_site_content').select('content_key,value_en,value_np');
+    if(error)return;
+    const map={};(data||[]).forEach(row=>map[row.content_key]=row);
+    const nameEn=map.brand_name?.value_en||'Oxford Academy',nameNp=map.brand_name?.value_np||nameEn;
+    document.querySelectorAll('.brand-name').forEach(node=>{node.dataset.en=nameEn;node.dataset.np=nameNp;node.textContent=document.body.classList.contains('np')?nameNp:nameEn;});
+    const logo=safeUrl(map.logo_url?.value_en||'');
+    document.querySelectorAll('.brand-mark').forEach(node=>{
+      if(!logo){node.textContent='OA';return;}
+      const image=document.createElement('img');image.src=logo;image.alt=nameEn+' logo';image.style.cssText='width:100%;height:100%;object-fit:contain;padding:3px;border-radius:inherit';node.replaceChildren(image);node.style.background='#fff';
     });
-
-    const logo = safeUrl(map.logo_url?.value_en || '');
-    document.querySelectorAll('.brand-mark').forEach((node) => {
-      if (!logo) {
-        node.textContent = 'OA';
-        return;
-      }
-      const image = document.createElement('img');
-      image.src = logo;
-      image.alt = nameEn + ' logo';
-      image.style.cssText = 'width:100%;height:100%;object-fit:contain;padding:5px;border-radius:inherit';
-      node.replaceChildren(image);
-      node.style.background = '#fff';
-    });
-
-    document.title = nameEn + ' | Kushma, Parbat';
-    const hero = safeUrl(map.hero_image_url?.value_en || '');
-    if (hero) {
-      let style = $('#oa-custom-hero');
-      if (!style) {
-        style = document.createElement('style');
-        style.id = 'oa-custom-hero';
-        document.head.appendChild(style);
-      }
-      style.textContent = '.hero:before{background-image:linear-gradient(90deg,rgba(8,27,49,.94),rgba(10,36,64,.65)),url(' + JSON.stringify(hero) + ')!important}';
-    }
+    const desktop=Math.max(40,Math.min(108,Number(map.logo_size_desktop?.value_en||48)));
+    const mobile=Math.max(34,Math.min(82,Number(map.logo_size_mobile?.value_en||42)));
+    let style=$('#oa-public-logo-sizing');if(!style){style=document.createElement('style');style.id='oa-public-logo-sizing';document.head.appendChild(style);}
+    style.textContent='.brand-mark{width:'+desktop+'px!important;height:'+desktop+'px!important;flex:0 0 '+desktop+'px!important}.nav-wrap .navbar{height:auto!important;min-height:'+Math.max(82,desktop+28)+'px;padding-top:8px;padding-bottom:8px}@media(max-width:760px){.brand-mark{width:'+mobile+'px!important;height:'+mobile+'px!important;flex-basis:'+mobile+'px!important}.nav-wrap .navbar{min-height:'+Math.max(70,mobile+24)+'px}}';
+    document.title=nameEn+' | Kushma, Parbat';
+    const hero=safeUrl(map.hero_image_url?.value_en||'');if(hero){let heroStyle=$('#oa-custom-hero');if(!heroStyle){heroStyle=document.createElement('style');heroStyle.id='oa-custom-hero';document.head.appendChild(heroStyle);}heroStyle.textContent='.hero:before{background-image:linear-gradient(90deg,rgba(8,27,49,.94),rgba(10,36,64,.65)),url('+JSON.stringify(hero)+')!important}';}
   }
 
   const showMessage = (message) => {
@@ -311,41 +289,54 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     });
   }
 
+  function openLogoCropper(file,onDone){
+    const objectUrl=URL.createObjectURL(file),image=new Image();
+    image.onload=()=>{
+      const overlay=document.createElement('div');overlay.className='oa-crop-overlay';
+      overlay.innerHTML="<section class='oa-crop-dialog' role='dialog' aria-modal='true'><header><div><h2>Crop academy logo</h2><p>Drag to position the image and use zoom to adjust the square crop.</p></div><button type='button' class='oa-crop-close'>×</button></header><div class='oa-crop-stage' id='oa-crop-stage'><img id='oa-crop-image' alt='Logo crop'></div><label class='oa-crop-zoom'>Zoom <input id='oa-crop-zoom' type='range' min='100' max='300' value='100'><span id='oa-crop-zoom-label'>100%</span></label><div class='oa-crop-actions'><button type='button' class='oa-button light' id='oa-crop-cancel'>Cancel</button><button type='button' class='oa-button' id='oa-crop-save'>Crop & use logo</button></div></section>";
+      document.body.appendChild(overlay);
+      const stage=overlay.querySelector('#oa-crop-stage'),preview=overlay.querySelector('#oa-crop-image'),zoomInput=overlay.querySelector('#oa-crop-zoom'),zoomLabel=overlay.querySelector('#oa-crop-zoom-label');
+      const size=320,fit=Math.max(size/image.naturalWidth,size/image.naturalHeight);let zoom=1,dx=0,dy=0,drag=null,closed=false;preview.src=objectUrl;
+      function redraw(){const w=image.naturalWidth*fit*zoom,h=image.naturalHeight*fit*zoom;dx=Math.max(-(w-size)/2,Math.min((w-size)/2,dx));dy=Math.max(-(h-size)/2,Math.min((h-size)/2,dy));preview.style.width=w+'px';preview.style.height=h+'px';preview.style.left='calc(50% + '+dx+'px)';preview.style.top='calc(50% + '+dy+'px)';zoomLabel.textContent=Math.round(zoom*100)+'%';}
+      zoomInput.addEventListener('input',()=>{zoom=Number(zoomInput.value)/100;redraw();});
+      stage.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,dx,dy};stage.setPointerCapture(e.pointerId);});
+      stage.addEventListener('pointermove',e=>{if(!drag)return;dx=drag.dx+e.clientX-drag.x;dy=drag.dy+e.clientY-drag.y;redraw();});
+      stage.addEventListener('pointerup',()=>{drag=null;});stage.addEventListener('pointercancel',()=>{drag=null;});
+      function close(){if(closed)return;closed=true;URL.revokeObjectURL(objectUrl);overlay.remove();}
+      overlay.querySelector('.oa-crop-close').addEventListener('click',close);overlay.querySelector('#oa-crop-cancel').addEventListener('click',close);overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+      overlay.querySelector('#oa-crop-save').addEventListener('click',()=>{const output=1024,canvas=document.createElement('canvas');canvas.width=output;canvas.height=output;const ctx=canvas.getContext('2d'),scale=output/size,w=image.naturalWidth*fit*zoom*scale,h=image.naturalHeight*fit*zoom*scale;ctx.clearRect(0,0,output,output);ctx.drawImage(image,(output-w)/2+dx*scale,(output-h)/2+dy*scale,w,h);canvas.toBlob(blob=>{if(!blob){showMessage('Could not crop this image.');return;}const cropped=new File([blob],'academy-logo.png',{type:'image/png'});close();onDone(cropped);},'image/png');});
+      redraw();
+    };
+    image.onerror=()=>{URL.revokeObjectURL(objectUrl);showMessage('Could not open this image. Choose another JPG or PNG.');};image.src=objectUrl;
+  }
+  function logoUploadField(value){
+    const url=safeUrl(value||'');
+    return "<div class='oa-field full'><label>Academy logo</label><input type='url' name='logo_url' value='"+esc(url)+"' placeholder='https://…'><div class='oa-upload'><small>Choose an image to open the crop popup. Drag and zoom, then save the cropped PNG.</small><input type='file' id='oa-logo-file' accept='image/png,image/jpeg,image/webp'></div><img class='oa-preview "+(url?'':'hide')+"' id='oa-logo-preview' src='"+esc(url)+"' alt='Logo preview'></div>";
+  }
+
   async function renderBranding() {
-    const view = $('#oa-view');
-    view.innerHTML = "<div class='oa-card'>Loading branding settings…</div>";
-    let map;
-    try { map = await getContentMap(); }
-    catch (error) {
-      view.innerHTML = "<div class='oa-card'>" + esc(error.message) + "</div>";
-      return;
-    }
-    const brand = map.brand_name || {};
-    view.innerHTML =
-      "<div class='oa-card'><h2>Academy name & logo</h2><p>Update the official name and logo displayed in the website header and footer. You can also change the homepage hero image.</p>" +
-      "<form id='oa-brand-form'><div class='oa-grid'>" +
-      "<div class='oa-field'><label>Academy name (English)</label><input name='brand_en' required value='" + esc(brand.value_en || 'Oxford Academy') + "'></div>" +
-      "<div class='oa-field'><label>विद्यालयको नाम (नेपाली)</label><input name='brand_np' value='" + esc(brand.value_np || 'अक्सफोर्ड एकेडेमी') + "'></div>" +
-      imageField('logo_url', 'Academy logo', map.logo_url?.value_en || '', 'branding') +
-      imageField('hero_image_url', 'Homepage hero background', map.hero_image_url?.value_en || '', 'branding') +
-      "</div><button class='oa-button' type='submit'>Save branding</button></form></div>";
-    const form = $('#oa-brand-form');
-    bindUploads(form);
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const fields = new FormData(form);
-      const rows = [
-        { content_key: 'brand_name', value_en: fields.get('brand_en'), value_np: fields.get('brand_np') || '' },
-        { content_key: 'logo_url', value_en: fields.get('logo_url') || '', value_np: fields.get('logo_url') || '' },
-        { content_key: 'hero_image_url', value_en: fields.get('hero_image_url') || '', value_np: fields.get('hero_image_url') || '' }
-      ];
-      const { error } = await db.from('oa_site_content').upsert(rows, { onConflict: 'content_key' });
-      if (error) showMessage(error.message);
-      else {
-        await applyBranding();
-        showMessage('Branding saved successfully.');
-      }
-    });
+    const view=$('#oa-view');view.innerHTML="<div class='oa-card'>Loading branding settings…</div>";
+    let map;try{map=await getContentMap();}catch(error){view.innerHTML="<div class='oa-card'>"+esc(error.message)+"</div>";return;}
+    const brand=map.brand_name||{},desktop=Math.max(40,Math.min(108,Number(map.logo_size_desktop?.value_en||48))),mobile=Math.max(34,Math.min(82,Number(map.logo_size_mobile?.value_en||42)));
+    view.innerHTML="<div class='oa-card'><h2>Academy name, logo & sizing</h2><p>Upload your logo, crop it in the popup, and choose its size on desktop and mobile.</p><form id='oa-brand-form'><div class='oa-grid'>"+
+      "<div class='oa-field'><label>Academy name (English)</label><input name='brand_en' required value='"+esc(brand.value_en||'Oxford Academy')+"'></div>"+
+      "<div class='oa-field'><label>विद्यालयको नाम (नेपाली)</label><input name='brand_np' value='"+esc(brand.value_np||'अक्सफोर्ड एकेडेमी')+"'></div>"+
+      logoUploadField(map.logo_url?.value_en||'')+imageField('hero_image_url','Homepage hero background',map.hero_image_url?.value_en||'','branding')+
+      "<div class='oa-field full'><label>Desktop logo size: <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='108' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
+      "<div class='oa-field full'><label>Mobile logo size: <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='82' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
+      "</div><div class='oa-actions'><button class='oa-button' type='submit'>Save branding</button></div></form></div>";
+    const form=$('#oa-brand-form');bindUploads(form.querySelector('[name=hero_image_url]').closest('.oa-field').parentElement);
+    const fileInput=$('#oa-logo-file');
+    fileInput.addEventListener('change',()=>{const file=fileInput.files&&fileInput.files[0];if(!file)return;openLogoCropper(file,async cropped=>{const note=fileInput.closest('.oa-upload').querySelector('small');note.textContent='Uploading cropped logo…';fileInput.disabled=true;try{const url=await uploadImage(cropped,'branding');form.querySelector('[name=logo_url]').value=url;const preview=$('#oa-logo-preview');preview.src=url;preview.classList.remove('hide');note.textContent='Logo uploaded. Save branding to apply it.';}catch(error){note.textContent=error.message||'Logo upload failed.';}finally{fileInput.disabled=false;fileInput.value='';}});});
+    $('#oa-desktop-slider').addEventListener('input',e=>$('#oa-desktop-value').textContent=e.target.value+' px');
+    $('#oa-mobile-slider').addEventListener('input',e=>$('#oa-mobile-value').textContent=e.target.value+' px');
+    form.addEventListener('submit',async event=>{event.preventDefault();const f=new FormData(form);const rows=[
+      {content_key:'brand_name',value_en:f.get('brand_en'),value_np:f.get('brand_np')||''},
+      {content_key:'logo_url',value_en:f.get('logo_url')||'',value_np:f.get('logo_url')||''},
+      {content_key:'hero_image_url',value_en:f.get('hero_image_url')||'',value_np:f.get('hero_image_url')||''},
+      {content_key:'logo_size_desktop',value_en:String(f.get('logo_size_desktop')||48),value_np:''},
+      {content_key:'logo_size_mobile',value_en:String(f.get('logo_size_mobile')||42),value_np:''}
+    ];const {error}=await db.from('oa_site_content').upsert(rows,{onConflict:'content_key'});if(error)showMessage(error.message);else{await applyBranding();showMessage('Logo, crop and display sizes saved.');}});
   }
 
   async function renderHomepage() {
