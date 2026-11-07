@@ -31,7 +31,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const image=document.createElement('img');image.src=logo;image.alt=nameEn+' logo';image.style.cssText='width:100%;height:100%;object-fit:contain;padding:3px;border-radius:inherit';node.replaceChildren(image);node.style.background='#fff';
     });
     const desktop=Math.max(40,Math.min(160,Number(map.logo_size_desktop?.value_en||48)));
-    const mobile=Math.max(34,Math.min(120,Number(map.logo_size_mobile?.value_en||42)));
+    const mobile=Math.max(34,Math.min(60,Number(map.logo_size_mobile?.value_en||42)));
     let style=$('#oa-public-logo-sizing');if(!style){style=document.createElement('style');style.id='oa-public-logo-sizing';document.head.appendChild(style);}
     style.textContent='.brand-mark{width:'+desktop+'px!important;height:'+desktop+'px!important;flex:0 0 '+desktop+'px!important}.nav-wrap .navbar{height:auto!important;min-height:'+Math.max(82,desktop+28)+'px;padding-top:8px;padding-bottom:8px}@media(max-width:760px){.brand-mark{width:'+mobile+'px!important;height:'+mobile+'px!important;flex-basis:'+mobile+'px!important}.nav-wrap .navbar{min-height:'+Math.max(70,mobile+24)+'px}}';
     document.title=nameEn+' | Kushma, Parbat';
@@ -153,6 +153,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       '.oa-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.oa-field{display:grid;gap:6px;margin-bottom:12px}.oa-field.full{grid-column:1/-1}.oa-field label{font-size:11px;color:#506176;font-weight:800}.oa-field input,.oa-field textarea{width:100%;border:1px solid #d8e1e9;border-radius:9px;padding:10px 11px;font-size:12px;color:#17283b}.oa-field textarea{min-height:85px;resize:vertical}',
       '.oa-upload{padding:10px;border:1px dashed #cbd6e0;border-radius:10px;background:#f8fafc}.oa-upload small{display:block;font-size:10px;color:#718096;margin-bottom:6px}.oa-preview{max-width:200px;max-height:120px;object-fit:contain;border:1px dashed #ccd5df;border-radius:9px;padding:5px;margin-top:8px}.oa-preview.hide{display:none}',
       '.oa-check{font-size:11px;font-weight:800;color:#506176;display:flex;align-items:center;gap:7px;margin:10px 0}.oa-records{display:grid;gap:8px}.oa-record{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #e4eaf0;border-radius:11px;padding:12px}.oa-record b{display:block;font-size:13px;color:#102b4e}.oa-record small{display:block;font-size:10px;color:#718096;overflow-wrap:anywhere}.oa-status{display:inline-block;padding:3px 7px;border-radius:30px;background:#edf5ed;color:#467345;font-size:9px;font-weight:900;margin-top:5px}.oa-status.draft{background:#fff3dd;color:#91671b}.oa-empty{padding:22px;border:1px dashed #cbd5df;border-radius:11px;text-align:center;color:#718096;font-size:12px}',
+      '.oa-enquiries-list{display:grid;gap:15px;margin-top:12px}.oa-enquiry-card{min-width:0;padding:18px;border:1px solid #dfe7ee;border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(16,43,78,.055)}.oa-enquiry-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.oa-enquiry-kicker{font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#9b782f}.oa-enquiry-card h3{margin:5px 0 3px;color:#102b4e;font:700 21px/1.25 Georgia,serif}.oa-enquiry-guardian{font-size:12px;color:#647488}.oa-enquiry-status-wrap{display:grid;gap:5px;min-width:120px;font-size:10px;font-weight:900;color:#647488}.oa-enquiry-status-wrap select{width:100%}.oa-enquiry-contact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}.oa-enquiry-contact{min-width:0;padding:11px 12px;border-radius:11px;background:#f5f7f9}.oa-enquiry-contact>span{display:block;margin-bottom:4px;color:#7b8997;font-size:9px;font-weight:900;letter-spacing:.09em}.oa-enquiry-contact a,.oa-enquiry-contact strong{color:#173d67;font-size:12px;font-weight:800;overflow-wrap:anywhere}.oa-enquiry-contact>span+span{font-size:12px}.oa-enquiry-message{margin-top:12px;padding:14px;border:1px solid #e8edf1;border-radius:12px;background:#fbfcfd}.oa-enquiry-message strong{display:block;margin-bottom:7px;color:#526579;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em}.oa-enquiry-message p{margin:0;color:#263b50;font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}.oa-enquiry-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.oa-enquiry-action{display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;border:1px solid #dbe4eb;border-radius:9px;color:#173d67;background:#fff;font-size:11px;font-weight:900}.oa-enquiry-action.whatsapp{border-color:#d4eadb;background:#eef8f1;color:#176b37}.oa-enquiry-action:hover{filter:brightness(.97)}',
+      '@media(max-width:680px){.oa-enquiry-card-head{flex-direction:column}.oa-enquiry-status-wrap{width:100%;grid-template-columns:auto minmax(0,1fr);align-items:center}.oa-enquiry-contact-grid{grid-template-columns:1fr}.oa-enquiry-card{padding:14px}.oa-enquiry-actions{display:grid;grid-template-columns:1fr}.oa-enquiry-action{width:100%}}',
       '.oa-msg{position:fixed;right:22px;bottom:20px;z-index:99;background:#102b4e;color:#fff;padding:11px 15px;border-radius:10px;font-size:12px;opacity:0;pointer-events:none;transition:.2s}.oa-msg.show{opacity:1}',
       '@media(max-width:900px){.oa-app{grid-template-columns:1fr}.oa-side{padding:14px;gap:12px}.oa-brand{padding-bottom:10px}.oa-nav{display:flex;overflow:auto}.oa-nav button{white-space:nowrap}.oa-side>a{display:none}.oa-main{padding:18px 14px}.oa-stats{grid-template-columns:repeat(2,1fr)}}',
       '@media(max-width:560px){.oa-top{align-items:flex-start;flex-direction:column}.oa-top h1{font-size:25px}.oa-grid{grid-template-columns:1fr}.oa-field.full{grid-column:1}.oa-record{align-items:flex-start;flex-direction:column}.oa-stats{gap:7px}.oa-stat{padding:12px}.oa-stat strong{font-size:22px}}'
@@ -319,13 +321,13 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   async function renderBranding() {
     const view=$('#oa-view');view.innerHTML="<div class='oa-card'>Loading branding settings…</div>";
     let map;try{map=await getContentMap();}catch(error){view.innerHTML="<div class='oa-card'>"+esc(error.message)+"</div>";return;}
-    const brand=map.brand_name||{},desktop=Math.max(40,Math.min(160,Number(map.logo_size_desktop?.value_en||48))),mobile=Math.max(34,Math.min(120,Number(map.logo_size_mobile?.value_en||42)));
+    const brand=map.brand_name||{},desktop=Math.max(40,Math.min(160,Number(map.logo_size_desktop?.value_en||48))),mobile=Math.max(34,Math.min(60,Number(map.logo_size_mobile?.value_en||42)));
     view.innerHTML="<div class='oa-card'><h2>Academy name, logo & sizing</h2><p>Upload your logo, crop it in the popup, and choose its size on desktop and mobile.</p><form id='oa-brand-form'><div class='oa-grid'>"+
       "<div class='oa-field'><label>Academy name (English)</label><input name='brand_en' required value='"+esc(brand.value_en||'Oxford Academy')+"'></div>"+
       "<div class='oa-field'><label>विद्यालयको नाम (नेपाली)</label><input name='brand_np' value='"+esc(brand.value_np||'अक्सफोर्ड एकेडेमी')+"'></div>"+
       logoUploadField(map.logo_url?.value_en||'')+imageField('hero_image_url','Homepage hero background',map.hero_image_url?.value_en||'','branding')+
       "<div class='oa-field full'><label>Desktop logo size: <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='160' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
-      "<div class='oa-field full'><label>Mobile logo size: <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='120' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
+      "<div class='oa-field full'><label>Mobile logo size: <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='60' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
       "</div><div class='oa-actions'><button class='oa-button' type='submit'>Save branding</button></div></form></div>";
     const form=$('#oa-brand-form');bindUploads(form.querySelector('[name=hero_image_url]').closest('.oa-field').parentElement);
     const fileInput=$('#oa-logo-file');
@@ -497,18 +499,40 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
   async function renderAdmissions() {
     const view=$('#oa-view');
-    view.innerHTML="<div class='oa-card'><div class='oa-admissions-heading'><div><h2>Admission enquiries</h2><p>Refresh to check for new submissions. The selected branch is shown on each request.</p></div><button type='button' class='oa-button light' id='oa-refresh-enquiries'>Refresh ↻</button></div><div id='oa-enquiries-summary' class='oa-enquiries-summary'>Loading…</div><div id='oa-enquiries' class='oa-records'></div></div>";
+    view.innerHTML="<div class='oa-card'><div class='oa-admissions-heading'><div><h2>Admission enquiries</h2><p>Read each request clearly and contact the parent or guardian by phone, WhatsApp or email.</p></div><button type='button' class='oa-button light' id='oa-refresh-enquiries'>Refresh ↻</button></div><div id='oa-enquiries-summary' class='oa-enquiries-summary'>Loading…</div><div id='oa-enquiries' class='oa-enquiries-list'></div></div>";
+    const dateLabel=value=>{const date=value?new Date(value):null;return date&&!Number.isNaN(date.getTime())?date.toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'}):'Date unavailable';};
+    const waNumber=value=>String(value||'').replace(/\D/g,'');
     async function reload(){
-      const node=$('#oa-enquiries'),summary=$('#oa-enquiries-summary');node.textContent='Loading enquiries…';
+      const node=$('#oa-enquiries'),summary=$('#oa-enquiries-summary');
+      node.innerHTML="<div class='oa-empty'>Loading enquiries…</div>";
       const {data,error,count}=await db.from('oa_admissions').select('*',{count:'exact'}).order('created_at',{ascending:false}).limit(200);
       if(error){summary.textContent='Could not load enquiries: '+error.message;node.innerHTML="<div class='oa-empty'>Permission error: "+esc(error.message)+"</div>";return;}
-      summary.textContent=(count??data?.length??0)+' enquiry record(s) saved';
-      node.innerHTML=data?.length?data.map(row=>
-        "<div class='oa-record'><div><b>"+esc(row.student_name)+"</b><small><strong>Branch:</strong> "+esc(row.branch_name||'Kushma Branch')+" · <strong>Phone:</strong> "+esc(row.phone)+" · <strong>Email:</strong> "+esc(row.email||'—')+"</small><small><strong>Parent / guardian:</strong> "+esc(row.guardian_name||'—')+"</small><small>"+esc(row.message||'No message')+" · "+new Date(row.created_at).toLocaleString()+"</small><span class='oa-status "+(row.status==='new'?'draft':'')+"'>"+esc(row.status||'new')+"</span></div><select class='oa-button light' data-status='"+esc(row.id)+"'><option value='new' "+(row.status==='new'?'selected':'')+">New</option><option value='contacted' "+(row.status==='contacted'?'selected':'')+">Contacted</option><option value='closed' "+(row.status==='closed'?'selected':'')+">Closed</option></select></div>"
-      ).join(''):"<div class='oa-empty'>No enquiries have been received yet. New submissions will appear here.</div>";
+      const rows=data||[];
+      summary.textContent=(count??rows.length)+' enquiry record(s) saved';
+      if(!rows.length){node.innerHTML="<div class='oa-empty'>No enquiries have been received yet. New submissions will appear here.</div>";return;}
+      node.innerHTML=rows.map(row=>{
+        const phone=String(row.phone||'').trim();
+        const digits=waNumber(phone);
+        const email=String(row.email||'').trim();
+        const message=String(row.message||'').trim();
+        const guardian=String(row.guardian_name||'').trim();
+        const phoneLink=phone?"<a href='tel:"+esc(phone.replace(/[^\d+]/g,''))+"'>"+esc(phone)+"</a>":"<span>Not provided</span>";
+        const emailLink=email?"<a href='mailto:"+esc(email)+"'>"+esc(email)+"</a>":"<span>Not provided</span>";
+        const whatsapp=digits?"<a class='oa-enquiry-action whatsapp' href='https://wa.me/"+esc(digits)+"?text="+encodeURIComponent('Namaste, we are contacting you regarding your admission enquiry for '+(row.student_name||'your child')+'.')+"' target='_blank' rel='noopener noreferrer'>Message on WhatsApp ↗</a>":'';
+        const emailAction=email?"<a class='oa-enquiry-action' href='mailto:"+esc(email)+"?subject="+encodeURIComponent('Oxford Academy admission enquiry')+"'>Send email ↗</a>":'';
+        const status=row.status||'new';
+        return "<article class='oa-enquiry-card'>"+
+          "<div class='oa-enquiry-card-head'><div><div class='oa-enquiry-kicker'>"+esc(row.branch_name||'Kushma Branch')+" · "+esc(dateLabel(row.created_at))+"</div><h3>"+esc(row.student_name||'Student name not provided')+"</h3><div class='oa-enquiry-guardian'>Parent / guardian: <strong>"+esc(guardian||'Not provided')+"</strong></div></div>"+
+          "<label class='oa-enquiry-status-wrap'><span>Status</span><select class='oa-button light' data-status='"+esc(row.id)+"'><option value='new' "+(status==='new'?'selected':'')+">New</option><option value='contacted' "+(status==='contacted'?'selected':'')+">Contacted</option><option value='closed' "+(status==='closed'?'selected':'')+">Closed</option></select></label></div>"+
+          "<div class='oa-enquiry-contact-grid'><div class='oa-enquiry-contact'><span>PHONE NUMBER</span>"+phoneLink+"</div><div class='oa-enquiry-contact'><span>EMAIL ADDRESS</span>"+emailLink+"</div><div class='oa-enquiry-contact'><span>BRANCH</span><strong>"+esc(row.branch_name||'Kushma Branch')+"</strong></div></div>"+
+          "<div class='oa-enquiry-message'><strong>Message from parent / guardian</strong><p>"+(message?esc(message):'No additional message was provided.')+"</p></div>"+
+          "<div class='oa-enquiry-actions'>"+(phone?"<a class='oa-enquiry-action' href='tel:"+esc(phone.replace(/[^\d+]/g,''))+"'>Call parent ↗</a>":'')+whatsapp+emailAction+"</div></article>";
+      }).join('');
       node.querySelectorAll('[data-status]').forEach(select=>select.addEventListener('change',async()=>{
+        select.disabled=true;
         const {error}=await db.from('oa_admissions').update({status:select.value}).eq('id',select.dataset.status);
         showMessage(error?error.message:'Enquiry status updated.');
+        if(error)select.disabled=false;
       }));
     }
     $('#oa-refresh-enquiries').addEventListener('click',reload);
