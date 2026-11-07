@@ -30,8 +30,10 @@ const recoveryHandler = [
   "  </script>"
 ].join('\n');
 html = replaceExactly(html, '    loadPublic();\n  </script>', recoveryHandler, 'password recovery event handler');
+html = replaceExactly(html, "const db = createClient(SUPABASE_URL, SUPABASE_KEY);", "const db = createClient(SUPABASE_URL, SUPABASE_KEY);\\n    window.__oaSupabaseClient = db;", 'expose academy auth client to login fallback');
 const settingsButtonFallback = `
-<script>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 (function () {
   const modal = document.getElementById('adminModal');
   const openButton = document.getElementById('adminOpen');
@@ -65,9 +67,67 @@ const settingsButtonFallback = `
       if (event.target === modal) close();
     });
   }
+
+  let fallbackClient = null;
+  const getClient = function () {
+    if (window.__oaSupabaseClient) return window.__oaSupabaseClient;
+    if (!fallbackClient) {
+      fallbackClient = createClient(
+        'https://gsfhhvkipvoutqqgyick.supabase.co',
+        'sb_publishable_lzdJkHCS88esovlNn2_kow_8mmAQgh-'
+      );
+    }
+    return fallbackClient;
+  };
+
+  document.addEventListener('submit', async function (event) {
+    const form = event.target;
+    if (!form || form.id !== 'loginForm') return;
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton && /create account/i.test(submitButton.textContent || '')) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    const email = (form.querySelector('#adminEmail')?.value || '').trim().toLowerCase();
+    const password = form.querySelector('#adminPassword')?.value || '';
+    const message = form.querySelector('#loginMessage') || document.getElementById('loginMessage');
+    const button = submitButton;
+    if (!email || !password) {
+      if (message) message.textContent = 'Enter your email address and password.';
+      return;
+    }
+    if (button) button.disabled = true;
+    if (message) message.textContent = 'Checking your sign-in details…';
+
+    try {
+      const client = getClient();
+      const { data, error } = await client.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      const { data: accountRole, error: roleError } = await client
+        .from('oa_users')
+        .select('role')
+        .eq('user_id', data.user.id)
+        .maybeSingle();
+      if (roleError) throw roleError;
+      if (accountRole?.role !== 'admin') {
+        await client.auth.signOut();
+        if (message) message.textContent = 'This account has the Student role. An Oxford Academy administrator must change it to admin before dashboard access is allowed.';
+        if (button) button.disabled = false;
+        return;
+      }
+      if (message) message.textContent = 'Sign-in successful. Opening the admin dashboard…';
+      window.location.reload();
+    } catch (error) {
+      if (message) message.textContent = error?.message || 'Sign-in failed. Please try again.';
+      if (button) button.disabled = false;
+    }
+  }, true);
 })();
 </script>
 `;
+
 if (!html.includes('</body>')) throw new Error('Could not find the page body close tag.');
 html = replaceExactly(html, '</body>', settingsButtonFallback + '</body>', 'settings-button fallback handler');
 
