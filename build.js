@@ -29,7 +29,7 @@ const recoveryHandler = [
   "    window.oaPublicContentReady = loadPublic();",
   "  </script>"
 ].join('\n');
-html = replaceExactly(html, '    window.oaPublicContentReady = loadPublic();\n  </script>', recoveryHandler, 'password recovery event handler');
+html = replaceExactly(html, '    loadPublic();\n  </script>', recoveryHandler, 'password recovery event handler');
 // The standalone fallback creates its own Supabase client; do not inject escaped text into the main module.
 const settingsButtonFallback = `
 <script type="module">
