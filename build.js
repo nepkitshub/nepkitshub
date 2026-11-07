@@ -152,7 +152,7 @@ for (const [needle, replacement, label] of publicMarkupPatches) {
 }
 
 const admissionGradePattern = /<div class="field full"><label for="grade"[^>]*>[\s\S]*?<\/div>/;
-const admissionBranchField = '<div class="field full"><label for="admissionBranch">Preferred branch *</label><select id="admissionBranch" name="branch_name" required><option value="">Choose a branch</option></select><small class="field-hint">Choose the academy branch you want to contact.</small></div>';
+const admissionBranchField = '<div class="field full"><label for="admissionBranch">Preferred branch *</label><select id="admissionBranch" name="branch_name" required><option value="">Choose a branch</option></select><small style="display:block;margin-top:5px;color:#718096;font-size:11px">Choose the academy branch you want to contact.</small></div>';
 html = replaceRegexExactly(html, admissionGradePattern, admissionBranchField, 'admission branch selector field');
 const oldAdmissionHandler = `$('admissionForm').addEventListener('submit',async e=>{
       e.preventDefault(); const f=new FormData(e.currentTarget); if(f.get('website'))return;
