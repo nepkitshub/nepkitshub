@@ -142,7 +142,13 @@ const publicMarkupPatches = [
   ['<div class="notice-list" id="noticeList">', '<div class="oa-live-posts" id="oa-live-posts" aria-live="polite">Loading latest posts…</div><div class="notice-list" id="noticeList" hidden>', "public live posts feed"]
 ];
 for (const [needle, replacement, label] of publicMarkupPatches) {
-  html = replaceExactly(html, needle, replacement, label);
+  if (label === "brand location") {
+    const first = html.indexOf(needle);
+    if (first === -1) throw new Error("Could not find " + label);
+    html = html.slice(0, first) + replacement + html.slice(first + needle.length);
+  } else {
+    html = replaceExactly(html, needle, replacement, label);
+  }
 }
 html = html.replace(/\sdata-np="[^"]*"/g, '');
 
