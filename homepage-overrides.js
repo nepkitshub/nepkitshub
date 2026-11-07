@@ -259,4 +259,3 @@ if (!isAdminRoute) {
   };
   loadGallery();
 }
-}
