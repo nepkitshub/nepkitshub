@@ -37,7 +37,7 @@ const config = {
     table: 'oa_faculty',
     title: 'Meet Our Academy Team',
     singular: 'Team Member',
-    select: 'id,name,role_en,bio_en,photo_url,sort_order,is_published',
+    select: 'id,name,role_en,bio_en,photo_url,phone,email,address,sort_order,is_published',
     order: 'sort_order',
     ascending: true,
     detailUrlType: 'team',
@@ -87,6 +87,45 @@ const imageMarkup = (url, title, className = 'content-cover') => {
     : '<div class="' + className + ' is-empty" aria-hidden="true">✦</div>';
 };
 
+const teamContactMarkup = (row) => {
+  const contacts = [];
+  const phone = String(row.phone || '').trim();
+  const email = String(row.email || '').trim();
+  const address = String(row.address || '').trim();
+  if (phone) {
+    const tel = phone.replace(/[^+0-9]/g, '');
+    if (tel) contacts.push('<a href="tel:' + esc(tel) + '"><span>Phone</span><strong>' + esc(phone) + '</strong></a>');
+  }
+  if (email) contacts.push('<a href="mailto:' + esc(email) + '"><span>Email</span><strong>' + esc(email) + '</strong></a>');
+  if (address) contacts.push('<div class="team-address"><span>Address</span><strong>' + esc(address) + '</strong></div>');
+  return contacts.length ? '<div class="team-contact-details">' + contacts.join('') + '</div>' : '';
+};
+
+async function applyPageBranding() {
+  try {
+    const { data, error } = await db.from('oa_site_content')
+      .select('content_key,value_en')
+      .in('content_key', ['logo_url', 'brand_name']);
+    if (error) return;
+    const map = {};
+    (data || []).forEach((row) => { map[row.content_key] = row.value_en || ''; });
+    const mark = $('.page-mark');
+    const logo = /^https:\/\//i.test(map.logo_url || '') ? map.logo_url : '';
+    if (mark) {
+      if (logo) {
+        const image = document.createElement('img');
+        image.src = logo;
+        image.alt = (map.brand_name || 'Oxford Academy') + ' logo';
+        mark.replaceChildren(image);
+      } else mark.textContent = 'OA';
+    }
+    const name = $('.page-brand-name');
+    if (name && map.brand_name) name.firstChild.textContent = map.brand_name;
+  } catch (error) {
+    console.error('Shared academy branding could not be loaded:', error);
+  }
+}
+
 async function fetchRows(kind, oneId = null, limit = 100) {
   const cfg = config[kind];
   let query = db.from(cfg.table).select(cfg.select).eq('is_published', true);
@@ -103,6 +142,14 @@ function card(row, kind) {
   const body = cfg.body(row);
   const category = cfg.category(row);
   const date = dateText(row.created_at);
+  if (kind === 'team') {
+    return '<article class="content-card team-member-card">' +
+      imageMarkup(cfg.image(row), title, 'team-avatar') +
+      '<div class="content-card-body"><div class="content-meta"><span>' + esc(category) + '</span></div>' +
+      '<h2>' + esc(title) + '</h2>' +
+      (body ? '<p class="team-member-bio">' + esc(body) + '</p>' : '') +
+      teamContactMarkup(row) + '</div></article>';
+  }
   const href = detailHref(row, cfg.detailUrlType);
   return '<article class="content-card">' + imageMarkup(cfg.image(row), title) +
     '<div class="content-card-body"><div class="content-meta"><span>' + esc(category) + '</span>' +
@@ -134,6 +181,7 @@ async function renderDetail() {
       (dateText(row.created_at) ? '<time>' + esc(dateText(row.created_at)) + '</time>' : '') +
       '</div><h1>' + esc(title) + '</h1>' +
       (body ? '<div class="content-full-text">' + esc(body) + '</div>' : '') +
+      (selectedType === 'team' ? teamContactMarkup(row) : '') +
       '<a class="content-back-link" href="' + listingHref(selectedType === 'notice' ? 'notices' : selectedType) +
       '">← Back to ' + esc(config[selectedType].title) + '</a></div></article>';
     target.querySelectorAll('img').forEach((img) => img.addEventListener('error', () => {
@@ -163,5 +211,6 @@ async function renderListing() {
   }
 }
 
+applyPageBranding();
 if (detailMode) renderDetail();
 else renderListing();
