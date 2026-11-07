@@ -34,14 +34,15 @@ style.textContent = [
   '#facultyCards.oa-public-staff-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:stretch}',
   '.oa-staff-card{min-width:0;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 10px 30px rgba(16,43,78,.07);transition:transform .22s ease,box-shadow .22s ease}',
   '.oa-staff-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(16,43,78,.13)}',
-  '.oa-staff-photo{width:100%;aspect-ratio:4/3;overflow:hidden;background:linear-gradient(135deg,#eaf0f5,#cdd9e4);display:grid;place-items:center;color:#8b9aaa;font-size:48px}',
-  '.oa-staff-photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}',
-  '.oa-staff-details{padding:18px 19px 20px}',
+  '.oa-staff-photo{width:144px;height:144px;aspect-ratio:1/1;overflow:hidden;border-radius:50%;margin:22px auto 0;background:linear-gradient(135deg,#eaf0f5,#cdd9e4);display:grid;place-items:center;color:#8b9aaa;font-size:42px;border:5px solid #f5f0e4;box-shadow:0 8px 22px rgba(16,43,78,.12)}',
+  '.oa-staff-photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}',
+  '.oa-staff-details{padding:18px 19px 20px;text-align:center}',
   '.oa-staff-details h3{margin:0 0 7px;color:var(--navy);font:700 21px/1.25 Playfair Display,Georgia,serif}',
   '.oa-staff-role{display:inline-flex;align-items:center;margin-bottom:10px;padding:5px 10px;border-radius:99px;background:#f5f0e4;color:#896625;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}',
-  '.oa-staff-details p{margin:0;color:#647488;font-size:12px;line-height:1.8;white-space:pre-line}',
+  '.oa-staff-details p{max-width:48ch;margin:0 auto;color:#647488;font-size:12px;line-height:1.8;white-space:pre-line}',
   '.oa-staff-empty{grid-column:1/-1;padding:24px;border:1px dashed #cbd5df;border-radius:16px;color:#647488;text-align:center;background:#fff;font-size:13px}',
-  '@media(max-width:760px){.oa-staff-photo{aspect-ratio:16/10;background:#f4f6f8}.oa-staff-photo img{object-fit:contain;object-position:center center;background:#f4f6f8}.oa-post-cover{aspect-ratio:4/3;background:#f5f7f9}.oa-post-cover img{object-fit:contain;background:#f5f7f9}}',
+  '.oa-program-card{min-width:0;display:flex;flex-direction:column;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:18px;padding:23px;box-shadow:0 10px 28px rgba(16,43,78,.07)}.oa-program-card .program-icon{display:grid;place-items:center;width:48px;height:48px;margin-bottom:15px;border-radius:14px;background:#f5f0e4;color:#9b782f;font-size:24px}.oa-program-card h3{margin:0 0 9px;color:var(--navy);font:700 21px/1.25 Playfair Display,Georgia,serif}.oa-program-card p{margin:0;color:#647488;font-size:12px;line-height:1.8}.oa-program-card .oa-program-enquire{display:inline-flex;margin-top:15px;color:#9b782f;font-size:11px;font-weight:900;text-decoration:underline;text-underline-offset:4px}.oa-program-empty{grid-column:1/-1;padding:22px;border:1px dashed #cbd5df;border-radius:14px;color:#647488;text-align:center;background:#fff;font-size:13px}',
+  '@media(max-width:760px){.oa-staff-photo{width:124px;height:124px;aspect-ratio:1/1;background:#f4f6f8}.oa-staff-photo img{object-fit:cover;object-position:center;background:#f4f6f8}.oa-post-cover{aspect-ratio:4/3;background:#f5f7f9}.oa-post-cover img{object-fit:contain;background:#f5f7f9}}',
   '@media(max-width:420px){.nav-wrap .brand{max-width:calc(100% - 108px);gap:6px}.nav-wrap .brand-name{font-size:14px}.nav-wrap .brand-place{font-size:7px;letter-spacing:.09em}.nav-wrap .brand-mark{width:39px;height:39px;flex-basis:39px}}',
 
   '@media(min-width:761px){.hero{min-height:660px}.hero:before{background-position:center center;background-size:cover}}',
@@ -68,7 +69,7 @@ style.textContent = [
   '.notice-list{grid-template-columns:minmax(0,1fr)}#galleryGrid.oa-public-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#facultyCards.oa-public-staff-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.oa-staff-details{padding:15px}.oa-staff-details h3{font-size:18px}.admission-copy{position:static}.admission-panel{padding:18px!important}.contact-card{padding:17px}',
   '.footer{padding:44px 0 20px}.footer-grid{grid-template-columns:1fr 1fr;gap:22px}.footer-grid>div:first-child{grid-column:1/-1}.copyright{display:flex;flex-direction:column;gap:9px}.oa-footer-admin{margin-left:8px}.admin-fab{display:none!important}',
   '}',
-  '@media(max-width:420px){#galleryGrid.oa-public-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#facultyCards.oa-public-staff-grid{grid-template-columns:minmax(0,1fr)}.oa-staff-photo{aspect-ratio:16/10}.oa-staff-details{padding:17px}.oa-staff-details h3{font-size:20px}.nav-wrap .brand{max-width:calc(100% - 82px);gap:6px}.nav-wrap .brand-mark{width:39px;height:39px;flex-basis:39px}.nav-wrap .brand-name{font-size:14px}.nav-wrap .brand-place{font-size:7px;letter-spacing:.1em}.footer .brand{position:static;transform:none;max-width:100%;min-width:0}.menu-btn{width:41px;height:41px}.cards,.people-grid{grid-template-columns:minmax(0,1fr)}.value-list{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-grid{grid-template-columns:minmax(0,1fr)}.footer-grid>div:first-child{grid-column:auto}.section{padding:52px 0}}',
+  '@media(max-width:420px){#galleryGrid.oa-public-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#facultyCards.oa-public-staff-grid{grid-template-columns:minmax(0,1fr)}.oa-staff-photo{width:116px;height:116px;aspect-ratio:1/1}.oa-staff-details{padding:17px}.oa-staff-details h3{font-size:20px}.nav-wrap .brand{max-width:calc(100% - 82px);gap:6px}.nav-wrap .brand-mark{width:39px;height:39px;flex-basis:39px}.nav-wrap .brand-name{font-size:14px}.nav-wrap .brand-place{font-size:7px;letter-spacing:.1em}.footer .brand{position:static;transform:none;max-width:100%;min-width:0}.menu-btn{width:41px;height:41px}.cards,.people-grid{grid-template-columns:minmax(0,1fr)}.value-list{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-grid{grid-template-columns:minmax(0,1fr)}.footer-grid>div:first-child{grid-column:auto}.section{padding:52px 0}}',
   '@media(max-height:700px) and (max-width:760px){.hero{min-height:calc(100dvh - 84px)}.hero-inner{padding:24px 0}.hero-note{margin-top:17px}.hero h1{font-size:clamp(35px,9vw,48px)}}'
 ].join('');
 document.head.appendChild(style);
@@ -113,6 +114,53 @@ if (!isAdminRoute) {
       if (event.key === 'Escape') closeMenu();
     });
   }
+
+  const programmeSection = document.getElementById('academics');
+  if (programmeSection) {
+    const heading = programmeSection.querySelector('.section-head h2');
+    const kicker = programmeSection.querySelector('.section-kicker');
+    const explanation = programmeSection.querySelector('.section-head p');
+    if (heading) heading.textContent = 'Our Programmes';
+    if (kicker) kicker.remove();
+    if (explanation) explanation.remove();
+    const menuLink = document.querySelector('#navLinks a[href="#academics"]');
+    if (menuLink) menuLink.textContent = 'Programmes';
+    document.querySelectorAll('a[href="#academics"]').forEach((link) => {
+      if (link.textContent.toLowerCase().includes('learning areas')) link.textContent = 'Explore our programmes →';
+    });
+  }
+
+  const programmeRoot = document.getElementById('programCards');
+  const loadProgrammes = async () => {
+    if (!programmeRoot) return;
+    programmeRoot.innerHTML = '<div class="oa-program-empty">Loading our programmes…</div>';
+    try {
+      const { data, error } = await db.from('oa_programs')
+        .select('id,title_en,description_en,grade_range,is_published,sort_order')
+        .eq('is_published', true)
+        .order('sort_order', { ascending:true })
+        .limit(3);
+      if (error) throw error;
+      if (!data || !data.length) {
+        programmeRoot.innerHTML = '<div class="oa-program-empty">Our programmes will be announced here.</div>';
+        return;
+      }
+      const iconFor = (title) => /japan/i.test(title) ? 'あ' : (/korean/i.test(title) ? '한' : (/montessori|early childhood/i.test(title) ? '✿' : '✦'));
+      programmeRoot.innerHTML = data.map((item) => {
+        const title = escapeHtml(item.title_en || 'Academy programme');
+        const description = escapeHtml(item.description_en || '');
+        const grade = escapeHtml(item.grade_range || '');
+        return '<article class="oa-program-card"><div class="program-icon">' + iconFor(item.title_en || '') + '</div>' +
+          (grade ? '<span class="oa-program-grade">' + grade + '</span>' : '') +
+          '<h3>' + title + '</h3>' + (description ? '<p>' + description + '</p>' : '') +
+          '<a class="oa-program-enquire" href="#admission">Enquire about this programme →</a></article>';
+      }).join('');
+    } catch (error) {
+      console.error('Academy programmes could not be loaded:', error);
+      programmeRoot.innerHTML = '<div class="oa-program-empty">Our programmes could not be loaded right now. Please refresh the page.</div>';
+    }
+  };
+  loadProgrammes();
 
   const postRoot = document.getElementById('oa-live-posts');
   const escapeHtml = (value = '') => String(value ?? '').replace(/[&<>"']/g, (char) => ({
@@ -193,7 +241,7 @@ if (!isAdminRoute) {
         .select('id,name,role_en,bio_en,photo_url,sort_order,is_published')
         .eq('is_published', true)
         .order('sort_order', { ascending:true })
-        .limit(4);
+        .limit(2);
       if (error) throw error;
       if (!data || !data.length) {
         staffRoot.innerHTML = '<div class="oa-staff-empty">Our teachers and staff profiles will appear here as the academy publishes them.</div>';
@@ -209,13 +257,12 @@ if (!isAdminRoute) {
         const photo = imageUrl
           ? '<div class="oa-staff-photo"><img src="' + imageUrl + '" alt="' + name + '" loading="lazy"></div>'
           : '<div class="oa-staff-photo" aria-hidden="true">✦</div>';
-        const readMore = '<a class="oa-staff-read" href="/read/?type=team&id=' + encodeURIComponent(member.id) + '">View profile →</a>';
         return '<article class="oa-staff-card">' + photo +
           '<div class="oa-staff-details"><h3>' + name + '</h3>' +
           '<span class="oa-staff-role">' + role + '</span>' +
-          (bio ? '<p>' + bio + '</p>' : '') + readMore + '</div></article>';
+          (bio ? '<p>' + bio + '</p>' : '') + '</div></article>';
       }).join('');
-      if (data.length >= 4) sectionMore(staffRoot, 'team', 'Meet the full team');
+      sectionMore(staffRoot, 'team', 'Meet the full team');
       staffRoot.querySelectorAll('.oa-staff-photo img').forEach((img) => {
         img.addEventListener('error', () => {
           const photo = img.closest('.oa-staff-photo');
