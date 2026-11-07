@@ -29,6 +29,47 @@ const recoveryHandler = [
   "  </script>"
 ].join('\n');
 html = replaceExactly(html, '    loadPublic();\n  </script>', recoveryHandler, 'password recovery event handler');
+const settingsButtonFallback = `
+<script>
+(function () {
+  const modal = document.getElementById('adminModal');
+  const openButton = document.getElementById('adminOpen');
+  const footerLink = document.getElementById('adminFooterLink');
+  const closeButton = document.getElementById('adminClose');
+  if (!modal) return;
+  const open = function (event) {
+    if (event) event.preventDefault();
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden', 'false');
+  };
+  const close = function () {
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+  };
+  if (openButton && openButton.dataset.fallbackBound !== 'true') {
+    openButton.dataset.fallbackBound = 'true';
+    openButton.addEventListener('click', open);
+  }
+  if (footerLink && footerLink.dataset.fallbackBound !== 'true') {
+    footerLink.dataset.fallbackBound = 'true';
+    footerLink.addEventListener('click', open);
+  }
+  if (closeButton && closeButton.dataset.fallbackBound !== 'true') {
+    closeButton.dataset.fallbackBound = 'true';
+    closeButton.addEventListener('click', close);
+  }
+  if (modal.dataset.fallbackBound !== 'true') {
+    modal.dataset.fallbackBound = 'true';
+    modal.addEventListener('click', function (event) {
+      if (event.target === modal) close();
+    });
+  }
+})();
+</script>
+`;
+if (!html.includes('</body>')) throw new Error('Could not find the page body close tag.');
+html = replaceExactly(html, '</body>', settingsButtonFallback + '</body>', 'settings-button fallback handler');
+
 const output = path.join(process.cwd(), 'dist');
 fs.mkdirSync(output, { recursive: true });
 fs.writeFileSync(path.join(output, 'index.html'), html);
