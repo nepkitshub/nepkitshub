@@ -30,8 +30,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       if(!logo){node.textContent='OA';return;}
       const image=document.createElement('img');image.src=logo;image.alt=nameEn+' logo';image.style.cssText='width:100%;height:100%;object-fit:contain;padding:3px;border-radius:inherit';node.replaceChildren(image);node.style.background='#fff';
     });
-    const desktop=Math.max(40,Math.min(108,Number(map.logo_size_desktop?.value_en||48)));
-    const mobile=Math.max(34,Math.min(82,Number(map.logo_size_mobile?.value_en||42)));
+    const desktop=Math.max(40,Math.min(160,Number(map.logo_size_desktop?.value_en||48)));
+    const mobile=Math.max(34,Math.min(120,Number(map.logo_size_mobile?.value_en||42)));
     let style=$('#oa-public-logo-sizing');if(!style){style=document.createElement('style');style.id='oa-public-logo-sizing';document.head.appendChild(style);}
     style.textContent='.brand-mark{width:'+desktop+'px!important;height:'+desktop+'px!important;flex:0 0 '+desktop+'px!important}.nav-wrap .navbar{height:auto!important;min-height:'+Math.max(82,desktop+28)+'px;padding-top:8px;padding-bottom:8px}@media(max-width:760px){.brand-mark{width:'+mobile+'px!important;height:'+mobile+'px!important;flex-basis:'+mobile+'px!important}.nav-wrap .navbar{min-height:'+Math.max(70,mobile+24)+'px}}';
     document.title=nameEn+' | Kushma, Parbat';
@@ -319,13 +319,13 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   async function renderBranding() {
     const view=$('#oa-view');view.innerHTML="<div class='oa-card'>Loading branding settings…</div>";
     let map;try{map=await getContentMap();}catch(error){view.innerHTML="<div class='oa-card'>"+esc(error.message)+"</div>";return;}
-    const brand=map.brand_name||{},desktop=Math.max(40,Math.min(108,Number(map.logo_size_desktop?.value_en||48))),mobile=Math.max(34,Math.min(82,Number(map.logo_size_mobile?.value_en||42)));
+    const brand=map.brand_name||{},desktop=Math.max(40,Math.min(160,Number(map.logo_size_desktop?.value_en||48))),mobile=Math.max(34,Math.min(120,Number(map.logo_size_mobile?.value_en||42)));
     view.innerHTML="<div class='oa-card'><h2>Academy name, logo & sizing</h2><p>Upload your logo, crop it in the popup, and choose its size on desktop and mobile.</p><form id='oa-brand-form'><div class='oa-grid'>"+
       "<div class='oa-field'><label>Academy name (English)</label><input name='brand_en' required value='"+esc(brand.value_en||'Oxford Academy')+"'></div>"+
       "<div class='oa-field'><label>विद्यालयको नाम (नेपाली)</label><input name='brand_np' value='"+esc(brand.value_np||'अक्सफोर्ड एकेडेमी')+"'></div>"+
       logoUploadField(map.logo_url?.value_en||'')+imageField('hero_image_url','Homepage hero background',map.hero_image_url?.value_en||'','branding')+
-      "<div class='oa-field full'><label>Desktop logo size: <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='108' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
-      "<div class='oa-field full'><label>Mobile logo size: <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='82' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
+      "<div class='oa-field full'><label>Desktop logo size: <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='160' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
+      "<div class='oa-field full'><label>Mobile logo size: <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='120' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
       "</div><div class='oa-actions'><button class='oa-button' type='submit'>Save branding</button></div></form></div>";
     const form=$('#oa-brand-form');bindUploads(form.querySelector('[name=hero_image_url]').closest('.oa-field').parentElement);
     const fileInput=$('#oa-logo-file');
