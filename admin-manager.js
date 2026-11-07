@@ -628,25 +628,25 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       field('branch_name','Branch name',row.branch_name)+field('address','Address',row.address)+field('phone','Phone number',row.phone,'tel')+
       field('whatsapp_number','WhatsApp number',row.whatsapp_number,'tel')+field('email','Email address',row.email,'email')+
       field('facebook_url','Facebook URL',row.facebook_url,'url')+field('instagram_url','Instagram URL',row.instagram_url,'url')+
-      field('tiktok_url','TikTok URL',row.tiktok_url,'url')+field('sort_order','Display order',row.sort_order,'number')+
+      field('tiktok_url','TikTok URL',row.tiktok_url,'url')+field('maps_url','Google Maps pin link',row.maps_url,'url')+field('sort_order','Display order',row.sort_order,'number')+
       "</div><label class='oa-check'><input type='checkbox' name='is_active' "+(row.is_active?'checked':'')+"> Show on the public website</label><button class='oa-button'>Save branch details</button></form>";
     view.innerHTML="<div class='oa-card'><h2>Branches & contact details</h2><p>Only active branches appear in the public branch selector. Saved details display in the Contact section and WhatsApp button.</p></div>"+
       rows.map(formMarkup).join('')+
       "<div class='oa-card'><h2>Add another branch</h2><form id='oa-add-branch'><div class='oa-grid'>"+
       field('branch_name','Branch name','New branch')+field('address','Address','City, District, Province')+field('phone','Phone number','','tel')+
       field('whatsapp_number','WhatsApp number','','tel')+field('email','Email address','','email')+field('facebook_url','Facebook URL','','url')+
-      field('instagram_url','Instagram URL','','url')+field('tiktok_url','TikTok URL','','url')+field('sort_order','Display order',rows.length+1,'number')+
+      field('instagram_url','Instagram URL','','url')+field('tiktok_url','TikTok URL','','url')+field('maps_url','Google Maps pin link','','url')+field('sort_order','Display order',rows.length+1,'number')+
       "</div><label class='oa-check'><input type='checkbox' name='is_active' checked> Show on the public website</label><button class='oa-button'>Add branch</button></form></div>";
     document.querySelectorAll('.oa-branch-form').forEach(form=>form.addEventListener('submit',async event=>{
       event.preventDefault();const f=new FormData(form);
-      const payload={branch_name:f.get('branch_name')||'',address:f.get('address')||'',phone:f.get('phone')||'',whatsapp_number:f.get('whatsapp_number')||'',email:f.get('email')||'',facebook_url:f.get('facebook_url')||'',instagram_url:f.get('instagram_url')||'',tiktok_url:f.get('tiktok_url')||'',sort_order:Number(f.get('sort_order')||0),is_active:f.get('is_active')==='on',updated_at:new Date().toISOString()};
+      const payload={branch_name:f.get('branch_name')||'',address:f.get('address')||'',phone:f.get('phone')||'',whatsapp_number:f.get('whatsapp_number')||'',email:f.get('email')||'',facebook_url:f.get('facebook_url')||'',instagram_url:f.get('instagram_url')||'',tiktok_url:f.get('tiktok_url')||'',maps_url:safeUrl(f.get('maps_url')||''),sort_order:Number(f.get('sort_order')||0),is_active:f.get('is_active')==='on',updated_at:new Date().toISOString()};
       const {error}=await db.from('oa_branches').update(payload).eq('id',form.dataset.id);
       showMessage(error?error.message:'Branch details saved.');
     }));
     $('#oa-add-branch').addEventListener('submit',async event=>{
       event.preventDefault();const f=new FormData(event.currentTarget),name=f.get('branch_name')||'New Branch';
       const slug=name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-      const {error}=await db.from('oa_branches').insert({slug,branch_name:name,address:f.get('address')||'',phone:f.get('phone')||'',whatsapp_number:f.get('whatsapp_number')||'',email:f.get('email')||'',facebook_url:f.get('facebook_url')||'',instagram_url:f.get('instagram_url')||'',tiktok_url:f.get('tiktok_url')||'',sort_order:Number(f.get('sort_order')||0),is_active:f.get('is_active')==='on'});
+      const {error}=await db.from('oa_branches').insert({slug,branch_name:name,address:f.get('address')||'',phone:f.get('phone')||'',whatsapp_number:f.get('whatsapp_number')||'',email:f.get('email')||'',facebook_url:f.get('facebook_url')||'',instagram_url:f.get('instagram_url')||'',tiktok_url:f.get('tiktok_url')||'',maps_url:safeUrl(f.get('maps_url')||''),sort_order:Number(f.get('sort_order')||0),is_active:f.get('is_active')==='on'});
       if(error)showMessage(error.message);else{showMessage('Branch added.');await openSection('branches');}
     });
   }
@@ -686,7 +686,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       details.innerHTML="<div class='contact-card'><div class='contact-icon'>⌖</div><div><b data-en='Visit us' data-np='हामीलाई भेट्नुहोस्'>"+(np?'हामीलाई भेट्नुहोस्':'Visit us')+"</b><span id='contactAddress'>"+esc(b.address||(np?'ठेगाना थपिएको छैन':'Address not added yet'))+"</span></div></div>"+
         "<div class='contact-card'><div class='contact-icon'>✉</div><div><b data-en='Email' data-np='इमेल'>"+(np?'इमेल':'Email')+"</b>"+mail+"</div></div>"+
         "<div class='contact-card'><div class='contact-icon'>☎</div><div><b data-en='Phone' data-np='फोन'>"+(np?'फोन':'Phone')+"</b>"+tel+"</div></div><div class='oa-social-links'>"+whatsapp+socials+"</div>";
-      if(map){const heading=map.querySelector('b'),paragraph=map.querySelector('p'),link=map.querySelector('a');if(heading)heading.textContent=b.branch_name;if(paragraph)paragraph.textContent=b.address||b.branch_name;if(link)link.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(b.address||b.branch_name);}
+      if(map){const heading=map.querySelector('b'),paragraph=map.querySelector('p'),link=map.querySelector('a');if(heading)heading.textContent=b.branch_name;if(paragraph)paragraph.textContent=b.address||b.branch_name;if(link){link.href=safeUrl(b.maps_url||'')||'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(b.address||b.branch_name);link.textContent=b.maps_url?'Open pinned location in Google Maps ↗':'Open location in Maps ↗';link.target='_blank';link.rel='noopener noreferrer';}}
       if(form){const select=form.querySelector('[name=branch_name]');if(select)select.value=b.branch_name;}
       const footer=$('.footer-grid > div:last-child .footer-links');
       if(footer){const oldFacebook=footer.querySelector('a[href*="facebook.com/share"]');if(oldFacebook)oldFacebook.style.display='none';let social=$('#oa-footer-socials');if(!social){social=document.createElement('span');social.id='oa-footer-socials';footer.appendChild(social);}social.innerHTML=socials;}
