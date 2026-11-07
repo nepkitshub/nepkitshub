@@ -134,7 +134,7 @@ if (!isAdminRoute) {
   const renderPosts = (rows) => {
     if (!postRoot) return;
     if (!rows.length) {
-      postRoot.innerHTML = '<div class="oa-post-status">There are no published updates yet. Please check again soon.</div>';
+      postRoot.innerHTML = '<div class="oa-post-status">No notices have been published yet. Please check again soon.</div>';
       return;
     }
     postRoot.innerHTML = rows.slice(0, 4).map((post) => {
