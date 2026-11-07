@@ -24,7 +24,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     if(error)return;
     const map={};(data||[]).forEach(row=>map[row.content_key]=row);
     const nameEn=map.brand_name?.value_en||'Oxford Academy';
-    document.querySelectorAll('.brand-name').forEach(node=>{node.textContent=nameEn;});
+    document.querySelectorAll('.brand-name,.oa-brand b').forEach(node=>{node.textContent=nameEn;});
     const logo=safeUrl(map.logo_url?.value_en||'');
     document.querySelectorAll('.brand-mark,.oa-mark').forEach(node=>{
       if(!logo){node.textContent='OA';return;}
@@ -322,7 +322,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     let map;try{map=await getContentMap();}catch(error){view.innerHTML="<div class='oa-card'>"+esc(error.message)+"</div>";return;}
     const brand=map.brand_name||{},desktop=Math.max(40,Math.min(160,Number(map.logo_size_desktop?.value_en||48))),mobile=Math.max(34,Math.min(60,Number(map.logo_size_mobile?.value_en||42)));
     view.innerHTML="<div class='oa-card'><h2>Academy name, logo & sizing</h2><p>Upload your logo, crop it in the popup, and choose its size on desktop and mobile.</p><form id='oa-brand-form'><div class='oa-grid'>"+
-      "<div class='oa-field'><label>Academy name (English)</label><input name='brand_en' required value='"+esc(brand.value_en||'Oxford Academy')+"'></div>"+
+      "<div class='oa-field'><label>Academy name</label><input name='brand_en' required value='"+esc(brand.value_en||'Oxford Academy')+"'></div>"+
 
       logoUploadField(map.logo_url?.value_en||'')+imageField('hero_image_url','Homepage hero background',map.hero_image_url?.value_en||'','branding')+
       "<div class='oa-field full'><label>Desktop logo size: <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='160' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
