@@ -555,7 +555,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const {data,error}=await db.from('oa_branches').select('*').eq('is_active',true).order('sort_order');
     if(error){console.warn('Branch contact information could not be loaded:',error.message);return;}
     const branches=data||[];if(!branches.length)return;
-    left.innerHTML="<div class='oa-branch-picker'><label for='oa-public-branch'>Choose a branch</label><select id='oa-public-branch'></select></div><div id='oa-public-branch-details'></div>";
+    left.innerHTML="<div class='oa-branch-picker'><label for='oa-public-branch' data-en='Choose a branch' data-np='शाखा छान्नुहोस्'>Choose a branch</label><select id='oa-public-branch'></select></div><div id='oa-public-branch-details'></div>";
     const picker=$('#oa-public-branch'),details=$('#oa-public-branch-details');
     picker.innerHTML=branches.map(b=>"<option value='"+esc(b.id)+"'>"+esc(b.branch_name)+"</option>").join('');
     const form=$('#admissionForm');
@@ -565,7 +565,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       let branchField=form.querySelector('#admissionBranch')?.closest('.field');
       if(!branchField){
         branchField=document.createElement('div');branchField.className='field full';
-        branchField.innerHTML="<label for='admissionBranch'>Choose branch *</label><select id='admissionBranch' name='branch_name' required></select>";
+        branchField.innerHTML="<label for='admissionBranch' data-en='Choose branch *' data-np='शाखा छान्नुहोस् *'>Choose branch *</label><select id='admissionBranch' name='branch_name' required></select>";
         if(messageField)messageField.before(branchField);else form.querySelector('.form-grid')?.append(branchField);
       }
       const branchSelect=branchField.querySelector('select');
@@ -573,20 +573,21 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     }
     function display(){
       const b=branches.find(item=>item.id===picker.value)||branches[0];
+      const np=document.body.classList.contains('np');
       const phone=b.phone||'',email=b.email||'',whats=String(b.whatsapp_number||phone).replace(/\D/g,'');
-      const mail=email?"<a id='contactEmail' href='mailto:"+encodeURIComponent(email)+"'>"+esc(email)+"</a>":"<span id='contactEmail'>Email details not added yet</span>";
-      const tel=phone?"<a id='contactPhone' href='tel:"+encodeURIComponent(phone.replace(/[^\d+]/g,''))+"'>"+esc(phone)+"</a>":"<span id='contactPhone'>Phone details not added yet</span>";
-      const whatsapp=whats?"<a class='oa-social-link oa-whatsapp' href='https://wa.me/"+whats+"?text="+encodeURIComponent('Namaste, I would like to enquire about '+b.branch_name)+"' target='_blank' rel='noopener'>Message on WhatsApp ↗</a>":'';
+      const mail=email?"<a id='contactEmail' href='mailto:"+encodeURIComponent(email)+"'>"+esc(email)+"</a>":"<span id='contactEmail'>"+(np?'इमेल विवरण थपिएको छैन':'Email details not added yet')+"</span>";
+      const tel=phone?"<a id='contactPhone' href='tel:"+encodeURIComponent(phone.replace(/[^\d+]/g,''))+"'>"+esc(phone)+"</a>":"<span id='contactPhone'>"+(np?'फोन विवरण थपिएको छैन':'Phone details not added yet')+"</span>";
+      const whatsapp=whats?"<a class='oa-social-link oa-whatsapp' href='https://wa.me/"+whats+"?text="+encodeURIComponent('Namaste, I would like to enquire about '+b.branch_name)+"' target='_blank' rel='noopener'>"+(np?'व्हाट्सएपमा सन्देश पठाउनुहोस् ↗':'Message on WhatsApp ↗')+"</a>":'';
       const socials=[['Facebook',b.facebook_url],['Instagram',b.instagram_url],['TikTok',b.tiktok_url]]
         .filter(item=>safeUrl(item[1]))
         .map(item=>"<a class='oa-social-link' href='"+esc(safeUrl(item[1]))+"' target='_blank' rel='noopener noreferrer'>"+item[0]+" ↗</a>").join('');
-      details.innerHTML="<div class='contact-card'><div class='contact-icon'>⌖</div><div><b>Visit us</b><span id='contactAddress'>"+esc(b.address||'Address not added yet')+"</span></div></div>"+
-        "<div class='contact-card'><div class='contact-icon'>✉</div><div><b>Email</b>"+mail+"</div></div>"+
-        "<div class='contact-card'><div class='contact-icon'>☎</div><div><b>Phone</b>"+tel+"</div></div><div class='oa-social-links'>"+whatsapp+socials+"</div>";
+      details.innerHTML="<div class='contact-card'><div class='contact-icon'>⌖</div><div><b data-en='Visit us' data-np='हामीलाई भेट्नुहोस्'>"+(np?'हामीलाई भेट्नुहोस्':'Visit us')+"</b><span id='contactAddress'>"+esc(b.address||(np?'ठेगाना थपिएको छैन':'Address not added yet'))+"</span></div></div>"+
+        "<div class='contact-card'><div class='contact-icon'>✉</div><div><b data-en='Email' data-np='इमेल'>"+(np?'इमेल':'Email')+"</b>"+mail+"</div></div>"+
+        "<div class='contact-card'><div class='contact-icon'>☎</div><div><b data-en='Phone' data-np='फोन'>"+(np?'फोन':'Phone')+"</b>"+tel+"</div></div><div class='oa-social-links'>"+whatsapp+socials+"</div>";
       if(map){const heading=map.querySelector('b'),paragraph=map.querySelector('p'),link=map.querySelector('a');if(heading)heading.textContent=b.branch_name;if(paragraph)paragraph.textContent=b.address||b.branch_name;if(link)link.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(b.address||b.branch_name);}
       if(form){const select=form.querySelector('[name=branch_name]');if(select)select.value=b.branch_name;}
       const footer=$('.footer-grid > div:last-child .footer-links');
-      if(footer){let social=$('#oa-footer-socials');if(!social){social=document.createElement('span');social.id='oa-footer-socials';footer.appendChild(social);}social.innerHTML=socials;}
+      if(footer){const oldFacebook=footer.querySelector('a[href*="facebook.com/share"]');if(oldFacebook)oldFacebook.style.display='none';let social=$('#oa-footer-socials');if(!social){social=document.createElement('span');social.id='oa-footer-socials';footer.appendChild(social);}social.innerHTML=socials;}
     }
     picker.addEventListener('change',display);
     if(form){const select=form.querySelector('[name=branch_name]');if(select)select.addEventListener('change',()=>{const branch=branches.find(item=>item.branch_name===select.value);if(branch){picker.value=branch.id;display();}});}
