@@ -30,7 +30,7 @@ const recoveryHandler = [
   "  </script>"
 ].join('\n');
 html = replaceExactly(html, '    loadPublic();\n  </script>', recoveryHandler, 'password recovery event handler');
-html = replaceExactly(html, "const db = createClient(SUPABASE_URL, SUPABASE_KEY);", "const db = createClient(SUPABASE_URL, SUPABASE_KEY);\\n    window.__oaSupabaseClient = db;", 'expose academy auth client to login fallback');
+// The standalone fallback creates its own Supabase client; do not inject escaped text into the main module.
 const settingsButtonFallback = `
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
