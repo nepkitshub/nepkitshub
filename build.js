@@ -162,6 +162,8 @@ const homepageOverridesSource = fs.readFileSync(path.join(__dirname, 'homepage-o
 const homepageOverridesScript = '<script type="module">\n' + homepageOverridesSource + '\n</script>';
 html = replaceExactly(html, '</body>', homepageOverridesScript + '</body>', 'homepage mobile and posts overrides');
 
+html = replaceExactly(html, '</head>', '<style id="oa-hidden-state-fix">[hidden],.notice-list[hidden]{display:none!important}</style></head>', 'hidden notice fallback style');
+
 const output = path.join(process.cwd(), 'dist');
 fs.mkdirSync(output, { recursive: true });
 fs.writeFileSync(path.join(output, 'index.html'), html);
@@ -187,4 +189,51 @@ const adminPage = replaceExactly(adminRouteHtml, '</head>', adminRouteStyles + '
 const adminDir = path.join(output, 'admin');
 fs.mkdirSync(adminDir, { recursive: true });
 fs.writeFileSync(path.join(adminDir, 'index.html'), adminPage);
-console.log('Built Oxford Academy static site with registration and admin approval (' + html.length + ' bytes) from ' + partsDir);
+
+const contentPageSource = fs.readFileSync(path.join(__dirname, 'public-content-pages.js'), 'utf8');
+const contentPageStyles = \`
+  :root{--navy:#102b4e;--gold:#d5ad5c;--ink:#17283b;--muted:#647488;--line:#e5eaf0}
+  *{box-sizing:border-box}body{margin:0;background:#f7f8fa;color:var(--ink);font-family:Arial,sans-serif;line-height:1.65}
+  a{color:inherit;text-decoration:none}.page-top{background:#102b4e;color:#fff;padding:17px 22px}
+  .page-top-inner{max-width:1160px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .page-brand{display:flex;align-items:center;gap:11px;font-weight:900}
+  .page-mark{width:42px;height:42px;border:1px solid rgba(213,173,92,.8);border-radius:12px;display:grid;place-items:center;color:#f0d99e;font:800 19px Georgia}
+  .page-brand small{display:block;color:#d4dfeb;font-size:10px;letter-spacing:.1em}
+  .page-home{color:#f0d99e;font-size:12px;font-weight:900}
+  .page-main{width:min(1160px,calc(100% - 36px));margin:42px auto 70px}
+  .page-breadcrumb{display:flex;flex-wrap:wrap;gap:8px;color:#78889a;font-size:11px;margin-bottom:16px}
+  .page-breadcrumb a{color:#255d91;font-weight:800}
+  .page-main h1{font:800 clamp(30px,5vw,46px)/1.15 Georgia,serif;color:var(--navy);margin:0 0 28px}
+  #content-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:stretch}
+  .content-card,.content-detail-card{overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:0 10px 35px rgba(16,43,78,.07)}
+  .content-cover{width:100%;aspect-ratio:16/10;overflow:hidden;background:linear-gradient(135deg,#eaf0f5,#cdd9e4)}
+  .content-cover img,.content-detail-cover img{display:block;width:100%;height:100%;object-fit:cover}
+  .content-cover.is-empty,.content-detail-cover.is-empty{display:grid;place-items:center;color:#91a0af;font-size:46px}
+  .content-card-body{padding:19px 20px 22px}
+  .content-meta{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:10px;color:#8b6c2d;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}
+  .content-meta time{color:#7b8998;letter-spacing:0;text-transform:none}
+  .content-card h2{font:700 21px/1.25 Georgia,serif;color:var(--navy);margin:0 0 9px}
+  .content-card p{font-size:12px;color:var(--muted);line-height:1.85;margin:0}
+  .content-read-more{display:inline-flex;margin-top:13px;color:#9b782f;font-size:11px;font-weight:900;text-decoration:underline;text-underline-offset:4px}
+  .content-detail-card{max-width:900px;margin:auto}
+  .content-detail-cover{width:100%;max-height:570px;aspect-ratio:16/9;overflow:hidden;background:#eaf0f5}
+  .content-detail-body{padding:clamp(20px,5vw,48px)}
+  .content-detail-body h1{margin:4px 0 20px;font-size:clamp(30px,5vw,48px)}
+  .content-full-text{white-space:pre-wrap;overflow-wrap:anywhere;color:#46596c;font-size:15px;line-height:2}
+  .content-back-link{display:inline-flex;margin-top:30px;color:#255d91;font-size:12px;font-weight:900}
+  .content-empty{padding:28px;border:1px dashed #cbd5df;border-radius:16px;background:#fff;color:#647488;text-align:center}
+  @media(max-width:760px){.page-top{padding:13px 15px}.page-main{width:calc(100% - 28px);margin:27px auto 48px}#content-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.content-card{border-radius:15px}.content-card-body{padding:14px}.content-card h2{font-size:18px}.content-card p{font-size:11px}.content-detail-cover{aspect-ratio:4/3}}
+  @media(max-width:480px){#content-list{grid-template-columns:1fr}.page-brand{font-size:14px}.page-brand small{font-size:9px}}
+\`;
+const contentPageHtml = (mode) => '<!doctype html>\\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b4e"><title>Oxford Academy</title><style>' + contentPageStyles + '</style></head><body>' +
+  '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span>Oxford Academy<small>KUSHMA, PARBAT</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
+  '<main class="page-main"><nav class="page-breadcrumb" id="content-breadcrumb"></nav>' +
+  (mode === 'detail' ? '<div id="content-detail"><div class="content-empty">Loading content…</div></div>' :
+    '<h1 id="content-heading">Academy updates</h1><div id="content-list"><div class="content-empty">Loading content…</div></div>') +
+  '</main><script type="module">\\n' + contentPageSource + '\\n</script></body></html>';
+for (const [folder, mode] of [['read','detail'],['all','listing']]) {
+  const target = path.join(output, folder);
+  fs.mkdirSync(target, { recursive:true });
+  fs.writeFileSync(path.join(target, 'index.html'), contentPageHtml(mode));
+}
+console.log('Built Oxford Academy static site with public content detail pages (' + html.length + ' bytes) from ' + partsDir);
