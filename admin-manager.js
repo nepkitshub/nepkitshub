@@ -617,7 +617,14 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         status:'new'
       };
       try{
-        const {error}=await db.from('oa_admissions').insert(payload);
+        const {data,error}=await db.rpc('oa_submit_admission',{
+          p_student_name:payload.student_name,
+          p_guardian_name:payload.guardian_name,
+          p_phone:payload.phone,
+          p_email:payload.email,
+          p_message:payload.message,
+          p_branch_name:payload.branch_name
+        });
         if(error)throw error;
         form.reset();
         const selected=$('#oa-public-branch option:checked')?.textContent;
