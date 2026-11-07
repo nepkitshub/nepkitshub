@@ -135,7 +135,7 @@ const output = path.join(process.cwd(), 'dist');
 fs.mkdirSync(output, { recursive: true });
 fs.writeFileSync(path.join(output, 'index.html'), html);
 const adminRouteHtml = replaceExactly(html, '<body>', '<body class="admin-route">', 'admin route body');
-const adminRouteStyles = \`<style id="oa-admin-route-style">
+const adminRouteStyles = `<style id="oa-admin-route-style">
   body.admin-route { min-height:100vh; background:#f2f5f8; }
   body.admin-route > :not(#adminModal):not(script) { display:none !important; }
   body.admin-route #adminModal {
@@ -151,7 +151,7 @@ const adminRouteStyles = \`<style id="oa-admin-route-style">
     body.admin-route #adminModal { padding:0; }
     body.admin-route .admin-modal { width:100%; min-height:100vh; border-radius:0; }
   }
-</style>\`;
+</style>`;
 const adminPage = replaceExactly(adminRouteHtml, '</head>', adminRouteStyles + '</head>', 'admin route styles');
 const adminDir = path.join(output, 'admin');
 fs.mkdirSync(adminDir, { recursive: true });
