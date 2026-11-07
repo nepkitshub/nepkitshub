@@ -150,6 +150,70 @@ for (const [needle, replacement, label] of publicMarkupPatches) {
     html = replaceExactly(html, needle, replacement, label);
   }
 }
+
+const admissionGradeField = '<div class="field full"><label for="grade" data-en="Class / grade of interest">Class / grade of interest</label><input id="grade" name="grade" maxlength="60" placeholder="Enter class or grade" /></div>';
+const admissionBranchField = '<div class="field full"><label for="admissionBranch">Preferred branch *</label><select id="admissionBranch" name="branch_name" required><option value="">Choose a branch</option></select><small class="field-hint">Choose the academy branch you want to contact.</small></div>';
+html = replaceExactly(html, admissionGradeField, admissionBranchField, 'admission branch selector field');
+const oldAdmissionHandler = `$('admissionForm').addEventListener('submit',async e=>{
+      e.preventDefault(); const f=new FormData(e.currentTarget); if(f.get('website'))return;
+      const payload={student_name:f.get('student_name'),guardian_name:f.get('guardian_name')||null,phone:f.get('phone'),email:f.get('email')||null,grade:f.get('grade')||null,message:f.get('message')||null};
+      const btn=$('admissionSubmit'),msg=$('admissionMessage');btn.disabled=true;btn.textContent=t('Sending…','पठाउँदै…');msg.textContent='';
+      const {error}=await db.from('oa_admissions').insert(payload);
+      btn.disabled=false;btn.textContent=t('Send enquiry →','जानकारी पठाउनुहोस् →');
+      if(error){msg.textContent=t('The form could not be sent right now. Please contact the academy through Facebook.','अहिले फारम पठाउन सकिएन। कृपया फेसबुकमार्फत विद्यालयमा सम्पर्क गर्नुहोस्।');console.error(error);}
+      else{e.currentTarget.reset();msg.textContent=t('Thank you. Your enquiry has been sent to the academy.','धन्यवाद। तपाईंको जानकारी विद्यालयमा पठाइएको छ।');}
+    });`;
+const newAdmissionHandler = `async function loadAdmissionBranches(){
+      const select=$('admissionBranch');
+      if(!select)return;
+      const {data,error}=await db.from('oa_branches').select('branch_name').eq('is_active',true).order('sort_order');
+      if(error||!data||!data.length){
+        select.innerHTML='<option value="">Branches are unavailable. Please refresh.</option>';
+        select.disabled=true;
+        return;
+      }
+      select.disabled=false;
+      select.innerHTML='<option value="">Choose a branch</option>'+data.map(row=>{
+        const name=String(row.branch_name||'').trim();
+        return name?'<option value="'+esc(name)+'">'+esc(name)+'</option>':'';
+      }).join('');
+    }
+    loadAdmissionBranches();
+    $('admissionForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const form=e.currentTarget;
+      const f=new FormData(form);
+      if(f.get('website'))return;
+      const studentName=String(f.get('student_name')||'').trim();
+      const phone=String(f.get('phone')||'').trim();
+      const branchName=String(f.get('branch_name')||'').trim();
+      if(studentName.length<2){$('admissionMessage').textContent='Please enter the student’s full name.';return;}
+      if(phone.length<6){$('admissionMessage').textContent='Please enter a valid contact number.';return;}
+      if(!branchName){$('admissionMessage').textContent='Please choose an academy branch.';return;}
+      const btn=$('admissionSubmit'),msg=$('admissionMessage');
+      btn.disabled=true;
+      btn.textContent='Sending enquiry…';
+      msg.textContent='';
+      const {error}=await db.rpc('oa_submit_admission',{
+        p_student_name:studentName,
+        p_guardian_name:String(f.get('guardian_name')||'').trim()||null,
+        p_phone:phone,
+        p_email:String(f.get('email')||'').trim()||null,
+        p_message:String(f.get('message')||'').trim()||null,
+        p_branch_name:branchName
+      });
+      btn.disabled=false;
+      btn.textContent='Send enquiry →';
+      if(error){
+        msg.textContent=error.message||'Your enquiry could not be sent. Please try again or call the academy.';
+        console.error('Admission enquiry submission failed:',error);
+      }else{
+        form.reset();
+        msg.textContent='Thank you. Your admission enquiry has been sent successfully.';
+      }
+    });`;
+html = replaceExactly(html, oldAdmissionHandler, newAdmissionHandler, 'validated admission enquiry submission handler');
+
 html = html.replace(/\sdata-np="[^"]*"/g, '');
 
 const adminManagerSource = fs.readFileSync(path.join(__dirname, 'admin-manager.js'), 'utf8');
