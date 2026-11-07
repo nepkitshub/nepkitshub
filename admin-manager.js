@@ -20,11 +20,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const maxFileBytes = 5 * 1024 * 1024;
 
   async function applyBranding() {
-    const {data,error}=await db.from('oa_site_content').select('content_key,value_en,value_np');
+    const {data,error}=await db.from('oa_site_content').select('content_key,value_en');
     if(error)return;
     const map={};(data||[]).forEach(row=>map[row.content_key]=row);
-    const nameEn=map.brand_name?.value_en||'Oxford Academy',nameNp=map.brand_name?.value_np||nameEn;
-    document.querySelectorAll('.brand-name').forEach(node=>{node.dataset.en=nameEn;node.dataset.np=nameNp;node.textContent=document.body.classList.contains('np')?nameNp:nameEn;});
+    const nameEn=map.brand_name?.value_en||'Oxford Academy';
+    document.querySelectorAll('.brand-name').forEach(node=>{node.textContent=nameEn;});
     const logo=safeUrl(map.logo_url?.value_en||'');
     document.querySelectorAll('.brand-mark,.oa-mark').forEach(node=>{
       if(!logo){node.textContent='OA';return;}
@@ -82,12 +82,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       table: 'oa_notices',
       noun: 'post',
       fields: [
-        ['title_en', 'Post title (English)', true],
-        ['title_np', 'शीर्षक (नेपाली)'],
+        ['title_en', 'Post title', true],
         ['category', 'Category'],
         ['image_url', 'Post image', false, 'image'],
-        ['body_en', 'Post content (English)', false, 'area'],
-        ['body_np', 'पोस्ट विवरण (नेपाली)', false, 'area']
+        ['body_en', 'Post content', false, 'area']
       ],
       label: (row) => row.title_en,
       sub: (row) => row.category || 'Post'
@@ -97,11 +95,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       table: 'oa_programs',
       noun: 'programme',
       fields: [
-        ['title_en', 'Programme title (English)', true],
-        ['title_np', 'कार्यक्रमको नाम (नेपाली)'],
-        ['grade_range', 'Class / grade range'],
-        ['description_en', 'Description (English)', false, 'area'],
-        ['description_np', 'विवरण (नेपाली)', false, 'area']
+        ['title_en', 'Programme title', true],
+        ['grade_range', 'Age group / level'],
+        ['description_en', 'Description', false, 'area'],
+        ['sort_order', 'Display order', false, 'number']
       ],
       label: (row) => row.title_en,
       sub: (row) => row.grade_range || 'Programme'
@@ -112,14 +109,13 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       noun: 'staff profile',
       fields: [
         ['name', 'Full name', true],
-        ['role_en', 'Role (English)'],
-        ['role_np', 'पद (नेपाली)'],
+        ['role_en', 'Role / position'],
         ['photo_url', 'Profile photo', false, 'image'],
-        ['bio_en', 'Biography (English)', false, 'area'],
+        ['bio_en', 'Biography', false, 'area'],
+        ['sort_order', 'Display order', false, 'number'],
         ['phone', 'Contact number'],
         ['email', 'Email address'],
-        ['address', 'Address', false, 'area'],
-        ['bio_np', 'परिचय (नेपाली)', false, 'area']
+        ['address', 'Address', false, 'area']
       ],
       label: (row) => row.name,
       sub: (row) => row.role_en || 'Staff member'
@@ -129,11 +125,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       table: 'oa_gallery',
       noun: 'photo',
       fields: [
-        ['title_en', 'Photo title (English)', true],
-        ['title_np', 'शीर्षक (नेपाली)'],
+        ['title_en', 'Photo title', true],
         ['image_url', 'Photo', true, 'image'],
-        ['caption_en', 'Caption (English)', false, 'area'],
-        ['caption_np', 'क्याप्सन (नेपाली)', false, 'area']
+        ['caption_en', 'Caption', false, 'area'],
+        ['sort_order', 'Display order', false, 'number']
       ],
       label: (row) => row.title_en,
       sub: () => 'Gallery photo'
@@ -226,7 +221,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   async function renderOverview() {
     const view = $('#oa-view');
     view.innerHTML =
-      "<div class='oa-card'><h2>Welcome to your website manager</h2><p>Manage the academy logo, homepage, posts, programmes, teachers, gallery and admission enquiries from this dashboard.</p></div>" +
+      "<div class='oa-card'><h2>Welcome to Oxford Academy website manager</h2><p>Manage website branding, homepage content, programmes, staff, notices, gallery, branch contacts and admission enquiries from one place.</p></div>" +
       "<div class='oa-stats' id='oa-stats'></div><div class='oa-card'><h2>Quick actions</h2><div class='oa-actions'>" +
       "<button class='oa-button' data-go='branding'>Change logo</button><button class='oa-button' data-go='notices'>Create a post</button>" +
       "<button class='oa-button light' data-go='gallery'>Upload photos</button><button class='oa-button light' data-go='homepage'>Edit homepage</button></div></div>";
@@ -328,7 +323,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const brand=map.brand_name||{},desktop=Math.max(40,Math.min(160,Number(map.logo_size_desktop?.value_en||48))),mobile=Math.max(34,Math.min(60,Number(map.logo_size_mobile?.value_en||42)));
     view.innerHTML="<div class='oa-card'><h2>Academy name, logo & sizing</h2><p>Upload your logo, crop it in the popup, and choose its size on desktop and mobile.</p><form id='oa-brand-form'><div class='oa-grid'>"+
       "<div class='oa-field'><label>Academy name (English)</label><input name='brand_en' required value='"+esc(brand.value_en||'Oxford Academy')+"'></div>"+
-      "<div class='oa-field'><label>विद्यालयको नाम (नेपाली)</label><input name='brand_np' value='"+esc(brand.value_np||'अक्सफोर्ड एकेडेमी')+"'></div>"+
+
       logoUploadField(map.logo_url?.value_en||'')+imageField('hero_image_url','Homepage hero background',map.hero_image_url?.value_en||'','branding')+
       "<div class='oa-field full'><label>Desktop logo size: <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='160' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
       "<div class='oa-field full'><label>Mobile logo size: <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='60' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
@@ -339,11 +334,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     $('#oa-desktop-slider').addEventListener('input',e=>$('#oa-desktop-value').textContent=e.target.value+' px');
     $('#oa-mobile-slider').addEventListener('input',e=>$('#oa-mobile-value').textContent=e.target.value+' px');
     form.addEventListener('submit',async event=>{event.preventDefault();const f=new FormData(form);const rows=[
-      {content_key:'brand_name',value_en:f.get('brand_en'),value_np:f.get('brand_np')||''},
-      {content_key:'logo_url',value_en:f.get('logo_url')||'',value_np:f.get('logo_url')||''},
-      {content_key:'hero_image_url',value_en:f.get('hero_image_url')||'',value_np:f.get('hero_image_url')||''},
-      {content_key:'logo_size_desktop',value_en:String(f.get('logo_size_desktop')||48),value_np:''},
-      {content_key:'logo_size_mobile',value_en:String(f.get('logo_size_mobile')||42),value_np:''}
+      {content_key:'brand_name',value_en:f.get('brand_en')},
+      {content_key:'logo_url',value_en:f.get('logo_url')||''},
+      {content_key:'hero_image_url',value_en:f.get('hero_image_url')||''},
+      {content_key:'logo_size_desktop',value_en:String(f.get('logo_size_desktop')||48)},
+      {content_key:'logo_size_mobile',value_en:String(f.get('logo_size_mobile')||42)}
     ];const {error}=await db.from('oa_site_content').upsert(rows,{onConflict:'content_key'});if(error)showMessage(error.message);else{await applyBranding();showMessage('Logo, crop and display sizes saved.');}});
   }
 
@@ -357,13 +352,12 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       return;
     }
     view.innerHTML =
-      "<div class='oa-card'><h2>Homepage text & contact details</h2><p>Edit each section in English and Nepali. Save each section after editing.</p></div>" +
+      "<div class='oa-card'><h2>Homepage text & contact details</h2><p>Update the text visitors see on the website. Save each section after editing.</p></div>" +
       "<div id='oa-home-fields'></div>";
     $('#oa-home-fields').innerHTML = contentKeys.map((item) => {
       const row = map[item[0]] || {};
       return "<form class='oa-card oa-text-form' data-key='" + esc(item[0]) + "'><h2>" + esc(item[1]) + "</h2>" +
-        "<div class='oa-grid'><div class='oa-field'><label>English</label><textarea name='value_en'>" + esc(row.value_en || '') + "</textarea></div>" +
-        "<div class='oa-field'><label>नेपाली</label><textarea name='value_np'>" + esc(row.value_np || '') + "</textarea></div></div>" +
+        "<div class='oa-grid'><div class='oa-field full'><label>Website text</label><textarea name='value_en'>" + esc(row.value_en || '') + "</textarea></div></div>" +
         "<button class='oa-button' type='submit'>Save section</button></form>";
     }).join('');
     document.querySelectorAll('.oa-text-form').forEach((form) => {
@@ -372,8 +366,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         const fields = new FormData(form);
         const { error } = await db.from('oa_site_content').upsert({
           content_key: form.dataset.key,
-          value_en: fields.get('value_en') || '',
-          value_np: fields.get('value_np') || ''
+          value_en: fields.get('value_en') || ''
         }, { onConflict: 'content_key' });
         showMessage(error ? error.message : 'Homepage section saved.');
       });
@@ -386,7 +379,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     if (kind === 'image') return imageField(name, label, '', 'content');
     const input = kind === 'area'
       ? "<textarea name='" + esc(name) + "'></textarea>"
-      : "<input name='" + esc(name) + "' placeholder=''" + required + ">";
+      : kind === 'number'
+        ? "<input type='number' min='0' step='1' name='" + esc(name) + "' value='0'" + required + ">"
+        : "<input name='" + esc(name) + "' placeholder=''" + required + ">";
     return "<div class='oa-field" + (kind === 'area' ? ' full' : '') + "'><label>" + esc(label) + "</label>" + input + "</div>";
   }
 
@@ -445,7 +440,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       event.preventDefault();
       const payload = {};
       config.fields.forEach((field) => {
-        payload[field[0]] = form.querySelector('[name="' + field[0] + '"]')?.value.trim() || '';
+        const rawValue = form.querySelector('[name="' + field[0] + '"]')?.value.trim() || '';
+        payload[field[0]] = field[3] === 'number' ? Number(rawValue || 0) : rawValue;
       });
       const missing = config.fields.find((field) => field[2] && !payload[field[0]]);
       if (missing) {
