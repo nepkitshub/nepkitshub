@@ -21,7 +21,7 @@ Current Oxford migrations recorded in Supabase:
 | `20261108051031_add_oxford_public_calendar` | Events and intake dates |
 | `20261108051504_add_oxford_partner_institutions` | Partner institution content |
 | `20261108051818_restrict_public_write_grants_oxford_content_tables` | Public write grant reduction for new Oxford content tables |
-| `limit_oxford_anon_table_grants` | Final least-privilege anonymous grants: public content read-only |
+| `20261108055210_limit_oxford_anon_table_grants` | Final least-privilege anonymous grants: public content read-only |
 
 ## Data model
 
