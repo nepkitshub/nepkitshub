@@ -515,11 +515,11 @@ const servicePageHtml = '<!doctype html>\\n<html lang="en"><head><meta charset="
   'document.title=item.title+" | Oxford Academic Instruction Pvt. Ltd.";document.getElementById("service-breadcrumb-title").textContent=item.title;' +
   'const steps=["Consultation","Plan & preparation","Documents","Next steps"];' +
   'const root=document.getElementById("service-detail");' +
-  'root.innerHTML="<section class=\\\\"oa-service-hero\\\\"><span class=\\\\"oa-service-kicker\\\\">"+esc(item.kicker)+"</span><h1>"+esc(item.title)+"</h1><p>"+esc(item.summary)+"</p><div class=\\\\"oa-service-hero-actions\\\\"><a href=\\\\"/#admission?service="+encodeURIComponent(key)+"\\\\">Enquire about this service ↗</a><a class=\\\\"secondary\\\\" href=\\\\"/#oa-lions-services\\\\">Explore all services</a></div></section>"+' +
+  'root.innerHTML="<section class=\\\\"oa-service-hero\\\\"><span class=\\\\"oa-service-kicker\\\\">"+esc(item.kicker)+"</span><h1>"+esc(item.title)+"</h1><p>"+esc(item.summary)+"</p><div class=\\\\"oa-service-hero-actions\\\\"><a href=\\\\"/?service="+encodeURIComponent(key)+"#admission\\\\">Enquire about this service ↗</a><a class=\\\\"secondary\\\\" href=\\\\"/#oa-lions-services\\\\">Explore all services</a></div></section>"+' +
   '"<div class=\\\\"oa-service-columns\\\\"><section class=\\\\"oa-service-panel\\\\"><h2>About this service</h2><p>"+esc(item.overview)+"</p><h2 style=\\\\"margin-top:24px\\\\">What we can help with</h2><ul class=\\\\"oa-service-list\\\\">"+item.includes.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul></section>"+' +
   '"<aside class=\\\\"oa-service-panel\\\\"><h2>How to get started</h2><ul class=\\\\"oa-service-list\\\\">"+item.steps.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul><p style=\\\\"margin-top:18px;font-size:11px\\\\">Contact either Oxford branch for current availability and details.</p></aside></div>"+' +
   '"<section class=\\\\"oa-service-panel\\\\\\" style=\\\\"margin-top:22px\\\\"><h2>Important information</h2><p>"+esc(item.note)+"</p></section>"+' +
-  '"<section class=\\\\"oa-service-bottom\\\\"><div><h2>Ready to discuss your next step?</h2><p>Send an enquiry and choose the Oxford branch you would like to contact.</p></div><a href=\\\\"/#admission?service="+encodeURIComponent(key)+"\\\\">Contact Oxford ↗</a></section>";' +
+  '"<section class=\\\\"oa-service-bottom\\\\"><div><h2>Ready to discuss your next step?</h2><p>Send an enquiry and choose the Oxford branch you would like to contact.</p></div><a href=\\\\"/?service="+encodeURIComponent(key)+"#admission\\\\">Contact Oxford ↗</a></section>";' +
   '</script></body></html>';
 const servicesDir = path.join(output, 'services');
 fs.mkdirSync(servicesDir, { recursive:true });
