@@ -4,10 +4,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const path = window.location.pathname.replace(/\/+$/, '');
   if (path === '/admin') return;
 
-  const db = createClient(
+  const db = window.__oaSupabaseClient || createClient(
     'https://gsfhhvkipvoutqqgyick.supabase.co',
     'sb_publishable_lzdJkHCS88esovlNn2_kow_8mmAQgh-'
   );
+  window.__oaSupabaseClient = db;
   const $ = (selector, root = document) => root.querySelector(selector);
   const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({
     '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'

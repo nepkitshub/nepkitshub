@@ -1,9 +1,10 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const db = createClient(
+const db = window.__oaSupabaseClient || createClient(
   'https://gsfhhvkipvoutqqgyick.supabase.co',
   'sb_publishable_lzdJkHCS88esovlNn2_kow_8mmAQgh-'
 );
+window.__oaSupabaseClient = db;
 const params = new URLSearchParams(window.location.search);
 const type = params.get('type') || 'notices';
 const id = params.get('id');

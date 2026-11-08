@@ -1,10 +1,11 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 (function () {
-  const db = createClient(
+  const db = window.__oaSupabaseClient || createClient(
     'https://gsfhhvkipvoutqqgyick.supabase.co',
     'sb_publishable_lzdJkHCS88esovlNn2_kow_8mmAQgh-'
   );
+  window.__oaSupabaseClient = db;
   let branding = null;
 
   const safeUrl = (value) => {
@@ -25,7 +26,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     document.querySelectorAll('.page-brand-name').forEach((node) => {
       const small = node.querySelector('small');
       const firstText = Array.from(node.childNodes).find((child) => child.nodeType === Node.TEXT_NODE);
-      if (firstText) firstText.nodeValue = name;
+      if (firstText) { if (firstText.nodeValue !== name) firstText.nodeValue = name; }
       else node.insertBefore(document.createTextNode(name), small || null);
     });
 
@@ -70,7 +71,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       '.brand-mark,.page-mark{width:' + desktop + 'px!important;height:' + desktop + 'px!important;flex:0 0 ' + desktop + 'px!important}' +
       '@media(max-width:760px){.brand-mark,.page-mark{width:' + mobile + 'px!important;height:' + mobile + 'px!important;flex-basis:' + mobile + 'px!important}}';
     if (style.textContent !== sizing) style.textContent = sizing;
-    document.title = name + ' | Kushma, Parbat';
+    // Keep route-specific titles from the static page metadata; branding only updates visible brand text.
   }
 
   async function refreshBranding() {

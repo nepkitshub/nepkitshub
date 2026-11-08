@@ -2,7 +2,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const SUPABASE_URL = 'https://gsfhhvkipvoutqqgyick.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_lzdJkHCS88esovlNn2_kow_8mmAQgh-';
-const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = window.__oaSupabaseClient || createClient(SUPABASE_URL, SUPABASE_KEY);
+window.__oaSupabaseClient = db;
 const isAdminRoute = window.location.pathname.replace(/\/+$/, '') === '/admin';
 
 const style = document.createElement('style');

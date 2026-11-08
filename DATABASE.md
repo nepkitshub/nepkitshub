@@ -6,7 +6,7 @@ Production project ref: `gsfhhvkipvoutqqgyick`.
 
 The database is migration-managed. The Supabase migration ledger is authoritative; do not recreate or bootstrap production from `schema.sql`. That file is deliberately non-executable because its original `oa_admins` email-allowlist model was superseded by the current user-role model.
 
-Current Oxford migrations recorded in Supabase:
+Production migration ledger recorded in Supabase:
 
 | Migration | Purpose |
 |---|---|
@@ -22,6 +22,24 @@ Current Oxford migrations recorded in Supabase:
 | `20261108051504_add_oxford_partner_institutions` | Partner institution content |
 | `20261108051818_restrict_public_write_grants_oxford_content_tables` | Public write grant reduction for new Oxford content tables |
 | `20261108055210_limit_oxford_anon_table_grants` | Final least-privilege anonymous grants: public content read-only |
+| `20261108135618_secure_shared_legacy_access` | Enables RLS on the legacy store tables; preserves public catalog and portfolio reads; denies public access to private customer/order records |
+
+The hosted ledger currently contains 20 migrations. This repository retains executable SQL for the 2026-11-08 Oxford grants migration and the 2026-11-08 shared-access lockdown migration; 18 earlier historical migration files are not present in Git. Do not claim that this repository alone can recreate the hosted database from an empty project. The ledger table above records their names and purposes; a full clean-room schema/data export remains a separate recovery task.
+
+
+## Shared-project security remediation
+
+The 2026-11-08 `secure_shared_legacy_access` migration was applied to the shared Supabase project.
+
+- RLS is enabled on every public store table (including the previously exposed commerce tables) and on `app_state`; there are now zero non-Oxford public tables with RLS disabled.
+- Anonymous and authenticated browser roles no longer have direct read/write access to profiles, password hashes, addresses, carts, orders, order items, payments, shipments, returns, notifications, inventory movements, audit logs, coupons, role tables, or internal media metadata.
+- The public store catalogue remains read-only: active products, variants, categories, brands, collections, banners, homepage sections, tags, product relationships, approved reviews and public site settings. Product costing/low-stock thresholds, reserved variant stock and profile password hashes are not selectable.
+- Portfolio content remains public-read under its existing publication/visibility policies. The public portfolio contact form can submit bounded fields only; messages cannot be listed by public credentials. Portfolio administration/media metadata remains unavailable through browser credentials until an Auth admin mapping is configured.
+- Existing rows were preserved. The migration did not delete or rewrite store orders, order items, shipments or the legacy profile.
+
+**Important compatibility boundary:** the existing store `profiles` record has no matching verified Supabase Auth user. The former `password_hash`-based browser model cannot securely identify that customer, so private customer and admin CRUD operations are intentionally denied rather than exposing them. The store frontend must migrate sign-in to Supabase Auth and use a trusted server-side checkout/admin path before customer cart/order updates and store administration can be re-enabled. Never put a Supabase service-role/secret key in a browser. Public catalogue browsing remains available.
+
+The database tooling did not permit changing default privileges for the underlying object-owner roles. Therefore, every future public-schema table/function must explicitly enable RLS and receive only the required grants/policies in its migration; verify this with the Security Advisor after each schema change.
 
 ## Data model
 
@@ -69,9 +87,13 @@ Payment proofs and other private documents must not be placed in this public buc
 
 ## Shared Supabase project boundary
 
-This Supabase project also contains NepKits Hub commerce tables and portfolio tables. Oxford fixes must be scoped to `oa_*` objects and `oa-academy-media`. Do not blanket-enable/rewrite policies on other applications as part of the academy deployment.
+This Supabase project also contains NepKits Hub commerce tables and portfolio tables. The `secure_shared_legacy_access` migration now enables RLS on all previously unprotected non-Oxford public tables, revokes browser-role write privileges, and restores public SELECT only for explicitly public catalog/portfolio content. It does not change Oxford Academy's `oa_*` table policies or the academy media bucket.
 
-A separate Supabase security-advisor run reports 33 non-Oxford public tables with RLS disabled, including commerce tables such as products, profiles, carts, orders and payments, plus portfolio tables. The current table inventory showed those tables empty at the time of review, but their grants and future use need a separate application-by-application policy audit. They are outside this site's scope and were not modified by the Oxford work. Do not expose customer or order data through them until RLS and role-specific policies are designed and tested.
+Private store tables (profiles, addresses, carts, orders, payments, shipments, returns, notifications, role/permission data, audit logs and internal media) intentionally have no browser-role policy or grant. This is a fail-closed state: the legacy store profile uses a custom password hash and its row does not match a verified Supabase Auth user. It must not be exposed until the store frontend is migrated to Supabase Auth and a server-side checkout/admin flow. Existing commerce records were retained. The public product catalogue remains readable.
+
+Portfolio tables retain published/visible read policies. The contact form has a bounded insert-only policy; message rows cannot be read using public keys. Portfolio administration remains closed until an approved Supabase Auth admin mapping is configured.
+
+A check of the hosted schema now returns zero non-Oxford public tables with RLS disabled. Some private tables intentionally have RLS but no policies; the advisor's informational `RLS Enabled No Policy` findings describe this deny-all state. The migration tooling could not change the owner-level default privileges, so each new public table or function must explicitly enable RLS and receive only narrowly required grants/policies.
 
 ## Operational verification
 
