@@ -708,4 +708,39 @@ const calendarDir = path.join(output, 'calendar');
 fs.mkdirSync(calendarDir, { recursive:true });
 fs.writeFileSync(path.join(calendarDir, 'index.html'), calendarPageHtml);
 
+
+/*
+ * Final design pass: every generated public route and the dedicated admin route
+ * receives the same maintained CSS and accessibility/interaction enhancements.
+ */
+const professionalThemeCss = fs.readFileSync(path.join(__dirname, 'professional-theme.css'), 'utf8');
+const professionalUxSource = fs.readFileSync(path.join(__dirname, 'professional-ux.js'), 'utf8');
+let professionalPagesUpdated = 0;
+function applyProfessionalLayer(folder) {
+  for (const entry of fs.readdirSync(folder, { withFileTypes: true })) {
+    const filePath = path.join(folder, entry.name);
+    if (entry.isDirectory()) {
+      applyProfessionalLayer(filePath);
+      continue;
+    }
+    if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
+    let page = fs.readFileSync(filePath, 'utf8');
+    if (page.includes('id="oa-professional-design-system"')) continue;
+    if (!page.includes('</head>') || !page.includes('</body>')) {
+      throw new Error('Cannot apply the Oxford professional theme to ' + filePath);
+    }
+    const themeBlock = '<style id="oa-professional-design-system">\n' + professionalThemeCss + '\n</style>';
+    const uxBlock = '<script id="oa-professional-ux">\n' + professionalUxSource + '\n</script>';
+    page = page.replace('</head>', themeBlock + '</head>');
+    page = page.replace('</body>', uxBlock + '</body>');
+    fs.writeFileSync(filePath, page);
+    professionalPagesUpdated += 1;
+  }
+}
+applyProfessionalLayer(output);
+if (professionalPagesUpdated === 0) {
+  throw new Error('The Oxford professional theme was not applied to any generated pages.');
+}
+console.log('Applied the unified Oxford design system and UX layer to ' + professionalPagesUpdated + ' routes.');
+
 console.log('Built Oxford Academy static site with public content detail pages (' + html.length + ' bytes) from ' + partsDir);
