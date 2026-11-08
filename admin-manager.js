@@ -71,6 +71,14 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     ['about_text', 'About section description'],
     ['mission_title', 'Mission banner heading'],
     ['mission_text', 'Mission banner description'],
+    ['company_story', 'About Oxford'],
+    ['company_mission', 'Our mission'],
+    ['company_vision', 'Our vision'],
+    ['company_goals', 'Our goals'],
+    ['leadership_message', 'Message from Oxford'],
+    ['services_intro', 'Services section introduction'],
+    ['classes_intro', 'Classes section introduction'],
+    ['testimonials_intro', 'Student experiences introduction'],
     ['contact_address', 'Contact address'],
     ['contact_email', 'Contact email'],
     ['contact_phone', 'Contact phone']
@@ -132,6 +140,90 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       ],
       label: (row) => row.title_en,
       sub: () => 'Gallery photo'
+    },
+    services: {
+      title: 'Services & Japan guidance',
+      table: 'oa_services',
+      noun: 'service',
+      description: 'Edit the public service descriptions, document support details, steps and notes shown on individual service pages.',
+
+      fields: [
+        ['slug', 'URL slug', true],
+        ['title_en', 'Service title', true],
+        ['category', 'Category'],
+        ['summary_en', 'Short description', false, 'area'],
+        ['body_en', 'Full service overview', false, 'area'],
+        ['highlights_en', 'What we help with (one point per line)', false, 'area'],
+        ['steps_en', 'Application / preparation steps (one per line)', false, 'area'],
+        ['note_en', 'Important note / disclaimer', false, 'area'],
+        ['image_url', 'Service image', false, 'image'],
+        ['sort_order', 'Display order', false, 'number']
+      ],
+      label: (row) => row.title_en,
+      sub: (row) => row.category || row.slug || 'Service'
+    },
+    testimonials: {
+      title: 'Student testimonials',
+      table: 'oa_testimonials',
+      noun: 'student experience',
+      publishDefault: false,
+      description: 'Only publish a student experience after the wording has been reviewed and the student has given permission to share their feedback and photo.',
+
+      fields: [
+        ['student_name', 'Student name', true],
+        ['course_name', 'Course / pathway'],
+        ['quote_en', 'Student feedback (approved wording)', true, 'area'],
+        ['location', 'Location (optional)'],
+        ['photo_url', 'Student photo (with permission)', false, 'image'],
+        ['sort_order', 'Display order', false, 'number']
+      ],
+      label: (row) => row.student_name,
+      sub: (row) => row.course_name || 'Student experience'
+    },
+    events: {
+      title: 'Calendar & course intakes',
+      table: 'oa_events',
+      noun: 'calendar item',
+      publishDefault: false,
+      description: 'Add genuine academy events, exam preparation sessions, course announcements and confirmed intake dates. Keep draft until details are confirmed.',
+
+      order: 'event_date',
+      ascending: true,
+      fields: [
+        ['slug', 'URL slug', true],
+        ['title_en', 'Event / intake title', true],
+        ['category', 'Category'],
+        ['summary_en', 'Short description', false, 'area'],
+        ['body_en', 'Full details', false, 'area'],
+        ['event_date', 'Start date', true, 'date'],
+        ['end_date', 'End date (optional)', false, 'date'],
+        ['time_label', 'Time / schedule'],
+        ['location', 'Location / branch'],
+        ['image_url', 'Event image', false, 'image'],
+        ['sort_order', 'Display order', false, 'number']
+      ],
+      label: (row) => row.title_en,
+      sub: (row) => [row.category, row.event_date].filter(Boolean).join(' · ')
+    },
+    partners: {
+      title: 'Partner institutions',
+      table: 'oa_partners',
+      noun: 'partner institution',
+      publishDefault: false,
+      description: 'Add only education or service partners with a current, confirmed relationship and permission to publish their details.',
+      fields: [
+        ['name', 'Institution / partner name', true],
+        ['category', 'Partnership category'],
+        ['country_or_region', 'Country / region'],
+        ['description_en', 'Description / relationship', false, 'area'],
+        ['website_url', 'Official website (HTTPS)'],
+        ['email', 'Public contact email'],
+        ['phone', 'Public contact phone'],
+        ['logo_url', 'Partner logo (with permission)', false, 'image'],
+        ['sort_order', 'Display order', false, 'number']
+      ],
+      label: (row) => row.name,
+      sub: (row) => [row.category, row.country_or_region].filter(Boolean).join(' · ')
     }
   };
 
@@ -174,6 +266,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       "<button data-section='programs'>▦ &nbsp; Programmes</button>" +
       "<button data-section='faculty'>♙ &nbsp; Teachers & staff</button>" +
       "<button data-section='gallery'>▧ &nbsp; Photo gallery</button>" +
+      "<button data-section='services'>◎ &nbsp; Services & visa guidance</button>" +
+      "<button data-section='testimonials'>☆ &nbsp; Student testimonials</button>" +
+      "<button data-section='events'>▦ &nbsp; Calendar & intakes</button>" +
+      "<button data-section='partners'>◇ &nbsp; Partner institutions</button>" +
       "<button data-section='admissions'>✉ &nbsp; Admissions</button><button data-section='branches'>⌖ &nbsp; Branches & contacts</button></nav>" +
       "<a href='/' target='_blank' rel='noopener'>View live website ↗</a></aside>" +
       "<main class='oa-main'><div class='oa-top'><div><small>OXFORD ACADEMY / ADMIN</small><h1 id='oa-title'>Dashboard overview</h1></div>" +
@@ -199,6 +295,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     programs: 'Academic programmes',
     faculty: 'Teachers & staff',
     gallery: 'Photo gallery',
+    services: 'Services & Japan guidance',
+    testimonials: 'Student testimonials',
+    events: 'Calendar & course intakes',
+    partners: 'Partner institutions',
     admissions: 'Admission enquiries',
     branches: 'Branches & contact details'
   };
@@ -221,11 +321,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   async function renderOverview() {
     const view = $('#oa-view');
     view.innerHTML =
-      "<div class='oa-card'><h2>Welcome to Oxford Academy website manager</h2><p>Manage website branding, homepage content, programmes, staff, notices, gallery, branch contacts and admission enquiries from one place.</p></div>" +
+      "<div class='oa-card'><h2>Welcome to Oxford Academic Instruction</h2><p>Manage the full public website: brand and About content, Japan services, language programmes, student testimonials, staff, notices, gallery, branch contacts and admission enquiries.</p></div>" +
       "<div class='oa-stats' id='oa-stats'></div><div class='oa-card'><h2>Quick actions</h2><div class='oa-actions'>" +
       "<button class='oa-button' data-go='branding'>Change logo</button><button class='oa-button' data-go='notices'>Create a post</button>" +
       "<button class='oa-button light' data-go='gallery'>Upload photos</button><button class='oa-button light' data-go='homepage'>Edit homepage</button></div></div>";
-    const tables = [['oa_notices','Posts'],['oa_programs','Programmes'],['oa_faculty','Staff'],['oa_gallery','Gallery photos'],['oa_admissions','Enquiries']];
+    const tables = [['oa_services','Services'],['oa_programs','Classes / programmes'],['oa_events','Calendar items'],['oa_testimonials','Testimonials'],['oa_partners','Partners'],['oa_notices','Posts'],['oa_faculty','Staff'],['oa_gallery','Gallery photos'],['oa_admissions','Enquiries']];
     const counts = await Promise.all(tables.map(async (item) => {
       const { count, error } = await db.from(item[0]).select('id', { count: 'exact', head: true });
       return [item[1], error ? '—' : (count || 0)];
@@ -381,7 +481,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       ? "<textarea name='" + esc(name) + "'></textarea>"
       : kind === 'number'
         ? "<input type='number' min='0' step='1' name='" + esc(name) + "' value='0'" + required + ">"
-        : "<input name='" + esc(name) + "' placeholder=''" + required + ">";
+        : kind === 'date'
+          ? "<input type='date' name='" + esc(name) + "' value=''" + required + ">"
+          : "<input name='" + esc(name) + "' placeholder=''" + required + ">";
     return "<div class='oa-field" + (kind === 'area' ? ' full' : '') + "'><label>" + esc(label) + "</label>" + input + "</div>";
   }
 
@@ -389,16 +491,16 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const config = collections[name];
     const view = $('#oa-view');
     view.innerHTML = "<div class='oa-card'><h2>" + esc(config.title) + "</h2><p>Loading entries…</p></div>";
-    const { data, error } = await db.from(config.table).select('*').order('created_at', { ascending: false }).limit(100);
+    const { data, error } = await db.from(config.table).select('*').order(config.order || 'created_at', { ascending: typeof config.ascending === 'boolean' ? config.ascending : false }).limit(100);
     if (error) {
       view.innerHTML = "<div class='oa-card'>" + esc(error.message) + "</div>";
       return;
     }
     const rows = data || [];
     view.innerHTML =
-      "<div class='oa-card'><h2 id='oa-form-title'>Add new " + esc(config.noun) + "</h2><p>Add an item, edit existing details, or publish and unpublish it.</p>" +
+      "<div class='oa-card'><h2 id='oa-form-title'>Add new " + esc(config.noun) + "</h2><p>" + esc(config.description || 'Add an item, edit existing details, or publish and unpublish it.') + "</p>" +
       "<form id='oa-entry-form'><div class='oa-grid'>" + config.fields.map(fieldMarkup).join('') + "</div>" +
-      "<label class='oa-check'><input type='checkbox' name='is_published' checked> Publish on the public website</label>" +
+      "<label class='oa-check'><input type='checkbox' name='is_published' " + (config.publishDefault === false ? '' : 'checked') + "> Publish on the public website</label>" +
       "<div class='oa-actions'><button class='oa-button' id='oa-save'>Save item</button><button class='oa-button light' id='oa-cancel' type='button' style='display:none'>Cancel edit</button></div></form></div>" +
       "<div class='oa-card'><h2>Existing items</h2><p>Edit, publish, unpublish or delete entries.</p><div class='oa-records' id='oa-record-list'></div></div>";
     const form = $('#oa-entry-form');
@@ -408,7 +510,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const reset = () => {
       form.reset();
       delete form.dataset.recordId;
-      form.querySelector('[name=is_published]').checked = true;
+      form.querySelector('[name=is_published]').checked = config.publishDefault !== false;
       form.querySelectorAll('.oa-preview').forEach((preview) => {
         preview.src = '';
         preview.classList.add('hide');
@@ -441,7 +543,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const payload = {};
       config.fields.forEach((field) => {
         const rawValue = form.querySelector('[name="' + field[0] + '"]')?.value.trim() || '';
-        payload[field[0]] = field[3] === 'number' ? Number(rawValue || 0) : rawValue;
+        payload[field[0]] = field[3] === 'number' ? Number(rawValue || 0) : (field[3] === 'date' && !rawValue ? null : rawValue);
       });
       const missing = config.fields.find((field) => field[2] && !payload[field[0]]);
       if (missing) {

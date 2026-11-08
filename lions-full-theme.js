@@ -78,6 +78,80 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   style.textContent = css;
   document.head.appendChild(style);
 
+
+  const additionalStyles = document.createElement('style');
+  additionalStyles.id = 'oa-complete-content-style';
+  additionalStyles.textContent = String.raw`
+    body.oa-lions-full .oa-company-profile{padding:84px 0;background:linear-gradient(180deg,#fff 0%,#f4f8fc 100%)}
+    body.oa-lions-full .oa-company-profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    body.oa-lions-full .oa-company-panel{min-width:0;padding:26px;border:1px solid #e3ebf2;border-radius:12px;background:#fff;box-shadow:0 10px 28px rgba(15,48,79,.055)}
+    body.oa-lions-full .oa-company-panel h3{margin:0 0 10px;color:#173f69;font:700 24px/1.2 "Playfair Display",Georgia,serif}
+    body.oa-lions-full .oa-company-panel p{margin:0;color:#6b7c8f;font-size:13px;line-height:1.95;white-space:pre-line}
+    body.oa-lions-full .oa-company-panel.mission{border-top:4px solid #f2a33a}
+    body.oa-lions-full .oa-company-panel.vision{border-top:4px solid #185da0}
+    body.oa-lions-full .oa-company-panel.goals,body.oa-lions-full .oa-company-panel.leadership{grid-column:1/-1}
+    body.oa-lions-full .oa-company-panel.leadership{background:#123e69;color:#fff;border:0}
+    body.oa-lions-full .oa-company-panel.leadership h3{color:#ffd18c}
+    body.oa-lions-full .oa-company-panel.leadership p{color:#e4eef8}
+    body.oa-lions-full .oa-lions-testimonials{background:#f6f9fc}
+    body.oa-lions-full .oa-testimonial-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+    body.oa-lions-full .oa-testimonial-card{display:flex;flex-direction:column;min-width:0;padding:23px;background:#fff;border:1px solid #e3eaf1;border-radius:12px;box-shadow:0 10px 28px rgba(15,48,79,.06)}
+    body.oa-lions-full .oa-lions-calendar{background:#fff}
+    body.oa-lions-full .oa-lions-partners{background:#f6f9fc}
+    body.oa-lions-full .oa-partner-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+    body.oa-lions-full .oa-partner-card{min-width:0;padding:21px;border:1px solid #e2eaf1;border-radius:11px;background:#fff;box-shadow:0 8px 22px rgba(15,48,79,.05)}
+    body.oa-lions-full .oa-partner-card img{display:block;width:100%;height:74px;object-fit:contain;margin-bottom:15px}
+    body.oa-lions-full .oa-partner-mark{display:grid;place-items:center;width:50px;height:50px;margin-bottom:15px;border-radius:11px;background:#eaf3fb;color:#185da0;font-size:22px}
+    body.oa-lions-full .oa-partner-card>span{color:#d89434;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.1em}
+    body.oa-lions-full .oa-partner-card h3{margin:7px 0;color:#173f69;font:700 19px/1.2 "Playfair Display",Georgia,serif}
+    body.oa-lions-full .oa-partner-card small{color:#7b8998;font-size:10px}
+    body.oa-lions-full .oa-partner-card p{color:#708194;font-size:11px;line-height:1.8}
+    body.oa-lions-full .oa-partner-card>a{display:inline-flex;margin-top:10px;color:#185da0;font-size:10px;font-weight:900}
+    body.oa-lions-full .oa-calendar-preview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    body.oa-lions-full .oa-calendar-preview-card{min-width:0;padding:21px;border:1px solid #e2eaf1;border-radius:11px;background:#fff;box-shadow:0 8px 22px rgba(15,48,79,.05)}
+    body.oa-lions-full .oa-calendar-preview-card>span{display:inline-flex;margin-right:8px;padding:4px 7px;border-radius:4px;background:#eaf3fb;color:#185da0;font-size:9px;font-weight:900;text-transform:uppercase}
+    body.oa-lions-full .oa-calendar-preview-card>b{display:inline-flex;color:#d89434;font-size:10px}
+    body.oa-lions-full .oa-calendar-preview-card h3{margin:12px 0 7px;color:#173f69;font:700 19px/1.25 "Playfair Display",Georgia,serif}
+    body.oa-lions-full .oa-calendar-preview-card p{color:#708194;font-size:11px;line-height:1.8}
+    body.oa-lions-full .oa-calendar-preview-card small{display:block;margin-top:6px;color:#748496;font-size:10px}
+    body.oa-lions-full .oa-testimonial-stars{margin-bottom:14px;color:#e3a03a;letter-spacing:.12em;font-size:14px}
+    body.oa-lions-full .oa-testimonial-quote{flex:1;margin:0 0 19px;color:#52677c;font-size:13px;line-height:1.9;white-space:pre-line}
+    body.oa-lions-full .oa-testimonial-person{display:flex;align-items:center;gap:11px;padding-top:14px;border-top:1px solid #e9eef3}
+    body.oa-lions-full .oa-testimonial-person img{width:46px;height:46px;flex:0 0 46px;object-fit:cover;border-radius:50%;border:2px solid #f0c681}
+    body.oa-lions-full .oa-testimonial-person b{display:block;color:#173f69;font-size:12px}
+    body.oa-lions-full .oa-testimonial-person small{display:block;color:#7a8998;font-size:10px}
+    body.oa-lions-full .oa-testimonial-empty{padding:24px;border:1px dashed #c7d4df;border-radius:11px;background:#fff;color:#718194;font-size:12px;line-height:1.8}
+    body.oa-lions-full .oa-class-level-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:20px}
+    body.oa-lions-full .oa-class-level{padding:18px 14px;border:1px solid #e2eaf1;border-radius:11px;background:#fff;box-shadow:0 8px 20px rgba(15,48,79,.045)}
+    body.oa-lions-full .oa-class-level strong{display:block;margin-bottom:7px;color:#185da0;font:800 22px/1 "DM Sans",sans-serif}
+    body.oa-lions-full .oa-class-level span{display:block;color:#6d7f91;font-size:10px;line-height:1.6}
+    body.oa-lions-full .oa-class-skills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px}
+    body.oa-lions-full .oa-class-skill{padding:17px;border:1px solid #e3ebf2;border-radius:10px;background:#f9fbfd;text-align:center}
+    body.oa-lions-full .oa-class-skill b{display:block;margin-bottom:5px;color:#173f69;font-size:13px}
+    body.oa-lions-full .oa-class-skill span{color:#768697;font-size:10px}
+    body.oa-lions-full .oa-service-card-category{display:inline-flex;margin-bottom:12px;padding:5px 8px;border-radius:4px;background:#eaf3fb;color:#185da0;font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    body.oa-lions-full .oa-service-card-image{height:145px;overflow:hidden;margin:-23px -21px 17px;width:calc(100% + 42px);background:#edf3f8}
+    body.oa-lions-full .oa-service-card-image img{width:100%;height:100%;display:block;object-fit:cover}
+    body.oa-lions-full .oa-lions-service-card{display:flex;flex-direction:column}
+    body.oa-lions-full .oa-lions-service-card>a{margin-top:auto;padding-top:16px}
+    @media(max-width:900px){
+      body.oa-lions-full .oa-lions-service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      body.oa-lions-full .oa-class-level-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      body.oa-lions-full .oa-testimonial-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body.oa-lions-full .oa-calendar-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body.oa-lions-full .oa-partner-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:760px){
+      body.oa-lions-full .oa-company-profile{padding:58px 0}
+      body.oa-lions-full .oa-company-profile-grid{grid-template-columns:1fr;gap:12px}
+      body.oa-lions-full .oa-company-panel{padding:20px}
+      body.oa-lions-full .oa-company-panel.goals,body.oa-lions-full .oa-company-panel.leadership{grid-column:auto}
+      body.oa-lions-full .oa-testimonial-grid,body.oa-lions-full .oa-calendar-preview-grid,body.oa-lions-full .oa-partner-grid{grid-template-columns:1fr}
+      body.oa-lions-full .oa-class-level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      body.oa-lions-full .oa-class-skills{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:430px){body.oa-lions-full .oa-lions-service-grid{grid-template-columns:1fr}}
+  `;
+  document.head.appendChild(additionalStyles);
+
   const closeMobileMenu = () => {
     const nav = $('#navLinks');
     const button = $('#menuBtn');
@@ -123,26 +197,24 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const nav = $('#navLinks');
       if (nav) {
         nav.innerHTML =
-          '<a href="#home">Home</a>' +
-          '<a href="#about">About Us</a>' +
+          '<a href="/">Home</a><a href="/about/">About Us</a>' +
           '<details class="oa-nav-drop"><summary>Services</summary><div class="oa-nav-menu">' +
             '<a href="#oa-lions-services">All Services</a>' +
-            '<a href="/services/?type=student-visa">Student Visa Guidance</a>' +
+            '<a href="/services/?type=student-visa">Student Visa & Study in Japan</a>' +
             '<a href="/services/?type=working-visa-language">Working Visa Language</a>' +
-            '<a href="/services/?type=ssw">SSW Preparation</a>' +
+            '<a href="/services/?type=ssw">Specified Skilled Worker (SSW)</a>' +
             '<a href="/services/?type=dependent-visa">Dependent Visa Guidance</a>' +
             '<a href="/services/?type=documentation">Documentation Support</a>' +
-            '<a href="/services/?type=career-counselling">Career Counselling</a>' +
-            '<a href="#oa-lions-offices">Branch Support</a>' +
+            '<a href="/services/?type=career-counselling">Study & Career Counselling</a>' +
           '</div></details>' +
           '<details class="oa-nav-drop"><summary>Classes</summary><div class="oa-nav-menu">' +
-            '<a href="/services/?type=japanese-classes">Japanese N5 · N4 · N3</a>' +
-            '<a href="/services/?type=language-tests">JLPT · NAT · J-CERT · JLCT</a>' +
-            '<a href="/services/?type=language-tests">JFT-Basic Preparation</a>' +
-            '<a href="/services/?type=ssw">SSW Preparation</a>' +
+            '<a href="/services/?type=japanese-classes">Japanese Language N5–N1</a>' +
+            '<a href="/services/?type=language-tests">JLPT · NAT · J-CERT · JLCT · JFT-Basic</a>' +
+            '<a href="/services/?type=ssw-preparation">SSW Preparation Class</a>' +
             '<a href="/services/?type=korean-classes">Korean Language</a>' +
           '</div></details>' +
-          '<a href="#team">Our Team</a><a href="#notices">News & Notices</a><a href="#contact">Contact Us</a>';
+          '<a href="#oa-lions-testimonials">Student Experiences</a><a href="/calendar/">Calendar</a><a href="#team">Our Team</a>' +
+          '<a href="#notices">News & Notices</a><a href="#contact">Contact Us</a>';
         nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMobileMenu));
       }
 
@@ -153,14 +225,14 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
       // Rewrite only Oxford's existing generic homepage copy. No Lions text, logos or claims are reused.
       setText('#heroEyebrow', 'OXFORD ACADEMIC INSTRUCTION PVT. LTD. · KUSHMA & BAGLUNG');
-      setText('#heroTitle', 'Your Future Starts With the Right Learning Path.');
-      setText('#heroSubtitle', 'Explore Japanese and Korean language programmes at Oxford Academic Instruction. Find course information, connect with our team and choose the branch that is convenient for you.');
-      setText('#heroNote', 'Japanese Language · Korean Language · Learner Support');
+      setText('#heroTitle', 'Your Japan Journey Starts With the Right Guidance.');
+      setText('#heroSubtitle', 'Explore study opportunities in Japan, Japanese language classes, work and SSW preparation, dependent visa guidance and application support — with Oxford Academic Instruction by your side.');
+      setText('#heroNote', 'Study in Japan · Work in Japan · Language & Documentation Support');
       setAnchor('.hero-buttons a:first-child', 'Explore Our Classes ↓', '#academics');
       setAnchor('.hero-buttons a:last-child', 'Send an Enquiry ↗', '#admission');
       setText('#aboutBadge', 'Learn with purpose. Move forward with confidence.');
-      setText('#aboutTitle', 'Education and language learning for your next step.');
-      setText('#aboutText', 'Oxford Academic Instruction Pvt. Ltd. provides Japanese and Korean language classes, Japan study and career counselling, student visa guidance, language preparation for work-related pathways, dependent visa guidance and documentation support. With branches in Kushma and Baglung, the academy helps learners understand their options and prepare for the next steps in their education or career journey.');
+      setText('#aboutTitle', 'Guidance and language education for your next step in Japan.');
+      setText('#aboutText', 'Oxford Academic Instruction Pvt. Ltd. supports learners through Japanese and Korean language classes, Japan study and career counselling, student visa guidance, working and SSW preparation, dependent visa guidance and application documentation support. With branches in Kushma and Baglung, the academy helps learners understand their options and prepare for the next steps in their education or career journey.');
       const aboutCopy = $('.about-copy');
       if (aboutCopy) {
         const paragraph = $('#aboutText');
@@ -173,6 +245,35 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       }
 
       const about = $('#about');
+      const { data: profileRows } = await db.from('oa_site_content')
+        .select('content_key,value_en')
+        .in('content_key', ['company_story','company_mission','company_vision','company_goals','leadership_message','services_intro','classes_intro','testimonials_intro']);
+      const profileMap = {};
+      (profileRows || []).forEach((row) => { profileMap[row.content_key] = String(row.value_en || '').trim(); });
+      let companyProfile = $('#oa-company-profile');
+      if (!companyProfile) {
+        companyProfile = document.createElement('section');
+        companyProfile.id = 'oa-company-profile';
+        companyProfile.className = 'section oa-company-profile';
+        companyProfile.innerHTML =
+          '<div class="container"><div class="section-head"><span class="section-kicker">ABOUT OXFORD</span><h2>Our purpose, direction and values.</h2><p>Learn about the principles behind Oxford Academic Instruction and the support we provide to learners and families.</p></div>' +
+          '<div class="oa-company-profile-grid">' +
+            '<article class="oa-company-panel mission"><h3>Our Mission</h3><p id="oa-company-mission"></p></article>' +
+            '<article class="oa-company-panel vision"><h3>Our Vision</h3><p id="oa-company-vision"></p></article>' +
+            '<article class="oa-company-panel goals"><h3>Our Goals</h3><p id="oa-company-goals"></p></article>' +
+            '<article class="oa-company-panel leadership"><h3>Message from Oxford</h3><p id="oa-company-leadership"></p></article>' +
+          '</div></div>';
+      }
+      setText('#aboutText', profileMap.company_story || $('#aboutText')?.textContent || '');
+      const profileText = (id, value) => {
+        const node = companyProfile.querySelector('#' + id);
+        if (node) node.textContent = value || '';
+      };
+      profileText('oa-company-mission', profileMap.company_mission);
+      profileText('oa-company-vision', profileMap.company_vision);
+      profileText('oa-company-goals', profileMap.company_goals);
+      profileText('oa-company-leadership', profileMap.leadership_message);
+
       const values = $('#why-choose-oxford');
       if (values) {
         sectionHead(values, 'WHY CHOOSE OXFORD', 'A learner-focused approach at every step.', 'We value curiosity, integrity, personal growth and a supportive learning community.');
@@ -193,7 +294,6 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         }
       }
 
-      // Build the reference-style services section using only programmes and enquiry routes Oxford actually offers.
       let services = $('#oa-lions-services');
       if (!services) {
         services = document.createElement('section');
@@ -202,22 +302,32 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         services.innerHTML =
           '<div class="container"><div class="section-head"><span class="section-kicker">OUR SERVICES</span>' +
           '<h2>Guidance for study, work and family pathways in Japan.</h2>' +
-          '<p>Explore Oxford’s Japanese language learning, Japan study guidance, visa-related assistance, test preparation and documentation support. Final eligibility and visa decisions remain with the relevant Japanese authorities.</p></div>' +
-          '<div class="oa-lions-service-grid">' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">🎓</div><h3>Student Visa Guidance</h3><p>Study in Japan counselling, Japanese school selection, application guidance, intake information and student visa documentation support.</p><a href="/services/?type=student-visa">Enquire about student visa →</a></article>' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">仕事</div><h3>Working Visa Language Preparation</h3><p>Japanese language preparation and guidance for learners exploring work-related pathways in Japan.</p><a href="/services/?type=working-visa-language">Enquire about work →</a></article>' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">SSW</div><h3>Specified Skilled Worker</h3><p>Japanese language and SSW preparation support, including guidance on relevant test and application steps.</p><a href="/services/?type=ssw">Enquire about SSW →</a></article>' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">家族</div><h3>Dependent Visa Guidance</h3><p>Guidance on family-related documentation and the dependent visa application process for Japan.</p><a href="/services/?type=dependent-visa">Enquire about dependent visa →</a></article>' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">文書</div><h3>Documentation Support</h3><p>Help understanding and preparing academic, identity, sponsor and financial documents for applications.</p><a href="/services/?type=documentation">Enquire about documents →</a></article>' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">◎</div><h3>Career Counselling</h3><p>Discuss your background, goals and possible education or work pathways before choosing a next step.</p><a href="/services/?type=career-counselling">Request counselling →</a></article>' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">あ</div><h3>Japanese Language Classes</h3><p>Build Japanese language skills for study, communication, proficiency tests and work-related preparation.</p><a href="#academics">Explore classes →</a></article>' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">한</div><h3>Korean Language Classes</h3><p>Explore Oxford’s published Korean language programme and ask the academy for current class information.</p><a href="#academics">Explore classes →</a></article>' +
-          '</div></div>';
+          '<p id="oa-services-intro"></p></div>' +
+          '<div class="oa-lions-service-grid" id="oa-lions-service-grid"><div class="oa-staff-empty">Loading services…</div></div></div>';
+      }
+      const servicesIntro = $('#oa-services-intro', services); if (servicesIntro) servicesIntro.textContent = profileMap.services_intro || 'Explore Oxford’s study, work, language and application support services.';
+      const serviceGrid = $('#oa-lions-service-grid', services);
+      if (serviceGrid) {
+        const { data: serviceRows, error: serviceError } = await db.from('oa_services')
+          .select('slug,title_en,category,summary_en,image_url,sort_order,is_published')
+          .eq('is_published', true).order('sort_order', { ascending:true });
+        if (!serviceError && serviceRows && serviceRows.length) {
+          serviceGrid.innerHTML = serviceRows.map((item) => {
+            const slug = encodeURIComponent(String(item.slug || ''));
+            const imageUrl = safeHttps(item.image_url || '');
+            const symbol = /student|study/i.test(item.slug) ? '🎓' : (/ssw|work/i.test(item.slug) ? '仕事' : (/dependent/i.test(item.slug) ? '家族' : (/language|class|test/i.test(item.slug) ? 'あ' : '✦')));
+            return '<article class="oa-lions-service-card">' +
+              (imageUrl ? '<div class="oa-service-card-image"><img src="' + esc(imageUrl) + '" alt="' + esc(item.title_en) + '" loading="lazy"></div>' : '<div class="oa-lions-service-icon">' + symbol + '</div>') +
+              '<span class="oa-service-card-category">' + esc(item.category || 'Oxford Service') + '</span>' +
+              '<h3>' + esc(item.title_en) + '</h3><p>' + esc(item.summary_en || 'Contact Oxford for more information about this service.') + '</p>' +
+              '<a href="/services/?type=' + slug + '">View service details →</a></article>';
+          }).join('');
+        } else {
+          serviceGrid.innerHTML = '<div class="oa-staff-empty">Service information is being updated. Please contact Oxford for assistance.</div>';
+          if (serviceError) console.warn('Services could not be loaded:', serviceError.message);
+        }
       }
 
-      // The old preview contained a generic      }
-
-      // The old preview contained a generic "learning journey" block. Replace it with a course callout.
       const oldJourney = $('#oa-learning-journey');
       const oldMissionBanner = $('.split-banner');
       let callout = $('#oa-lions-course-cta');
@@ -247,11 +357,17 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         classTypes.className = 'oa-lions-class-types';
         classTypes.innerHTML =
           '<div class="oa-lions-class-heading"><span class="section-kicker">JAPANESE COURSE OPTIONS</span><h3>Build your language skills step by step.</h3></div>' +
-          '<div class="oa-lions-class-type-grid">' +
-          '<article><b>N5 · N4 · N3 Classes</b><p>Structured Japanese language learning from foundational to intermediate levels.</p><a href="#admission" href="/services/?type=japanese-classes">Ask about class levels →</a></article>' +
-          '<article><b>JLPT · NAT · J-CERT · JLCT</b><p>Preparation for recognised Japanese language proficiency and communication tests.</p><a href="#admission" href="/services/?type=language-tests">Ask about test preparation →</a></article>' +
-          '<article><b>JFT-Basic Preparation</b><p>Language preparation for learners planning to pursue the Specified Skilled Worker pathway.</p><a href="#admission" href="/services/?type=language-tests">Ask about JFT-Basic →</a></article>' +
-          '<article><b>SSW Preparation</b><p>Language and pathway preparation for applicants exploring Japan’s Specified Skilled Worker route.</p><a href="#admission" href="/services/?type=ssw">Ask about SSW preparation →</a></article>' +
+          '<div class="oa-class-level-grid">' +
+          '<article class="oa-class-level"><strong>N5</strong><span>Beginner — scripts, basic vocabulary and everyday expressions</span></article>' +
+          '<article class="oa-class-level"><strong>N4</strong><span>Elementary — foundational grammar, vocabulary and comprehension</span></article>' +
+          '<article class="oa-class-level"><strong>N3</strong><span>Intermediate — familiar topics and practical communication</span></article>' +
+          '<article class="oa-class-level"><strong>N2</strong><span>Upper intermediate — complex texts and communication</span></article>' +
+          '<article class="oa-class-level"><strong>N1</strong><span>Advanced — complex written and spoken Japanese</span></article>' +
+          '</div>' +
+          '<div class="oa-class-skills"><div class="oa-class-skill"><b>Listening</b><span>Understand spoken Japanese</span></div><div class="oa-class-skill"><b>Speaking</b><span>Build natural communication</span></div><div class="oa-class-skill"><b>Reading</b><span>Read scripts and texts</span></div><div class="oa-class-skill"><b>Writing</b><span>Develop accurate expression</span></div></div>' +
+          '<div class="oa-lions-class-type-grid" style="margin-top:18px">' +
+          '<article><b>JLPT · NAT · J-CERT · JLCT · JFT-Basic</b><p>Prepare for Japanese language proficiency and communication tests. Confirm current formats and registrations with the exam providers.</p><a href="/services/?type=language-tests">View test preparation →</a></article>' +
+          '<article><b>SSW Preparation Class</b><p>Japanese language and pathway preparation for learners exploring the Specified Skilled Worker route.</p><a href="/services/?type=ssw-preparation">View SSW preparation →</a></article>' +
           '</div>';
         programRoot.insertAdjacentElement('afterend', classTypes);
       }
@@ -288,6 +404,66 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           '<article><span>03</span><h3>Application & Documents</h3><p>Get guidance on school applications, required paperwork and preparation for interviews.</p></article>' +
           '<article><span>04</span><h3>Follow-up & Next Steps</h3><p>Receive information about the next steps and where to check official application requirements.</p></article>' +
           '</div><p class="oa-lions-disclaimer">Visa eligibility, processing and approval are determined by the relevant Japanese institutions and authorities. Oxford provides guidance and preparation support; outcomes are not guaranteed.</p></div>';
+      }
+
+      let testimonials = $('#oa-lions-testimonials');
+      if (!testimonials) {
+        testimonials = document.createElement('section');
+        testimonials.id = 'oa-lions-testimonials';
+        testimonials.className = 'section oa-lions-testimonials';
+        testimonials.innerHTML =
+          '<div class="container"><div class="section-head"><span class="section-kicker">STUDENT EXPERIENCES</span><h2>Hear from learners at Oxford.</h2><p id="oa-testimonials-intro"></p></div><div class="oa-testimonial-grid" id="oa-testimonial-grid"><div class="oa-testimonial-empty">Student experiences will appear here after learners give permission for Oxford to publish their feedback.</div></div></div>';
+      }
+      const testimonialsIntro = $('#oa-testimonials-intro', testimonials); if (testimonialsIntro) testimonialsIntro.textContent = profileMap.testimonials_intro || 'Student feedback is shown only after it has been reviewed and approved for publication.';
+      const testimonialGrid = $('#oa-testimonial-grid', testimonials);
+      if (testimonialGrid) {
+        const { data: testimonialRows, error: testimonialError } = await db.from('oa_testimonials')
+          .select('student_name,course_name,quote_en,location,photo_url,sort_order')
+          .eq('is_published', true).order('sort_order', { ascending:true }).limit(12);
+        if (!testimonialError && testimonialRows && testimonialRows.length) {
+          testimonialGrid.innerHTML = testimonialRows.map((item) => {
+            const photo = safeHttps(item.photo_url || '');
+            return '<article class="oa-testimonial-card"><div class="oa-testimonial-stars" aria-label="Student feedback">★★★★★</div>' +
+              '<p class="oa-testimonial-quote">“' + esc(item.quote_en || '') + '”</p>' +
+              '<div class="oa-testimonial-person">' +
+                (photo ? '<img src="' + esc(photo) + '" alt="' + esc(item.student_name || 'Student') + '" loading="lazy">' : '<span class="oa-testimonial-avatar">OA</span>') +
+                '<div><b>' + esc(item.student_name || 'Oxford learner') + '</b><small>' + esc([item.course_name,item.location].filter(Boolean).join(' · ')) + '</small></div>' +
+              '</div></article>';
+          }).join('');
+        } else {
+          testimonialGrid.innerHTML = '<div class="oa-testimonial-empty">We are preparing this space for approved student experiences. Oxford will publish feedback only with the student’s permission.</div>';
+          if (testimonialError) console.warn('Testimonials could not be loaded:', testimonialError.message);
+        }
+      }
+
+      let calendarSection = $('#oa-lions-calendar');
+      if (!calendarSection) {
+        calendarSection = document.createElement('section');
+        calendarSection.id = 'oa-lions-calendar';
+        calendarSection.className = 'section oa-lions-calendar';
+        calendarSection.innerHTML =
+          '<div class="container"><div class="section-head"><span class="section-kicker">CALENDAR & INTAKES</span><h2>Upcoming events and course updates.</h2><p>See announcements and dates published by Oxford, or contact a branch to confirm the next available course or application intake.</p></div>' +
+          '<div class="oa-calendar-preview-grid" id="oa-calendar-preview-grid"><div class="oa-testimonial-empty">Loading calendar updates…</div></div>' +
+          '<div style="margin-top:22px"><a class="btn btn-navy" href="/calendar/">View full calendar ↗</a></div></div>';
+      }
+      const calendarGrid = $('#oa-calendar-preview-grid', calendarSection);
+      if (calendarGrid) {
+        const today = new Date().toISOString().slice(0,10);
+        const { data: eventRows, error: eventError } = await db.from('oa_events')
+          .select('title_en,category,summary_en,event_date,end_date,time_label,location')
+          .eq('is_published', true).gte('event_date', today)
+          .order('event_date', { ascending:true }).limit(3);
+        if (!eventError && eventRows && eventRows.length) {
+          calendarGrid.innerHTML = eventRows.map((event) => {
+            const date = new Date(event.event_date + 'T00:00:00').toLocaleDateString('en', {day:'numeric',month:'short',year:'numeric'});
+            return '<article class="oa-calendar-preview-card"><span>' + esc(event.category || 'Academy update') + '</span><b>' + esc(date) + '</b><h3>' + esc(event.title_en) + '</h3><p>' + esc(event.summary_en || '') + '</p>' +
+              (event.time_label ? '<small>' + esc(event.time_label) + '</small>' : '') +
+              (event.location ? '<small>' + esc(event.location) + '</small>' : '') + '</article>';
+          }).join('');
+        } else {
+          calendarGrid.innerHTML = '<div class="oa-testimonial-empty">There are no upcoming events or intake dates published yet. Contact Kushma or Baglung for current class schedules and application availability.</div>';
+          if (eventError) console.warn('Oxford calendar could not be loaded:', eventError.message);
+        }
       }
 
       // Turn the existing notices area into the updates section instead of inventing student testimonials.
@@ -330,6 +506,44 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         }
       }
 
+      // Show partner institutions only after Oxford adds and publishes verified relationships.
+      let partnerSection = $('#oa-lions-partners');
+      try {
+        const { data: partnerRows, error: partnerError } = await db.from('oa_partners')
+          .select('name,category,country_or_region,description_en,website_url,logo_url')
+          .eq('is_published', true).order('sort_order', { ascending:true });
+        if (!partnerError && partnerRows && partnerRows.length) {
+          if (!partnerSection) {
+            partnerSection = document.createElement('section');
+            partnerSection.id = 'oa-lions-partners';
+            partnerSection.className = 'section oa-lions-partners';
+            partnerSection.innerHTML =
+              '<div class="container"><div class="section-head"><span class="section-kicker">OUR PARTNERS</span><h2>Education and pathway partners.</h2><p>Institutions and organisations with confirmed relationships published by Oxford.</p></div><div class="oa-partner-grid" id="oa-partner-grid"></div></div>';
+          }
+          const partnerGrid = $('#oa-partner-grid', partnerSection);
+          if (partnerGrid) {
+            partnerGrid.innerHTML = partnerRows.map((partner) => {
+              const logo = safeHttps(partner.logo_url || '');
+              const website = safeHttps(partner.website_url || '');
+              return '<article class="oa-partner-card">' +
+                (logo ? '<img src="' + esc(logo) + '" alt="' + esc(partner.name) + '" loading="lazy">' : '<div class="oa-partner-mark">↗</div>') +
+                '<span>' + esc(partner.category || 'Partner institution') + '</span><h3>' + esc(partner.name) + '</h3>' +
+                (partner.country_or_region ? '<small>' + esc(partner.country_or_region) + '</small>' : '') +
+                (partner.description_en ? '<p>' + esc(partner.description_en) + '</p>' : '') +
+                (website ? '<a href="' + esc(website) + '" target="_blank" rel="noopener noreferrer">Visit official website ↗</a>' : '') +
+                '</article>';
+            }).join('');
+          }
+        } else if (partnerSection) {
+          partnerSection.remove();
+          partnerSection = null;
+        }
+      } catch (error) {
+        console.warn('Oxford partner information is unavailable:', error);
+        if (partnerSection) partnerSection.remove();
+        partnerSection = null;
+      }
+
       sectionHead($('#contact'), 'GET IN TOUCH', 'Have any questions? Contact us.', 'Call, email or choose your preferred branch to get in touch with Oxford Academic Instruction.');
       sectionHead($('#admission'), 'CONTACT US', 'Write us your message and we will follow up.', 'Complete the form and choose the Oxford branch you would like to contact. Sending the form does not confirm enrolment.');
 
@@ -343,7 +557,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const contact = $('#contact');
       const admission = $('#admission');
       if (main && hero) {
-        const ordered = [hero, trust, about, values, services, callout, academics, supportJourney, team, notices, gallery, offices, contact, admission].filter(Boolean);
+        const ordered = [hero, trust, about, companyProfile, values, services, callout, academics, supportJourney, calendarSection, testimonials, team, notices, gallery, offices, partnerSection, contact, admission].filter(Boolean);
         ordered.forEach((node) => main.appendChild(node));
       }
 
