@@ -6,7 +6,7 @@ Production project ref: `gsfhhvkipvoutqqgyick`.
 
 The database is migration-managed. The Supabase migration ledger is authoritative; do not recreate or bootstrap production from `schema.sql`. That file is deliberately non-executable because its original `oa_admins` email-allowlist model was superseded by the current user-role model.
 
-Current Oxford migrations recorded in Supabase:
+Production migration ledger recorded in Supabase:
 
 | Migration | Purpose |
 |---|---|
@@ -23,6 +23,9 @@ Current Oxford migrations recorded in Supabase:
 | `20261108051818_restrict_public_write_grants_oxford_content_tables` | Public write grant reduction for new Oxford content tables |
 | `20261108055210_limit_oxford_anon_table_grants` | Final least-privilege anonymous grants: public content read-only |
 | `20261108135618_secure_shared_legacy_access` | Enables RLS on the legacy store tables; preserves public catalog and portfolio reads; denies public access to private customer/order records |
+
+The hosted ledger currently contains 20 migrations. This repository retains executable SQL for the 2026-11-08 Oxford grants migration and the 2026-11-08 shared-access lockdown migration; 18 earlier historical migration files are not present in Git. Do not claim that this repository alone can recreate the hosted database from an empty project. The ledger table above records their names and purposes; a full clean-room schema/data export remains a separate recovery task.
+
 
 ## Shared-project security remediation
 
@@ -84,9 +87,13 @@ Payment proofs and other private documents must not be placed in this public buc
 
 ## Shared Supabase project boundary
 
-This Supabase project also contains NepKits Hub commerce tables and portfolio tables. Oxford fixes must be scoped to `oa_*` objects and `oa-academy-media`. Do not blanket-enable/rewrite policies on other applications as part of the academy deployment.
+This Supabase project also contains NepKits Hub commerce tables and portfolio tables. The `secure_shared_legacy_access` migration now enables RLS on all previously unprotected non-Oxford public tables, revokes browser-role write privileges, and restores public SELECT only for explicitly public catalog/portfolio content. It does not change Oxford Academy's `oa_*` table policies or the academy media bucket.
 
-A separate Supabase security-advisor run reports 33 non-Oxford public tables with RLS disabled, including commerce tables such as products, profiles, carts, orders and payments, plus portfolio tables. The current table inventory showed those tables empty at the time of review, but their grants and future use need a separate application-by-application policy audit. They are outside this site's scope and were not modified by the Oxford work. Do not expose customer or order data through them until RLS and role-specific policies are designed and tested.
+Private store tables (profiles, addresses, carts, orders, payments, shipments, returns, notifications, role/permission data, audit logs and internal media) intentionally have no browser-role policy or grant. This is a fail-closed state: the legacy store profile uses a custom password hash and its row does not match a verified Supabase Auth user. It must not be exposed until the store frontend is migrated to Supabase Auth and a server-side checkout/admin flow. Existing commerce records were retained. The public product catalogue remains readable.
+
+Portfolio tables retain published/visible read policies. The contact form has a bounded insert-only policy; message rows cannot be read using public keys. Portfolio administration remains closed until an approved Supabase Auth admin mapping is configured.
+
+A check of the hosted schema now returns zero non-Oxford public tables with RLS disabled. Some private tables intentionally have RLS but no policies; the advisor's informational `RLS Enabled No Policy` findings describe this deny-all state. The migration tooling could not change the owner-level default privileges, so each new public table or function must explicitly enable RLS and receive only narrowly required grants/policies.
 
 ## Operational verification
 
