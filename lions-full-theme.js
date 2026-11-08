@@ -97,6 +97,16 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     body.oa-lions-full .oa-testimonial-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
     body.oa-lions-full .oa-testimonial-card{display:flex;flex-direction:column;min-width:0;padding:23px;background:#fff;border:1px solid #e3eaf1;border-radius:12px;box-shadow:0 10px 28px rgba(15,48,79,.06)}
     body.oa-lions-full .oa-lions-calendar{background:#fff}
+    body.oa-lions-full .oa-lions-partners{background:#f6f9fc}
+    body.oa-lions-full .oa-partner-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+    body.oa-lions-full .oa-partner-card{min-width:0;padding:21px;border:1px solid #e2eaf1;border-radius:11px;background:#fff;box-shadow:0 8px 22px rgba(15,48,79,.05)}
+    body.oa-lions-full .oa-partner-card img{display:block;width:100%;height:74px;object-fit:contain;margin-bottom:15px}
+    body.oa-lions-full .oa-partner-mark{display:grid;place-items:center;width:50px;height:50px;margin-bottom:15px;border-radius:11px;background:#eaf3fb;color:#185da0;font-size:22px}
+    body.oa-lions-full .oa-partner-card>span{color:#d89434;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.1em}
+    body.oa-lions-full .oa-partner-card h3{margin:7px 0;color:#173f69;font:700 19px/1.2 "Playfair Display",Georgia,serif}
+    body.oa-lions-full .oa-partner-card small{color:#7b8998;font-size:10px}
+    body.oa-lions-full .oa-partner-card p{color:#708194;font-size:11px;line-height:1.8}
+    body.oa-lions-full .oa-partner-card>a{display:inline-flex;margin-top:10px;color:#185da0;font-size:10px;font-weight:900}
     body.oa-lions-full .oa-calendar-preview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
     body.oa-lions-full .oa-calendar-preview-card{min-width:0;padding:21px;border:1px solid #e2eaf1;border-radius:11px;background:#fff;box-shadow:0 8px 22px rgba(15,48,79,.05)}
     body.oa-lions-full .oa-calendar-preview-card>span{display:inline-flex;margin-right:8px;padding:4px 7px;border-radius:4px;background:#eaf3fb;color:#185da0;font-size:9px;font-weight:900;text-transform:uppercase}
@@ -127,14 +137,14 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     @media(max-width:900px){
       body.oa-lions-full .oa-lions-service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       body.oa-lions-full .oa-class-level-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-      body.oa-lions-full .oa-testimonial-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body.oa-lions-full .oa-calendar-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      body.oa-lions-full .oa-testimonial-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body.oa-lions-full .oa-calendar-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body.oa-lions-full .oa-partner-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
     @media(max-width:760px){
       body.oa-lions-full .oa-company-profile{padding:58px 0}
       body.oa-lions-full .oa-company-profile-grid{grid-template-columns:1fr;gap:12px}
       body.oa-lions-full .oa-company-panel{padding:20px}
       body.oa-lions-full .oa-company-panel.goals,body.oa-lions-full .oa-company-panel.leadership{grid-column:auto}
-      body.oa-lions-full .oa-testimonial-grid,body.oa-lions-full .oa-calendar-preview-grid{grid-template-columns:1fr}
+      body.oa-lions-full .oa-testimonial-grid,body.oa-lions-full .oa-calendar-preview-grid,body.oa-lions-full .oa-partner-grid{grid-template-columns:1fr}
       body.oa-lions-full .oa-class-level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       body.oa-lions-full .oa-class-skills{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
@@ -496,6 +506,44 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         }
       }
 
+      // Show partner institutions only after Oxford adds and publishes verified relationships.
+      let partnerSection = $('#oa-lions-partners');
+      try {
+        const { data: partnerRows, error: partnerError } = await db.from('oa_partners')
+          .select('name,category,country_or_region,description_en,website_url,logo_url')
+          .eq('is_published', true).order('sort_order', { ascending:true });
+        if (!partnerError && partnerRows && partnerRows.length) {
+          if (!partnerSection) {
+            partnerSection = document.createElement('section');
+            partnerSection.id = 'oa-lions-partners';
+            partnerSection.className = 'section oa-lions-partners';
+            partnerSection.innerHTML =
+              '<div class="container"><div class="section-head"><span class="section-kicker">OUR PARTNERS</span><h2>Education and pathway partners.</h2><p>Institutions and organisations with confirmed relationships published by Oxford.</p></div><div class="oa-partner-grid" id="oa-partner-grid"></div></div>';
+          }
+          const partnerGrid = $('#oa-partner-grid', partnerSection);
+          if (partnerGrid) {
+            partnerGrid.innerHTML = partnerRows.map((partner) => {
+              const logo = safeHttps(partner.logo_url || '');
+              const website = safeHttps(partner.website_url || '');
+              return '<article class="oa-partner-card">' +
+                (logo ? '<img src="' + esc(logo) + '" alt="' + esc(partner.name) + '" loading="lazy">' : '<div class="oa-partner-mark">↗</div>') +
+                '<span>' + esc(partner.category || 'Partner institution') + '</span><h3>' + esc(partner.name) + '</h3>' +
+                (partner.country_or_region ? '<small>' + esc(partner.country_or_region) + '</small>' : '') +
+                (partner.description_en ? '<p>' + esc(partner.description_en) + '</p>' : '') +
+                (website ? '<a href="' + esc(website) + '" target="_blank" rel="noopener noreferrer">Visit official website ↗</a>' : '') +
+                '</article>';
+            }).join('');
+          }
+        } else if (partnerSection) {
+          partnerSection.remove();
+          partnerSection = null;
+        }
+      } catch (error) {
+        console.warn('Oxford partner information is unavailable:', error);
+        if (partnerSection) partnerSection.remove();
+        partnerSection = null;
+      }
+
       sectionHead($('#contact'), 'GET IN TOUCH', 'Have any questions? Contact us.', 'Call, email or choose your preferred branch to get in touch with Oxford Academic Instruction.');
       sectionHead($('#admission'), 'CONTACT US', 'Write us your message and we will follow up.', 'Complete the form and choose the Oxford branch you would like to contact. Sending the form does not confirm enrolment.');
 
@@ -509,7 +557,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const contact = $('#contact');
       const admission = $('#admission');
       if (main && hero) {
-        const ordered = [hero, trust, about, companyProfile, values, services, callout, academics, supportJourney, calendarSection, testimonials, team, notices, gallery, offices, contact, admission].filter(Boolean);
+        const ordered = [hero, trust, about, companyProfile, values, services, callout, academics, supportJourney, calendarSection, testimonials, team, notices, gallery, offices, partnerSection, contact, admission].filter(Boolean);
         ordered.forEach((node) => main.appendChild(node));
       }
 
