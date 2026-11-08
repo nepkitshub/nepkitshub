@@ -3,15 +3,19 @@
 
   function addSkipLink() {
     if (document.querySelector('.oa-skip-link')) return;
-    var target = document.querySelector('body.admin-route #oa-view, .page-main, main, #home, .hero');
+    var isAdmin = document.body.classList.contains('admin-route');
+    var target = isAdmin
+      ? (document.querySelector('.oa-app .oa-main') || document.getElementById('adminBody'))
+      : document.querySelector('.page-main, main, #home, .hero');
     if (!target) return;
     if (!target.id) target.id = 'oa-page-main';
     target.setAttribute('tabindex', '-1');
-    var link = document.createElement('a');
+    var link = document.querySelector('.oa-skip-link') || document.createElement('a');
     link.className = 'oa-skip-link';
     link.href = '#' + target.id;
     link.textContent = 'Skip to main content';
-    document.body.insertBefore(link, document.body.firstChild);
+    var host = isAdmin ? document.getElementById('adminModal') : document.body;
+    if (host && link.parentElement !== host) host.insertBefore(link, host.firstChild);
   }
 
   function improveExternalLinks() {
