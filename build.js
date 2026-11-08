@@ -566,6 +566,7 @@ const aboutPageStyles = `
   .oa-about-office h3{margin:0 0 8px;color:#173f69;font:700 21px/1.2 'Playfair Display',Georgia,serif}
   .oa-about-office p{color:#6b7d8f;font-size:12px;line-height:1.8}
   .oa-about-team{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:20px}
+  .oa-about-partners{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:20px}
   .oa-about-person{padding:20px;border:1px solid #e2eaf1;border-radius:11px;background:#fff;text-align:center}
   .oa-about-person img,.oa-about-person .avatar{width:112px;height:112px;margin:0 auto 12px;border-radius:50%;object-fit:cover;border:4px solid #eaf3fb}
   .oa-about-person .avatar{display:grid;place-items:center;background:#eaf3fb;color:#185da0;font-size:29px;font-weight:900}
@@ -628,13 +629,38 @@ try {
       '</article>';
   }).join('') || '<div class="content-empty">Team profiles will be added here by Oxford.</div>';
 } catch (error) { teamRoot.textContent = 'Team information is temporarily unavailable.'; }
+const partnerSection = document.getElementById('oa-about-partners');
+try {
+  const { data: partners } = await db.from('oa_partners')
+    .select('name,category,country_or_region,description_en,website_url,logo_url')
+    .eq('is_published', true).order('sort_order');
+  if (partners && partners.length) {
+    partnerSection.hidden = false;
+    partnerSection.querySelector('#oa-about-partner-list').innerHTML = partners.map((partner) => {
+      const logo = safeUrl(partner.logo_url);
+      const website = safeUrl(partner.website_url);
+      return '<article class="oa-about-person">' +
+        (logo ? '<img src="' + esc(logo) + '" alt="' + esc(partner.name) + '">' : '<div class="avatar">↗</div>') +
+        '<b>' + esc(partner.name) + '</b><small>' + esc([partner.category,partner.country_or_region].filter(Boolean).join(' · ')) + '</small>' +
+        (partner.description_en ? '<p style="margin:10px 0 0;color:#6b7d8f;font-size:11px;line-height:1.75">' + esc(partner.description_en) + '</p>' : '') +
+        (website ? '<p><a href="' + esc(website) + '" target="_blank" rel="noopener noreferrer">Official website ↗</a></p>' : '') +
+        '</article>';
+    }).join('');
+  } else {
+    partnerSection.remove();
+  }
+} catch (error) {
+  console.warn('Oxford partner details are not available:', error);
+  partnerSection.remove();
+}
 </script>`;
 const aboutPageHtml = '<!doctype html>\\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>About Us | Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + aboutPageStyles + '</style></head><body>' +
   '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Japanese & Korean Language · Japan Study Guidance</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
   '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb"><a href="/">Home</a><span> / </span><span>About Us</span></nav><div id="oa-about-content"><div class="content-empty">Loading Oxford profile…</div></div>' +
   '<section class="oa-about-section"><h2>Our Offices</h2><p>Contact our Kushma or Baglung branch for current programme and enrolment information.</p><div id="oa-about-offices" class="oa-about-offices"><div class="content-empty">Loading branch information…</div></div></section>' +
-  '<section class="oa-about-section"><h2>Meet Our Team</h2><p>Get to know the published team members who support Oxford Academic Instruction.</p><div id="oa-about-team" class="oa-about-team"><div class="content-empty">Loading team profiles…</div></div></section></main>' +
+  '<section class="oa-about-section"><h2>Meet Our Team</h2><p>Get to know the published team members who support Oxford Academic Instruction.</p><div id="oa-about-team" class="oa-about-team"><div class="content-empty">Loading team profiles…</div></div></section>' +
+  '<section class="oa-about-section" id="oa-about-partners" hidden><h2>Our Partner Institutions</h2><p>Organisations with confirmed relationships published by Oxford Academic Instruction.</p><div id="oa-about-partner-list" class="oa-about-partners"></div></section></main>' +
   '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a> <a href="/admin/">Admin access ↗</a></footer>' +
   aboutPageScript + '</body></html>';
 const aboutDir = path.join(output, 'about');
