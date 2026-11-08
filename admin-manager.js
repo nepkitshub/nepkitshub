@@ -23,7 +23,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const {data,error}=await db.from('oa_site_content').select('content_key,value_en');
     if(error)return;
     const map={};(data||[]).forEach(row=>map[row.content_key]=row);
-    const nameEn=map.brand_name?.value_en||'Oxford Academy';
+    const savedBrandName=String(map.brand_name?.value_en||'').trim();const nameEn=!savedBrandName||/^Oxford Academy$/i.test(savedBrandName)?'Oxford Academic Instruction Pvt. Ltd.':savedBrandName;
     document.querySelectorAll('.brand-name,.oa-brand b').forEach(node=>{node.textContent=nameEn;});
     const logo=safeUrl(map.logo_url?.value_en||'');
     document.querySelectorAll('.brand-mark,.oa-mark').forEach(node=>{
