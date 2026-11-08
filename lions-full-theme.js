@@ -193,12 +193,12 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           '<h2>Guidance for study, work and family pathways in Japan.</h2>' +
           '<p>Explore Oxford’s Japanese language learning, Japan study guidance, visa-related assistance, test preparation and documentation support. Final eligibility and visa decisions remain with the relevant Japanese authorities.</p></div>' +
           '<div class="oa-lions-service-grid">' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">🎓</div><h3>Student Visa Guidance</h3><p>Study in Japan counselling, Japanese school selection, application guidance, intake information and student visa documentation support.</p><a href="#admission" data-oa-service="Study in Japan — school selection and student visa guidance">Enquire about student visa →</a></article>' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">仕事</div><h3>Working Visa Language Preparation</h3><p>Japanese language preparation and guidance for learners exploring work-related pathways in Japan.</p><a href="#admission" data-oa-service="Work in Japan — language preparation and pathway guidance">Enquire about work →</a></article>' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">SSW</div><h3>Specified Skilled Worker</h3><p>Japanese language and SSW preparation support, including guidance on relevant test and application steps.</p><a href="#admission" data-oa-service="Specified Skilled Worker (SSW) preparation and guidance">Enquire about SSW →</a></article>' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">家族</div><h3>Dependent Visa Guidance</h3><p>Guidance on family-related documentation and the dependent visa application process for Japan.</p><a href="#admission" data-oa-service="Dependent visa guidance and supporting documents">Enquire about dependent visa →</a></article>' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">文書</div><h3>Documentation Support</h3><p>Help understanding and preparing academic, identity, sponsor and financial documents for applications.</p><a href="#admission" data-oa-service="Documentation support for Japan-related applications">Enquire about documents →</a></article>' +
-          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">◎</div><h3>Career Counselling</h3><p>Discuss your background, goals and possible education or work pathways before choosing a next step.</p><a href="#admission" data-oa-service="Career counselling for study or work in Japan">Request counselling →</a></article>' +
+          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">🎓</div><h3>Student Visa Guidance</h3><p>Study in Japan counselling, Japanese school selection, application guidance, intake information and student visa documentation support.</p><a href="/services/?type=student-visa">Enquire about student visa →</a></article>' +
+          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">仕事</div><h3>Working Visa Language Preparation</h3><p>Japanese language preparation and guidance for learners exploring work-related pathways in Japan.</p><a href="/services/?type=working-visa-language">Enquire about work →</a></article>' +
+          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">SSW</div><h3>Specified Skilled Worker</h3><p>Japanese language and SSW preparation support, including guidance on relevant test and application steps.</p><a href="/services/?type=ssw">Enquire about SSW →</a></article>' +
+          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">家族</div><h3>Dependent Visa Guidance</h3><p>Guidance on family-related documentation and the dependent visa application process for Japan.</p><a href="/services/?type=dependent-visa">Enquire about dependent visa →</a></article>' +
+          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">文書</div><h3>Documentation Support</h3><p>Help understanding and preparing academic, identity, sponsor and financial documents for applications.</p><a href="/services/?type=documentation">Enquire about documents →</a></article>' +
+          '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">◎</div><h3>Career Counselling</h3><p>Discuss your background, goals and possible education or work pathways before choosing a next step.</p><a href="/services/?type=career-counselling">Request counselling →</a></article>' +
           '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">あ</div><h3>Japanese Language Classes</h3><p>Build Japanese language skills for study, communication, proficiency tests and work-related preparation.</p><a href="#academics">Explore classes →</a></article>' +
           '<article class="oa-lions-service-card"><div class="oa-lions-service-icon">한</div><h3>Korean Language Classes</h3><p>Explore Oxford’s published Korean language programme and ask the academy for current class information.</p><a href="#academics">Explore classes →</a></article>' +
           '</div></div>';
@@ -224,7 +224,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           '</div></div>';
       }
       if (oldJourney) oldJourney.remove();
-      if (oldMissionBanner) oldMissionBanner.remove();
+      if (oldMissionBanner) { const oldMissionSection = oldMissionBanner.closest('section'); if (oldMissionSection) oldMissionSection.remove(); else oldMissionBanner.remove(); }
 
       // Re-title the live course cards and keep them connected to published Supabase data.
       const academics = $('#academics');
@@ -334,6 +334,25 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       if (main && hero) {
         const ordered = [hero, trust, about, values, services, callout, academics, supportJourney, team, notices, gallery, offices, contact, admission].filter(Boolean);
         ordered.forEach((node) => main.appendChild(node));
+      }
+
+      const requestedService = new URLSearchParams(window.location.search).get('service');
+      if (requestedService) {
+        const serviceLabels = {
+          'student-visa':'Student visa guidance and study in Japan',
+          'working-visa-language':'Japanese language preparation for work in Japan',
+          'ssw':'Specified Skilled Worker (SSW) preparation',
+          'dependent-visa':'Dependent visa guidance',
+          'documentation':'Japan application documentation support',
+          'career-counselling':'Career counselling for study or work in Japan',
+          'language-tests':'Japanese language test preparation',
+          'japanese-classes':'Japanese language classes',
+          'korean-classes':'Korean language classes'
+        };
+        const message = $('#message');
+        if (message && serviceLabels[requestedService] && !message.value.trim()) {
+          message.value = 'I would like information about: ' + serviceLabels[requestedService] + '.';
+        }
       }
 
       document.querySelectorAll('[data-oa-service]').forEach((link) => {
