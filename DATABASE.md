@@ -52,7 +52,7 @@ Never grant admin based on a submitted email address, a browser-controlled user 
 
 Public pages may read published content and active branch data. The content tables grant the `anon` database role SELECT only; writes require an authenticated admin session and must also satisfy the relevant RLS policy.
 
-The admissions form calls `public.oa_submit_admission`. It validates student name, phone, email length and that the selected branch is active, then inserts a new enquiry. The browser does not receive direct SELECT/INSERT privileges on `oa_admissions`. The admin portal reads enquiries and updates their status after role checks and RLS evaluation.
+The admissions form calls `public.oa_submit_admission`. It validates student name, phone, email length and that the selected branch is active, then inserts a new enquiry. The browser does not receive direct SELECT/INSERT privileges on `oa_admissions`. The admin portal reads enquiries and updates their status after role checks and RLS evaluation. The function is intentionally callable by `anon` and `authenticated`; Supabase's security advisor flags this public SECURITY DEFINER RPC, which is expected for the public form but should remain narrow, validated and reviewed. Its fixed empty `search_path`, fully qualified table references and active-branch validation are part of that boundary.
 
 ## Media storage
 
@@ -71,7 +71,7 @@ Payment proofs and other private documents must not be placed in this public buc
 
 This Supabase project also contains NepKits Hub commerce tables and portfolio tables. Oxford fixes must be scoped to `oa_*` objects and `oa-academy-media`. Do not blanket-enable/rewrite policies on other applications as part of the academy deployment.
 
-A separate audit found that many non-Oxford commerce tables currently have RLS disabled. Those tables are outside this site's scope and were not modified by the Oxford work. Review them before the NepKits Hub store is populated with customer or order data.
+A separate Supabase security-advisor run reports 33 non-Oxford public tables with RLS disabled, including commerce tables such as products, profiles, carts, orders and payments, plus portfolio tables. The current table inventory showed those tables empty at the time of review, but their grants and future use need a separate application-by-application policy audit. They are outside this site's scope and were not modified by the Oxford work. Do not expose customer or order data through them until RLS and role-specific policies are designed and tested.
 
 ## Operational verification
 
