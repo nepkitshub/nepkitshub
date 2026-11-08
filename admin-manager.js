@@ -439,7 +439,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       {content_key:'hero_image_url',value_en:f.get('hero_image_url')||''},
       {content_key:'logo_size_desktop',value_en:String(f.get('logo_size_desktop')||48)},
       {content_key:'logo_size_mobile',value_en:String(f.get('logo_size_mobile')||42)}
-    ];const {error}=await db.from('oa_site_content').upsert(rows,{onConflict:'content_key'});if(error)showMessage(error.message);else{await applyBranding();showMessage('Logo, crop and display sizes saved.');}});
+    ];const {error}=await db.from('oa_site_content').upsert(rows,{onConflict:'content_key'});if(error)showMessage(error.message);else{await applyBranding();window.dispatchEvent(new Event('oa-branding-updated'));showMessage('Logo, crop and display sizes saved. Refresh the public website to see the updated branding everywhere.');}});
   }
 
   async function renderHomepage() {
