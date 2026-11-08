@@ -145,6 +145,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       title: 'Services & Japan guidance',
       table: 'oa_services',
       noun: 'service',
+      description: 'Edit the public service descriptions, document support details, steps and notes shown on individual service pages.',
+
       fields: [
         ['slug', 'URL slug', true],
         ['title_en', 'Service title', true],
@@ -164,6 +166,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       title: 'Student testimonials',
       table: 'oa_testimonials',
       noun: 'student experience',
+      publishDefault: false,
+      description: 'Only publish a student experience after the wording has been reviewed and the student has given permission to share their feedback and photo.',
+
       fields: [
         ['student_name', 'Student name', true],
         ['course_name', 'Course / pathway'],
@@ -179,6 +184,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       title: 'Calendar & course intakes',
       table: 'oa_events',
       noun: 'calendar item',
+      publishDefault: false,
+      description: 'Add genuine academy events, exam preparation sessions, course announcements and confirmed intake dates. Keep draft until details are confirmed.',
+
       order: 'event_date',
       ascending: true,
       fields: [
@@ -468,9 +476,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     }
     const rows = data || [];
     view.innerHTML =
-      "<div class='oa-card'><h2 id='oa-form-title'>Add new " + esc(config.noun) + "</h2><p>Add an item, edit existing details, or publish and unpublish it.</p>" +
+      "<div class='oa-card'><h2 id='oa-form-title'>Add new " + esc(config.noun) + "</h2><p>" + esc(config.description || 'Add an item, edit existing details, or publish and unpublish it.') + "</p>" +
       "<form id='oa-entry-form'><div class='oa-grid'>" + config.fields.map(fieldMarkup).join('') + "</div>" +
-      "<label class='oa-check'><input type='checkbox' name='is_published' checked> Publish on the public website</label>" +
+      "<label class='oa-check'><input type='checkbox' name='is_published' " + (config.publishDefault === false ? '' : 'checked') + "> Publish on the public website</label>" +
       "<div class='oa-actions'><button class='oa-button' id='oa-save'>Save item</button><button class='oa-button light' id='oa-cancel' type='button' style='display:none'>Cancel edit</button></div></form></div>" +
       "<div class='oa-card'><h2>Existing items</h2><p>Edit, publish, unpublish or delete entries.</p><div class='oa-records' id='oa-record-list'></div></div>";
     const form = $('#oa-entry-form');
@@ -480,7 +488,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const reset = () => {
       form.reset();
       delete form.dataset.recordId;
-      form.querySelector('[name=is_published]').checked = true;
+      form.querySelector('[name=is_published]').checked = config.publishDefault !== false;
       form.querySelectorAll('.oa-preview').forEach((preview) => {
         preview.src = '';
         preview.classList.add('hide');
