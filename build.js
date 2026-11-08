@@ -475,7 +475,7 @@ const servicePageData = {
     note:'Please contact Oxford to confirm the latest Korean class availability and course details.'
   }
 };
-const servicePageStyles = \`
+const servicePageStyles = `
   .oa-service-hero{position:relative;overflow:hidden;padding:55px 42px;border-radius:13px;background:linear-gradient(120deg,#10395f,#1b6096);color:#fff;box-shadow:0 17px 42px rgba(15,48,79,.13)}
   .oa-service-hero:after{position:absolute;content:"";width:300px;height:300px;right:-95px;top:-140px;border:1px solid rgba(255,255,255,.22);border-radius:50%;box-shadow:0 0 0 35px rgba(255,255,255,.04),0 0 0 70px rgba(255,255,255,.035)}
   .oa-service-kicker{display:inline-flex;padding:6px 11px;border:1px solid rgba(255,255,255,.32);border-radius:4px;color:#ffd18c;font-size:10px;font-weight:900;letter-spacing:.14em}
@@ -503,7 +503,7 @@ const servicePageStyles = \`
   .oa-service-bottom a{display:inline-flex;flex:0 0 auto;padding:12px 17px;border-radius:6px;background:#185da0;color:#fff;font-size:11px;font-weight:900}
   @media(max-width:760px){.oa-service-hero{padding:32px 22px}.oa-service-columns{grid-template-columns:1fr;gap:13px}.oa-service-panel{padding:20px}.oa-service-steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.oa-service-bottom{align-items:flex-start;flex-direction:column;padding:20px}.oa-service-bottom a{width:100%;justify-content:center}}
   @media(max-width:420px){.oa-service-steps{grid-template-columns:1fr}}
-\`;
+`;
 const servicePageHtml = '<!doctype html>\\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>Oxford Academic Instruction Pvt. Ltd. | Services</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + '</style></head><body>' +
   '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Japanese & Korean Language · Japan Study Guidance</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
   '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/#oa-lions-services">Back to services ↗</a></div></header>' +
