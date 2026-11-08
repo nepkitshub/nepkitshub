@@ -442,3 +442,199 @@ if (!isAdminRoute) {
     aboutSection.insertAdjacentElement('afterend', whySection);
   }
 }
+
+
+// Service-led homepage composition inspired by the reference site's information flow.
+// All offering cards still come from published oa_programs records.
+if (!isAdminRoute) {
+  const officialCompanyName = 'Oxford Academic Instruction Pvt. Ltd.';
+  const setOnlyDefault = (selector, defaults, value) => {
+    const node = document.querySelector(selector);
+    if (!node) return;
+    const current = (node.textContent || '').replace(/\s+/g, ' ').trim();
+    const allowed = Array.isArray(defaults) ? defaults : [defaults];
+    if (allowed.includes(current)) node.textContent = value;
+  };
+
+  // Rewrite generic starter copy into specific, verified descriptions of Oxford's programmes.
+  setOnlyDefault('#heroTitle', 'A place to learn, grow & lead.', 'Build skills. Explore opportunities. Shape your future.');
+  setOnlyDefault('#heroSubtitle',
+    'Building knowledge, nurturing character and inspiring every learner to discover their potential.',
+    'Explore Japanese and Korean language learning, Montessori early childhood education and practical programme information from Oxford Academic Instruction.');
+  setOnlyDefault('#heroNote', 'Learning today. Shaping tomorrow.', 'Language learning · Early childhood education · Learner support');
+  setOnlyDefault('#aboutBadge', 'Learn with purpose. Grow with confidence.', 'A place to learn, prepare and take your next step.');
+  setOnlyDefault('#aboutTitle', 'Education that helps every learner move forward.', 'Learning programmes for different stages and ambitions.');
+  setOnlyDefault('#aboutText',
+    'Oxford Academy is a learning community in Kushma, Parbat. This space is where the academy can introduce its story, educational approach and the values it wants every learner to carry forward.',
+    'Oxford Academic Instruction Pvt. Ltd. is an education provider serving learners and families through Japanese Language, Korean Language and Montessori Early Childhood programmes. Based in the Gandaki region, the academy shares programme information and helps prospective learners connect with the right branch for their enquiries.');
+  setOnlyDefault('#academics .section-head h2', 'A strong foundation for a bright future.', 'Our Courses & Learning Programmes');
+  setOnlyDefault('#academics .section-head p',
+    'Explore the academic programmes offered by Oxford Academy. Official programme names and grade levels can be updated by the academy team.',
+    'Explore the programmes currently offered by Oxford Academic Instruction. Contact the academy for current batches, age groups, schedules and enrolment details.');
+  setOnlyDefault('#missionTitle', 'Every learner deserves the chance to shine.', 'Not sure which programme is right for you?');
+  setOnlyDefault('#missionText', 'Discover a learning environment where questions are encouraged and progress is celebrated.', 'Talk with our team about Japanese and Korean language learning or Montessori early childhood education. We can share the current programme details and next steps.');
+  setOnlyDefault('#team .section-head h2', 'Meet our academy team.', 'Meet the People Behind Oxford');
+  setOnlyDefault('#team .section-head p',
+    'Meet the educators and team members who help make the academy community what it is. Profiles will be added by the administration.',
+    'Get to know the people who support the academy’s learning programmes and day-to-day enquiries.');
+  setOnlyDefault('#notices .section-head h2', 'Latest notices & updates.', 'News, Notices & Academy Updates');
+  setOnlyDefault('#notices .section-head p',
+    'Important announcements, events and updates from Oxford Academy will be shared here.',
+    'Stay up to date with programme announcements, admission information and news from Oxford Academic Instruction.');
+  setOnlyDefault('#gallery .section-head h2', 'A glimpse of academy life.', 'Life at Oxford');
+  setOnlyDefault('#gallery .section-head p',
+    'Photos and highlights shared by the academy will be displayed in this gallery.',
+    'See moments and activities shared by the academy. New photos are added by the administration.');
+  setOnlyDefault('#admission .admission-copy h2', "Let's talk about your child's learning journey.", 'Take the First Step Towards Enrolment');
+  setOnlyDefault('#admission .admission-copy p',
+    'Send an admission enquiry and the academy team can follow up with the information you need. Submitting this form does not confirm admission.',
+    'Tell us which programme you are interested in and the academy team can share the relevant details. Sending an enquiry does not confirm enrolment.');
+  setOnlyDefault('#contact .section-head h2', "We'd be glad to hear from you.", 'Visit or Contact Our Team');
+  setOnlyDefault('#contact .section-head p',
+    'Reach out to Oxford Academy for questions about the academy, programmes or admission enquiries.',
+    'Choose the Kushma or Baglung branch to view its contact information and location details.');
+
+  // Make the top-level quick facts reflect the actual programmes and branch locations.
+  const trustItems = document.querySelectorAll('.trust-grid .trust-item');
+  const trustCopy = [
+    ['Japanese & Korean Language', 'Language learning programmes'],
+    ['Montessori Early Learning', 'Early childhood education'],
+    ['Kushma & Baglung Branches', 'Choose the branch that suits you']
+  ];
+  trustItems.forEach((item, index) => {
+    if (!trustCopy[index]) return;
+    const strong = item.querySelector('strong');
+    const small = item.querySelector('small');
+    if (strong) strong.textContent = trustCopy[index][0];
+    if (small) small.textContent = trustCopy[index][1];
+  });
+
+  // Reposition the existing values into a dedicated "Why choose us" panel.
+  const whySection = document.getElementById('why-choose-oxford');
+  if (whySection) {
+    const whyHeading = whySection.querySelector('h2');
+    const whyText = whySection.querySelector('.section-head p');
+    if (whyHeading) whyHeading.textContent = 'A learning environment built around the learner.';
+    if (whyText) whyText.textContent = 'We want learners to feel encouraged to ask questions, act with integrity, keep improving and learn as part of a community.';
+  }
+
+  // Add a clear, simple pathway like the reference site, without claiming unverified visa or placement services.
+  let journeySection = document.getElementById('oa-learning-journey');
+  if (!journeySection) {
+    journeySection = document.createElement('section');
+    journeySection.id = 'oa-learning-journey';
+    journeySection.className = 'section oa-learning-journey';
+    journeySection.innerHTML =
+      '<div class="container">' +
+        '<div class="section-head">' +
+          '<span class="section-kicker">HOW TO GET STARTED</span>' +
+          '<h2>Your learning journey starts with a conversation.</h2>' +
+          '<p>Find out about the programme, ask your questions and connect with the branch that can help you.</p>' +
+        '</div>' +
+        '<div class="oa-journey-grid">' +
+          '<article class="oa-journey-card"><span class="oa-journey-number">01</span><div class="oa-journey-icon">⌕</div><h3>Explore Programmes</h3><p>Review the Japanese, Korean and Montessori programmes currently listed by the academy.</p></article>' +
+          '<article class="oa-journey-card"><span class="oa-journey-number">02</span><div class="oa-journey-icon">✉</div><h3>Send an Enquiry</h3><p>Tell us which programme interests you and choose your preferred Oxford branch.</p></article>' +
+          '<article class="oa-journey-card"><span class="oa-journey-number">03</span><div class="oa-journey-icon">✓</div><h3>Speak With Our Team</h3><p>Contact the academy for current class details, schedules, age groups and enrolment steps.</p></article>' +
+        '</div>' +
+      '</div>';
+  }
+
+  // Use the existing editable mission banner as the main programme-enquiry callout.
+  const missionBanner = document.querySelector('.split-banner');
+  if (missionBanner) {
+    const oldSection = missionBanner.closest('section');
+    const journeyContainer = journeySection.querySelector('.container');
+    if (journeyContainer && !journeyContainer.contains(missionBanner)) {
+      const holder = document.createElement('div');
+      holder.className = 'oa-journey-callout';
+      holder.appendChild(missionBanner);
+      journeyContainer.appendChild(holder);
+      if (oldSection && !oldSection.querySelector('section')) oldSection.remove();
+    }
+  }
+
+  // Arrange the homepage in the same information sequence as the reference:
+  // introduction → reasons to choose us → services/courses → learner pathway → team → updates → contact.
+  const hero = document.getElementById('home');
+  if (hero && hero.parentElement) {
+    const parent = hero.parentElement;
+    const order = [
+      document.querySelector('.trust-row'),
+      document.getElementById('about'),
+      whySection,
+      document.getElementById('academics'),
+      journeySection,
+      document.getElementById('team'),
+      document.getElementById('notices'),
+      document.getElementById('gallery'),
+      document.getElementById('admission'),
+      document.getElementById('contact')
+    ].filter(Boolean);
+    let cursor = hero;
+    order.forEach((node) => {
+      if (node.parentElement !== parent) return;
+      if (node === cursor) return;
+      cursor.insertAdjacentElement('afterend', node);
+      cursor = node;
+    });
+  }
+
+  // Simplify labels and ensure every key page section remains one tap away.
+  const nav = document.getElementById('navLinks');
+  if (nav) {
+    const labels = {
+      '#home':'Home',
+      '#about':'About Us',
+      '#academics':'Courses',
+      '#team':'Our Team',
+      '#notices':'Updates',
+      '#gallery':'Gallery',
+      '#contact':'Contact'
+    };
+    nav.querySelectorAll('a[href]').forEach((link) => {
+      if (labels[link.getAttribute('href')]) link.textContent = labels[link.getAttribute('href')];
+    });
+    if (!nav.querySelector('a[href="#oa-learning-journey"]')) {
+      const link = document.createElement('a');
+      link.href = '#oa-learning-journey';
+      link.textContent = 'How to Start';
+      const contact = nav.querySelector('a[href="#contact"]');
+      nav.insertBefore(link, contact || null);
+    }
+  }
+
+  document.querySelectorAll('.footer .brand-name').forEach((node) => {
+    if ((node.textContent || '').trim() === 'Oxford Academy') node.textContent = officialCompanyName;
+  });
+  const footerCopyright = document.querySelector('.copyright > span:first-child');
+  if (footerCopyright) footerCopyright.textContent = '© ' + new Date().getFullYear() + ' ' + officialCompanyName + ', Kushma, Parbat. All rights reserved.';
+
+  const journeyStyle = document.createElement('style');
+  journeyStyle.id = 'oa-learning-journey-style';
+  journeyStyle.textContent = String.raw`
+    body.oa-lions-inspired-preview .oa-learning-journey{background:#f6f8fa}
+    body.oa-lions-inspired-preview .oa-journey-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    body.oa-lions-inspired-preview .oa-journey-card{position:relative;min-width:0;min-height:230px;padding:25px 24px 23px;background:#fff;border:1px solid #e4eaf0;border-radius:19px;box-shadow:0 12px 30px rgba(16,43,78,.06)}
+    body.oa-lions-inspired-preview .oa-journey-number{position:absolute;right:18px;top:15px;color:#d8c394;font:800 25px/1 Georgia,serif}
+    body.oa-lions-inspired-preview .oa-journey-icon{width:47px;height:47px;display:grid;place-items:center;margin-bottom:18px;border-radius:14px;background:#f4f0e6;color:#98712e;font-size:21px}
+    body.oa-lions-inspired-preview .oa-journey-card h3{margin:0 0 9px;color:#102b49;font:700 20px/1.25 'Playfair Display',Georgia,serif}
+    body.oa-lions-inspired-preview .oa-journey-card p{margin:0;color:#68798b;font-size:12px;line-height:1.85}
+    body.oa-lions-inspired-preview .oa-journey-callout{margin-top:28px}
+    body.oa-lions-inspired-preview .oa-journey-callout .split-banner{width:100%}
+    body.oa-lions-inspired-preview #academics .section-head{max-width:760px}
+    body.oa-lions-inspired-preview #academics .oa-program-card{min-height:260px}
+    body.oa-lions-inspired-preview #academics .oa-program-card h3{font-size:22px}
+    body.oa-lions-inspired-preview #academics .oa-program-card p{font-size:13px;line-height:1.9}
+    body.oa-lions-inspired-preview #academics .oa-program-card .oa-program-enquire{margin-top:auto;padding-top:17px}
+    body.oa-lions-inspired-preview #contact .contact-grid{align-items:stretch}
+    body.oa-lions-inspired-preview #contact .map-panel{height:100%;min-height:300px;border:1px solid #dce5ec;border-radius:20px}
+    @media(max-width:760px){
+      body.oa-lions-inspired-preview .oa-journey-grid{grid-template-columns:1fr;gap:12px}
+      body.oa-lions-inspired-preview .oa-journey-card{min-height:0;padding:20px}
+      body.oa-lions-inspired-preview .oa-journey-icon{margin-bottom:13px}
+      body.oa-lions-inspired-preview #academics .oa-program-card{min-height:0}
+      body.oa-lions-inspired-preview #contact .map-panel{min-height:260px}
+    }
+  `;
+  document.head.appendChild(journeyStyle);
+}
