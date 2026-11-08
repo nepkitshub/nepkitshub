@@ -513,7 +513,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const payload = {};
       config.fields.forEach((field) => {
         const rawValue = form.querySelector('[name="' + field[0] + '"]')?.value.trim() || '';
-        payload[field[0]] = field[3] === 'number' ? Number(rawValue || 0) : rawValue;
+        payload[field[0]] = field[3] === 'number' ? Number(rawValue || 0) : (field[3] === 'date' && !rawValue ? null : rawValue);
       });
       const missing = config.fields.find((field) => field[2] && !payload[field[0]]);
       if (missing) {
