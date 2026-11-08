@@ -310,3 +310,135 @@ if (!isAdminRoute) {
   };
   loadGallery();
 }
+
+
+// Lions-inspired Oxford preview layer.
+// This is a presentation-only layer: it does not alter Supabase records or admission workflows.
+if (!isAdminRoute) {
+  document.body.classList.add('oa-lions-inspired-preview');
+
+  const referenceTheme = document.createElement('style');
+  referenceTheme.id = 'oa-lions-inspired-preview-style';
+  referenceTheme.textContent = String.raw`
+    body.oa-lions-inspired-preview {
+      --navy:#102b49;--navy2:#19456f;--blue:#2d6b98;--gold:#d4ad65;--gold2:#f2dfb8;
+      --ink:#1b2b3d;--muted:#68798b;--paper:#f7f9fb;--line:#e5eaf0;
+    }
+    body.oa-lions-inspired-preview .container{width:min(1180px,calc(100% - 48px))}
+    body.oa-lions-inspired-preview .nav-wrap{box-shadow:0 8px 28px rgba(10,34,58,.07)}
+    body.oa-lions-inspired-preview .navbar{gap:17px}
+    body.oa-lions-inspired-preview .brand{min-width:260px;gap:10px}
+    body.oa-lions-inspired-preview .brand-name{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:800;letter-spacing:-.025em;line-height:1.15}
+    body.oa-lions-inspired-preview .brand-place{font-size:9px;letter-spacing:.15em}
+    body.oa-lions-inspired-preview .nav-links{gap:16px;font-size:12px}
+    body.oa-lions-inspired-preview .hero{min-height:650px}
+    body.oa-lions-inspired-preview .hero:before{background-position:center 42%;background-size:cover}
+    body.oa-lions-inspired-preview .hero:after{right:-135px;top:-190px;width:520px;height:520px;border-color:rgba(242,223,184,.28)}
+    body.oa-lions-inspired-preview .hero-inner{max-width:760px;padding:96px 0 112px}
+    body.oa-lions-inspired-preview .eyebrow{padding:8px 14px;border:1px solid rgba(242,223,184,.42);border-radius:99px;background:rgba(8,29,51,.34);letter-spacing:.14em}
+    body.oa-lions-inspired-preview .eyebrow:before{display:none}
+    body.oa-lions-inspired-preview .hero h1{max-width:740px;font-size:clamp(48px,6.3vw,78px);line-height:1.04}
+    body.oa-lions-inspired-preview .hero p{max-width:620px;font-size:16px}
+    body.oa-lions-inspired-preview .btn{min-height:46px;padding:13px 22px}
+    body.oa-lions-inspired-preview .btn-gold{background:var(--gold);box-shadow:0 10px 25px rgba(212,173,101,.25)}
+    body.oa-lions-inspired-preview .trust-row{margin-top:-30px}
+    body.oa-lions-inspired-preview .trust-grid{padding:25px 30px;border-radius:22px;box-shadow:0 18px 46px rgba(10,34,58,.11)}
+    body.oa-lions-inspired-preview .trust-item{padding:7px 24px}
+    body.oa-lions-inspired-preview .trust-icon{width:46px;height:46px;border-radius:15px}
+    body.oa-lions-inspired-preview .section{padding:92px 0}
+    body.oa-lions-inspired-preview .section.soft{background:linear-gradient(180deg,#f8fafc 0%,#f3f6f9 100%)}
+    body.oa-lions-inspired-preview .section-head{max-width:720px}
+    body.oa-lions-inspired-preview .section-kicker{color:#98712e;letter-spacing:.17em}
+    body.oa-lions-inspired-preview .section h2{font-size:clamp(34px,4.2vw,50px)}
+    body.oa-lions-inspired-preview .about-grid{gap:66px}
+    body.oa-lions-inspired-preview .about-photo{border-radius:24px;box-shadow:0 22px 52px rgba(16,43,78,.13)}
+    body.oa-lions-inspired-preview .photo-badge{right:-4px;bottom:-2px;border-radius:19px}
+    body.oa-lions-inspired-preview #why-choose-oxford .section-head{margin-bottom:30px}
+    body.oa-lions-inspired-preview #why-choose-oxford .value-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:0}
+    body.oa-lions-inspired-preview #why-choose-oxford .value{min-height:142px;padding:23px 20px;border:1px solid #e4eaf0;border-radius:18px;background:#fff;box-shadow:0 10px 27px rgba(16,43,78,.055)}
+    body.oa-lions-inspired-preview #why-choose-oxford .value b{font-size:15px}
+    body.oa-lions-inspired-preview #why-choose-oxford .value b:before{content:'';display:block;width:26px;height:3px;border-radius:4px;background:var(--gold);margin-bottom:15px}
+    body.oa-lions-inspired-preview #why-choose-oxford .value small{font-size:12px;line-height:1.65}
+    body.oa-lions-inspired-preview #academics .section-head{margin-bottom:30px}
+    body.oa-lions-inspired-preview .oa-program-card,
+    body.oa-lions-inspired-preview .program-card{border-radius:20px;padding:27px;border-color:#e3e9ef;box-shadow:0 12px 30px rgba(16,43,78,.065)}
+    body.oa-lions-inspired-preview .oa-program-card:hover,
+    body.oa-lions-inspired-preview .program-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(16,43,78,.11)}
+    body.oa-lions-inspired-preview .oa-program-card .program-icon{width:50px;height:50px;border-radius:16px}
+    body.oa-lions-inspired-preview .split-banner{border-radius:25px;padding:46px 50px;box-shadow:0 18px 42px rgba(16,43,78,.12)}
+    body.oa-lions-inspired-preview #team .oa-staff-card{border-radius:22px;box-shadow:0 12px 30px rgba(16,43,78,.065)}
+    body.oa-lions-inspired-preview #team .oa-staff-photo{width:150px;height:150px;border-width:5px}
+    body.oa-lions-inspired-preview #notices .oa-post-card{border-radius:21px;box-shadow:0 12px 30px rgba(16,43,78,.07)}
+    body.oa-lions-inspired-preview #galleryGrid .oa-gallery-card{border-radius:18px}
+    body.oa-lions-inspired-preview #admission .admission-panel{border:1px solid rgba(255,255,255,.35);border-radius:23px;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+    body.oa-lions-inspired-preview #contact .contact-card{border-radius:17px;box-shadow:0 8px 22px rgba(16,43,78,.045)}
+    body.oa-lions-inspired-preview .footer{padding-top:66px}
+    @media(max-width:980px) and (min-width:761px){
+      body.oa-lions-inspired-preview .brand{min-width:215px}
+      body.oa-lions-inspired-preview .brand-name{font-size:14px}
+      body.oa-lions-inspired-preview .nav-links{gap:10px;font-size:11px}
+    }
+    @media(max-width:760px){
+      body.oa-lions-inspired-preview .container{width:calc(100% - 30px)}
+      body.oa-lions-inspired-preview .navbar{min-height:78px!important;justify-content:flex-start!important;padding:8px 0 8px 58px!important}
+      body.oa-lions-inspired-preview .nav-wrap .brand{position:absolute!important;left:58px!important;right:7px!important;top:50%!important;transform:translateY(-50%)!important;width:auto!important;max-width:none!important;min-width:0!important;justify-content:flex-start!important;gap:8px!important}
+      body.oa-lions-inspired-preview .nav-wrap .brand-mark{width:38px!important;height:38px!important;flex:0 0 38px!important;border-radius:12px!important}
+      body.oa-lions-inspired-preview .nav-wrap .brand-name{font-size:clamp(10px,3.2vw,14px)!important;line-height:1.05!important;white-space:normal!important;overflow-wrap:anywhere;max-width:100%}
+      body.oa-lions-inspired-preview .nav-wrap .brand-place{font-size:7px!important;letter-spacing:.1em!important;margin-top:3px!important}
+      body.oa-lions-inspired-preview .nav-actions{left:8px!important}
+      body.oa-lions-inspired-preview .hero{min-height:620px;min-height:calc(100svh - 78px)}
+      body.oa-lions-inspired-preview .hero-inner{padding:clamp(42px,8vh,70px) 0}
+      body.oa-lions-inspired-preview .hero h1{font-size:clamp(39px,10.5vw,56px);line-height:1.04}
+      body.oa-lions-inspired-preview .hero p{font-size:14px;line-height:1.75}
+      body.oa-lions-inspired-preview .trust-row{margin-top:0}
+      body.oa-lions-inspired-preview .trust-grid{padding:13px 15px}
+      body.oa-lions-inspired-preview .trust-item{padding:8px 9px;gap:9px}
+      body.oa-lions-inspired-preview .trust-item strong{font-size:11px}
+      body.oa-lions-inspired-preview .trust-item small{font-size:9px}
+      body.oa-lions-inspired-preview .section{padding:62px 0}
+      body.oa-lions-inspired-preview .about-grid{gap:32px}
+      body.oa-lions-inspired-preview .about-visual{min-height:310px}
+      body.oa-lions-inspired-preview #why-choose-oxford .value-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+      body.oa-lions-inspired-preview #why-choose-oxford .value{min-height:125px;padding:17px 15px}
+      body.oa-lions-inspired-preview .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+      body.oa-lions-inspired-preview .oa-program-card{padding:18px}
+      body.oa-lions-inspired-preview .split-banner{padding:28px 23px;align-items:flex-start;flex-direction:column}
+      body.oa-lions-inspired-preview #team .oa-staff-photo{width:124px;height:124px}
+      body.oa-lions-inspired-preview .footer{padding-top:47px}
+    }
+    @media(max-width:420px){
+      body.oa-lions-inspired-preview .nav-wrap .brand-name{font-size:11px!important}
+      body.oa-lions-inspired-preview .nav-wrap .brand-mark{width:36px!important;height:36px!important;flex-basis:36px!important}
+      body.oa-lions-inspired-preview .trust-grid{grid-template-columns:1fr}
+      body.oa-lions-inspired-preview .trust-item{border-right:0;border-bottom:1px solid var(--line);padding:10px 4px}
+      body.oa-lions-inspired-preview .trust-item:last-child{border-bottom:0}
+      body.oa-lions-inspired-preview .cards{grid-template-columns:1fr}
+      body.oa-lions-inspired-preview #why-choose-oxford .value-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+      body.oa-lions-inspired-preview #why-choose-oxford .value{min-height:118px}
+    }
+  `;
+  document.head.appendChild(referenceTheme);
+
+  const heroEyebrow = document.getElementById('heroEyebrow');
+  if (heroEyebrow) heroEyebrow.textContent = 'OXFORD ACADEMIC INSTRUCTION PVT. LTD. · KUSHMA, PARBAT';
+
+  // Reuse the academy's existing published values as a distinct "Why choose us" section.
+  const aboutSection = document.getElementById('about');
+  const values = aboutSection?.querySelector('.value-list');
+  const academicsSection = document.getElementById('academics');
+  if (aboutSection && values && academicsSection && !document.getElementById('why-choose-oxford')) {
+    const whySection = document.createElement('section');
+    whySection.id = 'why-choose-oxford';
+    whySection.className = 'section soft oa-why-section';
+    whySection.innerHTML =
+      '<div class="container">' +
+        '<div class="section-head">' +
+          '<span class="section-kicker">WHY CHOOSE OXFORD</span>' +
+          '<h2>Learning that builds more than knowledge.</h2>' +
+          '<p>Curiosity, integrity, growth and community shape the way we learn and move forward together.</p>' +
+        '</div>' +
+      '</div>';
+    whySection.querySelector('.container').appendChild(values);
+    aboutSection.insertAdjacentElement('afterend', whySection);
+  }
+}
