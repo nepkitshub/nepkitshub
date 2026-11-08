@@ -460,19 +460,19 @@ if (!isAdminRoute) {
   setOnlyDefault('#heroTitle', 'A place to learn, grow & lead.', 'Build skills. Explore opportunities. Shape your future.');
   setOnlyDefault('#heroSubtitle',
     'Building knowledge, nurturing character and inspiring every learner to discover their potential.',
-    'Explore Japanese and Korean language learning, Montessori early childhood education and practical programme information from Oxford Academic Instruction.');
+    'Explore Japanese and Korean language programmes and practical course information from Oxford Academic Instruction.');
   setOnlyDefault('#heroNote', 'Learning today. Shaping tomorrow.', 'Language learning · Early childhood education · Learner support');
   setOnlyDefault('#aboutBadge', 'Learn with purpose. Grow with confidence.', 'A place to learn, prepare and take your next step.');
   setOnlyDefault('#aboutTitle', 'Education that helps every learner move forward.', 'Learning programmes for different stages and ambitions.');
   setOnlyDefault('#aboutText',
     'Oxford Academy is a learning community in Kushma, Parbat. This space is where the academy can introduce its story, educational approach and the values it wants every learner to carry forward.',
-    'Oxford Academic Instruction Pvt. Ltd. is an education provider serving learners and families through Japanese Language, Korean Language and Montessori Early Childhood programmes. Based in the Gandaki region, the academy shares programme information and helps prospective learners connect with the right branch for their enquiries.');
+    'Oxford Academic Instruction Pvt. Ltd. supports learners and families through its Japanese Language and Korean Language programmes. With branches in Kushma and Baglung, the academy helps prospective learners connect with the team, ask questions and get current course and enrolment information.');
   setOnlyDefault('#academics .section-head h2', 'A strong foundation for a bright future.', 'Our Courses & Learning Programmes');
   setOnlyDefault('#academics .section-head p',
     'Explore the academic programmes offered by Oxford Academy. Official programme names and grade levels can be updated by the academy team.',
     'Explore the programmes currently offered by Oxford Academic Instruction. Contact the academy for current batches, age groups, schedules and enrolment details.');
   setOnlyDefault('#missionTitle', 'Every learner deserves the chance to shine.', 'Not sure which programme is right for you?');
-  setOnlyDefault('#missionText', 'Discover a learning environment where questions are encouraged and progress is celebrated.', 'Talk with our team about Japanese and Korean language learning or Montessori early childhood education. We can share the current programme details and next steps.');
+  setOnlyDefault('#missionText', 'Discover a learning environment where questions are encouraged and progress is celebrated.', 'Talk with our team about Japanese or Korean language learning. We can share the current programme details and next steps.');
   setOnlyDefault('#team .section-head h2', 'Meet our academy team.', 'Meet the People Behind Oxford');
   setOnlyDefault('#team .section-head p',
     'Meet the educators and team members who help make the academy community what it is. Profiles will be added by the administration.',
@@ -497,8 +497,8 @@ if (!isAdminRoute) {
   // Make the top-level quick facts reflect the actual programmes and branch locations.
   const trustItems = document.querySelectorAll('.trust-grid .trust-item');
   const trustCopy = [
-    ['Japanese & Korean Language', 'Language learning programmes'],
-    ['Montessori Early Learning', 'Early childhood education'],
+    ['Japanese Language', 'Language learning programme'],
+    ['Korean Language', 'Language learning programme'],
     ['Kushma & Baglung Branches', 'Choose the branch that suits you']
   ];
   trustItems.forEach((item, index) => {
@@ -532,7 +532,7 @@ if (!isAdminRoute) {
           '<p>Find out about the programme, ask your questions and connect with the branch that can help you.</p>' +
         '</div>' +
         '<div class="oa-journey-grid">' +
-          '<article class="oa-journey-card"><span class="oa-journey-number">01</span><div class="oa-journey-icon">⌕</div><h3>Explore Programmes</h3><p>Review the Japanese, Korean and Montessori programmes currently listed by the academy.</p></article>' +
+          '<article class="oa-journey-card"><span class="oa-journey-number">01</span><div class="oa-journey-icon">⌕</div><h3>Explore Programmes</h3><p>Review the Japanese and Korean language programmes currently listed by the academy.</p></article>' +
           '<article class="oa-journey-card"><span class="oa-journey-number">02</span><div class="oa-journey-icon">✉</div><h3>Send an Enquiry</h3><p>Tell us which programme interests you and choose your preferred Oxford branch.</p></article>' +
           '<article class="oa-journey-card"><span class="oa-journey-number">03</span><div class="oa-journey-icon">✓</div><h3>Speak With Our Team</h3><p>Contact the academy for current class details, schedules, age groups and enrolment steps.</p></article>' +
         '</div>' +
