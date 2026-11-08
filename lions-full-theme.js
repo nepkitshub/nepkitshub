@@ -126,10 +126,21 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           '<a href="#home">Home</a>' +
           '<a href="#about">About Us</a>' +
           '<details class="oa-nav-drop"><summary>Services</summary><div class="oa-nav-menu">' +
-            '<a href="#oa-lions-services">Our Services</a><a href="#oa-lions-offices">Branch Support</a><a href="#admission">Admission Enquiry</a>' +
+            '<a href="#oa-lions-services">All Services</a>' +
+            '<a href="/services/?type=student-visa">Student Visa Guidance</a>' +
+            '<a href="/services/?type=working-visa-language">Working Visa Language</a>' +
+            '<a href="/services/?type=ssw">SSW Preparation</a>' +
+            '<a href="/services/?type=dependent-visa">Dependent Visa Guidance</a>' +
+            '<a href="/services/?type=documentation">Documentation Support</a>' +
+            '<a href="/services/?type=career-counselling">Career Counselling</a>' +
+            '<a href="#oa-lions-offices">Branch Support</a>' +
           '</div></details>' +
           '<details class="oa-nav-drop"><summary>Classes</summary><div class="oa-nav-menu">' +
-            '<a href="#academics">Japanese Language</a><a href="#academics">Korean Language</a>' +
+            '<a href="/services/?type=japanese-classes">Japanese N5 · N4 · N3</a>' +
+            '<a href="/services/?type=language-tests">JLPT · NAT · J-CERT · JLCT</a>' +
+            '<a href="/services/?type=language-tests">JFT-Basic Preparation</a>' +
+            '<a href="/services/?type=ssw">SSW Preparation</a>' +
+            '<a href="/services/?type=korean-classes">Korean Language</a>' +
           '</div></details>' +
           '<a href="#team">Our Team</a><a href="#notices">News & Notices</a><a href="#contact">Contact Us</a>';
         nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMobileMenu));
@@ -237,10 +248,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         classTypes.innerHTML =
           '<div class="oa-lions-class-heading"><span class="section-kicker">JAPANESE COURSE OPTIONS</span><h3>Build your language skills step by step.</h3></div>' +
           '<div class="oa-lions-class-type-grid">' +
-          '<article><b>N5 · N4 · N3 Classes</b><p>Structured Japanese language learning from foundational to intermediate levels.</p><a href="#admission" data-oa-service="Japanese language N5, N4 or N3 classes">Ask about class levels →</a></article>' +
-          '<article><b>JLPT · NAT · J-CERT · JLCT</b><p>Preparation for recognised Japanese language proficiency and communication tests.</p><a href="#admission" data-oa-service="Japanese language test preparation: JLPT, NAT, J-CERT or JLCT">Ask about test preparation →</a></article>' +
-          '<article><b>JFT-Basic Preparation</b><p>Language preparation for learners planning to pursue the Specified Skilled Worker pathway.</p><a href="#admission" data-oa-service="JFT-Basic Japanese language preparation">Ask about JFT-Basic →</a></article>' +
-          '<article><b>SSW Preparation</b><p>Language and pathway preparation for applicants exploring Japan’s Specified Skilled Worker route.</p><a href="#admission" data-oa-service="Specified Skilled Worker (SSW) preparation">Ask about SSW preparation →</a></article>' +
+          '<article><b>N5 · N4 · N3 Classes</b><p>Structured Japanese language learning from foundational to intermediate levels.</p><a href="#admission" href="/services/?type=japanese-classes">Ask about class levels →</a></article>' +
+          '<article><b>JLPT · NAT · J-CERT · JLCT</b><p>Preparation for recognised Japanese language proficiency and communication tests.</p><a href="#admission" href="/services/?type=language-tests">Ask about test preparation →</a></article>' +
+          '<article><b>JFT-Basic Preparation</b><p>Language preparation for learners planning to pursue the Specified Skilled Worker pathway.</p><a href="#admission" href="/services/?type=language-tests">Ask about JFT-Basic →</a></article>' +
+          '<article><b>SSW Preparation</b><p>Language and pathway preparation for applicants exploring Japan’s Specified Skilled Worker route.</p><a href="#admission" href="/services/?type=ssw">Ask about SSW preparation →</a></article>' +
           '</div>';
         programRoot.insertAdjacentElement('afterend', classTypes);
       }
