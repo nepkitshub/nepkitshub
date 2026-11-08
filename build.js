@@ -504,7 +504,7 @@ const servicePageStyles = `
   @media(max-width:760px){.oa-service-hero{padding:32px 22px}.oa-service-columns{grid-template-columns:1fr;gap:13px}.oa-service-panel{padding:20px}.oa-service-steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.oa-service-bottom{align-items:flex-start;flex-direction:column;padding:20px}.oa-service-bottom a{width:100%;justify-content:center}}
   @media(max-width:420px){.oa-service-steps{grid-template-columns:1fr}}
 `;
-const servicePageScript = String.raw\`<script type="module">
+const servicePageScript = String.raw`<script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const db = createClient('https://gsfhhvkipvoutqqgyick.supabase.co', 'sb_publishable_lzdJkHCS88esovlNn2_kow_8mmAQgh-');
 const fallbackServices = \${JSON.stringify(servicePageData)};
@@ -538,7 +538,7 @@ root.innerHTML =
   '<aside class="oa-service-panel"><h2>How to get started</h2><ul class="oa-service-list">' + item.steps.map((entry) => '<li>' + esc(entry) + '</li>').join('') + '</ul><p style="margin-top:18px;font-size:11px">Contact either Oxford branch for current availability and details.</p></aside></div>' +
   '<section class="oa-service-panel" style="margin-top:22px"><h2>Important information</h2><p>' + esc(item.note) + '</p></section>' +
   '<section class="oa-service-bottom"><div><h2>Ready to discuss your next step?</h2><p>Send an enquiry and choose the Oxford branch you would like to contact.</p></div><a href="/?service=' + encodeURIComponent(key) + '#admission">Contact Oxford ↗</a></section>';
-</script>\`;
+</script>`;
 const servicePageHtml = '<!doctype html>\\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>Oxford Academic Instruction Pvt. Ltd. | Services</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + '</style></head><body>' +
   '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Japanese & Korean Language · Japan Study Guidance</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
   '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/#oa-lions-services">Back to services ↗</a></div></header>' +
@@ -550,7 +550,7 @@ fs.mkdirSync(servicesDir, { recursive:true });
 fs.writeFileSync(path.join(servicesDir, 'index.html'), servicePageHtml);
 
 
-const aboutPageStyles = \`
+const aboutPageStyles = `
   .oa-about-hero{padding:48px 38px;border-radius:13px;background:linear-gradient(120deg,#10395f,#1b6096);color:#fff}
   .oa-about-hero span{color:#ffd18c;font-size:10px;font-weight:900;letter-spacing:.14em}
   .oa-about-hero h1{max-width:820px;margin:12px 0;color:#fff;font:700 clamp(34px,5vw,54px)/1.12 'Playfair Display',Georgia,serif}
@@ -575,8 +575,8 @@ const aboutPageStyles = \`
   .oa-about-section h2{margin:0 0 10px;color:#173f69;font:700 31px/1.2 'Playfair Display',Georgia,serif}
   .oa-about-section>p{color:#6b7d8f;font-size:13px;line-height:1.85;max-width:800px}
   @media(max-width:760px){.oa-about-hero{padding:30px 22px}.oa-about-grid,.oa-about-offices,.oa-about-team{grid-template-columns:1fr}.oa-about-card.goals,.oa-about-card.message{grid-column:auto}.oa-about-card{padding:20px}}
-\`;
-const aboutPageScript = String.raw\`<script type="module">
+`;
+const aboutPageScript = String.raw`<script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const db = createClient('https://gsfhhvkipvoutqqgyick.supabase.co', 'sb_publishable_lzdJkHCS88esovlNn2_kow_8mmAQgh-');
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -628,7 +628,7 @@ try {
       '</article>';
   }).join('') || '<div class="content-empty">Team profiles will be added here by Oxford.</div>';
 } catch (error) { teamRoot.textContent = 'Team information is temporarily unavailable.'; }
-</script>\`;
+</script>`;
 const aboutPageHtml = '<!doctype html>\\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>About Us | Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + aboutPageStyles + '</style></head><body>' +
   '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Japanese & Korean Language · Japan Study Guidance</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
   '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
@@ -641,7 +641,7 @@ const aboutDir = path.join(output, 'about');
 fs.mkdirSync(aboutDir, { recursive:true });
 fs.writeFileSync(path.join(aboutDir, 'index.html'), aboutPageHtml);
 
-const calendarPageStyles = \`
+const calendarPageStyles = `
   .oa-calendar-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
   .oa-event-card{padding:22px;border:1px solid #e2eaf1;border-radius:12px;background:#fff;box-shadow:0 9px 25px rgba(15,48,79,.055)}
   .oa-event-date{display:inline-flex;padding:6px 10px;background:#eaf3fb;border-radius:5px;color:#185da0;font-size:10px;font-weight:900}
@@ -649,8 +649,8 @@ const calendarPageStyles = \`
   .oa-event-card p{color:#6b7d8f;font-size:12px;line-height:1.8;white-space:pre-line}
   .oa-event-category{display:block;margin-bottom:8px;color:#d89434;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
   @media(max-width:700px){.oa-calendar-grid{grid-template-columns:1fr}}
-\`;
-const calendarPageScript = String.raw\`<script type="module">
+`;
+const calendarPageScript = String.raw`<script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const db = createClient('https://gsfhhvkipvoutqqgyick.supabase.co', 'sb_publishable_lzdJkHCS88esovlNn2_kow_8mmAQgh-');
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -671,7 +671,7 @@ try {
   console.error('Oxford calendar could not be loaded:', error);
   root.innerHTML = '<div class="content-empty">Calendar information is temporarily unavailable. Please contact Oxford for current dates.</div>';
 }
-</script>\`;
+</script>`;
 const calendarPageHtml = '<!doctype html>\\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>Calendar & Intakes | Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + calendarPageStyles + '</style></head><body>' +
   '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Course Dates · Events · Application Updates</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
   '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
