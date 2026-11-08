@@ -446,7 +446,8 @@ if (!isAdminRoute) {
 
 // Service-led homepage composition inspired by the reference site's information flow.
 // All offering cards still come from published oa_programs records.
-if (!isAdminRoute) {
+const applyServiceLedHomepageCopy = () => {
+  if (isAdminRoute) return;
   const officialCompanyName = 'Oxford Academic Instruction Pvt. Ltd.';
   const setOnlyDefault = (selector, defaults, value) => {
     const node = document.querySelector(selector);
@@ -637,4 +638,10 @@ if (!isAdminRoute) {
     }
   `;
   document.head.appendChild(journeyStyle);
+};
+applyServiceLedHomepageCopy();
+if (window.oaPublicContentReady && typeof window.oaPublicContentReady.then === 'function') {
+  window.oaPublicContentReady.then(applyServiceLedHomepageCopy).catch((error) => {
+    console.error('Oxford homepage content could not be refreshed:', error);
+  });
 }
