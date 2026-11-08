@@ -539,7 +539,7 @@ root.innerHTML =
   '<section class="oa-service-panel" style="margin-top:22px"><h2>Important information</h2><p>' + esc(item.note) + '</p></section>' +
   '<section class="oa-service-bottom"><div><h2>Ready to discuss your next step?</h2><p>Send an enquiry and choose the Oxford branch you would like to contact.</p></div><a href="/?service=' + encodeURIComponent(key) + '#admission">Contact Oxford ↗</a></section>';
 </script>`;
-const servicePageHtml = '<!doctype html>\\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>Oxford Academic Instruction Pvt. Ltd. | Services</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + '</style></head><body>' +
+const servicePageHtml = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>Oxford Academic Instruction Pvt. Ltd. | Services</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + '</style></head><body>' +
   '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Japanese & Korean Language · Japan Study Guidance</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
   '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/#oa-lions-services">Back to services ↗</a></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb"><a href="/">Home</a><span> / </span><a href="/#oa-lions-services">Services</a><span> / </span><span id="service-breadcrumb-title">Service details</span></nav><div id="service-detail"><div class="content-empty">Loading service information…</div></div></main>' +
@@ -654,7 +654,7 @@ try {
   partnerSection.remove();
 }
 </script>`;
-const aboutPageHtml = '<!doctype html>\\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>About Us | Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + aboutPageStyles + '</style></head><body>' +
+const aboutPageHtml = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>About Us | Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + aboutPageStyles + '</style></head><body>' +
   '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Japanese & Korean Language · Japan Study Guidance</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
   '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb"><a href="/">Home</a><span> / </span><span>About Us</span></nav><div id="oa-about-content"><div class="content-empty">Loading Oxford profile…</div></div>' +
@@ -698,7 +698,7 @@ try {
   root.innerHTML = '<div class="content-empty">Calendar information is temporarily unavailable. Please contact Oxford for current dates.</div>';
 }
 </script>`;
-const calendarPageHtml = '<!doctype html>\\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>Calendar & Intakes | Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + calendarPageStyles + '</style></head><body>' +
+const calendarPageHtml = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>Calendar & Intakes | Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + calendarPageStyles + '</style></head><body>' +
   '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Course Dates · Events · Application Updates</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
   '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb"><a href="/">Home</a><span> / </span><span>Calendar & Intakes</span></nav><section class="oa-service-hero"><span class="oa-service-kicker">OXFORD ACADEMIC CALENDAR</span><h1>Events, course updates and intake information.</h1><p>Check announcements published by Oxford. For current class availability and application deadlines, contact the branch relevant to you.</p></section><div id="oa-calendar-list" class="oa-calendar-grid" style="margin-top:24px"><div class="content-empty">Loading calendar…</div></div></main>' +
@@ -742,6 +742,7 @@ fs.writeFileSync(notFoundDir, notFoundHtml);
  */
 const professionalThemeCss = fs.readFileSync(path.join(__dirname, 'professional-theme.css'), 'utf8');
 const professionalUxSource = fs.readFileSync(path.join(__dirname, 'professional-ux.js'), 'utf8');
+const publicBrandingSource = fs.readFileSync(path.join(__dirname, 'public-branding.js'), 'utf8');
 let professionalPagesUpdated = 0;
 function applyProfessionalLayer(folder) {
   for (const entry of fs.readdirSync(folder, { withFileTypes: true })) {
@@ -782,8 +783,9 @@ function applyProfessionalLayer(folder) {
     }
     const themeBlock = '<style id="oa-professional-design-system">\n' + professionalThemeCss + '\n</style>';
     const uxBlock = '<script id="oa-professional-ux">\n' + professionalUxSource + '\n</script>';
+    const brandingBlock = '<script type="module" id="oa-public-branding">\n' + publicBrandingSource + '\n</script>';
     page = page.replace('</head>', themeBlock + '</head>');
-    page = page.replace('</body>', uxBlock + '</body>');
+    page = page.replace('</body>', brandingBlock + uxBlock + '</body>');
     fs.writeFileSync(filePath, page);
     professionalPagesUpdated += 1;
   }
