@@ -109,18 +109,21 @@ async function applyPageBranding() {
     if (error) return;
     const map = {};
     (data || []).forEach((row) => { map[row.content_key] = row.value_en || ''; });
+    const savedBrandName = String(map.brand_name || '').trim();
+    const brandName = !savedBrandName || /^Oxford Academy$/i.test(savedBrandName)
+      ? 'Oxford Academic Instruction Pvt. Ltd.' : savedBrandName;
     const mark = $('.page-mark');
     const logo = /^https:\/\//i.test(map.logo_url || '') ? map.logo_url : '';
     if (mark) {
       if (logo) {
         const image = document.createElement('img');
         image.src = logo;
-        image.alt = (map.brand_name || 'Oxford Academy') + ' logo';
+        image.alt = brandName + ' logo';
         mark.replaceChildren(image);
       } else mark.textContent = 'OA';
     }
     const name = $('.page-brand-name');
-    if (name && map.brand_name) name.firstChild.textContent = map.brand_name;
+    if (name && brandName) name.firstChild.textContent = brandName;
   } catch (error) {
     console.error('Shared academy branding could not be loaded:', error);
   }
@@ -169,7 +172,7 @@ async function renderDetail() {
     const title = titleOf(row);
     const body = config[selectedType].body(row);
     const image = config[selectedType].image(row);
-    document.title = title + ' | Oxford Academy';
+    document.title = title + ' | Oxford Academic Instruction Pvt. Ltd.';
     breadcrumb.innerHTML = '<a href="/">Home</a><span> / </span><a href="' +
       listingHref(selectedType === 'notice' ? 'notices' : selectedType) + '">' +
       esc(config[selectedType].title) + '</a><span> / </span><span>' + esc(title) + '</span>';
@@ -197,7 +200,7 @@ async function renderListing() {
   const target = $('#content-list');
   const heading = $('#content-heading');
   heading.textContent = config[selectedType].title;
-  document.title = config[selectedType].title + ' | Oxford Academy';
+  document.title = config[selectedType].title + ' | Oxford Academic Instruction Pvt. Ltd.';
   try {
     const kind = selectedType === 'notices' ? 'notices' : selectedType;
     const rows = await fetchRows(kind, null, 100);
