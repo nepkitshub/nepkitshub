@@ -459,3 +459,171 @@ body.admin-route .oa-enquiry-card:hover { box-shadow: 0 14px 34px rgba(16,43,78,
   html { scroll-behavior: auto; }
   *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+/* Early tablet navigation: prevent the full desktop link row from exceeding
+   the available width between phones and small laptops. */
+@media (max-width: 1260px) {
+  body.oa-lions-full .navbar {
+    position: relative;
+    min-height: 78px;
+    padding: 8px 0 8px 52px;
+    justify-content: flex-start;
+  }
+  body.oa-lions-full .nav-wrap .brand {
+    position: absolute;
+    top: 50%;
+    left: 58px;
+    right: 4px;
+    min-width: 0;
+    max-width: none;
+    transform: translateY(-50%);
+    gap: 10px;
+  }
+  body.oa-lions-full .nav-wrap .brand-mark {
+    width: 44px !important;
+    height: 44px !important;
+    flex: 0 0 44px !important;
+  }
+  body.oa-lions-full .nav-wrap .brand-name {
+    font-size: clamp(12px, 1.7vw, 15px);
+    line-height: 1.2;
+    white-space: normal;
+  }
+  body.oa-lions-full .nav-actions {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    width: auto;
+    margin: 0;
+    transform: translateY(-50%);
+  }
+  body.oa-lions-full .nav-actions .btn {
+    display: none !important;
+  }
+  body.oa-lions-full .menu-btn {
+    display: grid !important;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+  }
+  body.oa-lions-full .nav-links {
+    position: absolute !important;
+    top: calc(100% - 1px) !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    max-height: calc(100dvh - 100px);
+    padding: 12px !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #fff !important;
+    border: 1px solid #e3eaf1 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 20px 48px rgba(16,43,78,.17) !important;
+    z-index: 80;
+  }
+  body.oa-lions-full .nav-links > a,
+  body.oa-lions-full .nav-links summary {
+    min-height: 44px;
+  }
+}
+
+/* Phone-size refinements: keep the academy name readable beside the menu. */
+@media (max-width: 560px) {
+  body.oa-lions-full .nav-wrap .brand {
+    left: 58px;
+    right: 4px;
+    gap: 8px;
+  }
+  body.oa-lions-full .nav-wrap .brand-name {
+    font-size: clamp(12px, 3.35vw, 14px) !important;
+    line-height: 1.16;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+  body.oa-lions-full .nav-wrap .brand-place {
+    font-size: 9px;
+    line-height: 1.1;
+  }
+}
+
+/* Keep the tablet drawer as a true vertical navigation list. */
+@media (max-width: 1260px) {
+  /* Anchor the hamburger to the navbar, not the hidden CTA group. */
+  body.oa-lions-full .nav-actions {
+    position: static !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    height: 0 !important;
+    flex: 0 0 0 !important;
+    overflow: visible !important;
+  }
+  body.oa-lions-full .nav-actions > :not(.menu-btn) {
+    display: none !important;
+  }
+  body.oa-lions-full .nav-actions .menu-btn,
+  body.oa-lions-full #menuBtn {
+    position: absolute !important;
+    top: 50% !important;
+    left: -50px !important;
+    right: auto !important;
+    width: 42px !important;
+    height: 42px !important;
+    margin: 0 !important;
+    transform: translateY(-50%) !important;
+    z-index: 5;
+    display: grid !important;
+  }
+  body.oa-lions-full .nav-links {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 2px !important;
+  }
+  body.oa-lions-full .nav-links > a,
+  body.oa-lions-full .nav-links .oa-nav-drop {
+    display: flex !important;
+    width: 100% !important;
+    flex: 0 0 auto;
+  }
+  body.oa-lions-full .nav-links .oa-nav-drop {
+    display: block !important;
+  }
+  body.oa-lions-full .nav-links .oa-nav-drop > summary {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+  body.oa-lions-full .nav-links .oa-nav-drop[open] > .oa-nav-menu {
+    position: static !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 2px 0 8px !important;
+    padding: 4px 0 4px 12px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #f5f8fb !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+  body.oa-lions-full .nav-links .oa-nav-menu a {
+    display: flex !important;
+    align-items: center;
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 12px;
+    white-space: normal;
+  }
+}
+
