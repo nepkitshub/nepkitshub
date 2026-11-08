@@ -13,7 +13,7 @@ html = html.replace('content="Oxford Academy, Kushma, Parbat — learning, chara
 function replaceExactly(source, needle, replacement, label) { const first = source.indexOf(needle); if (first === -1) throw new Error('Could not find ' + label); if (source.indexOf(needle, first + needle.length) !== -1) throw new Error('Found ' + label + ' more than once'); return source.slice(0, first) + replacement + source.slice(first + needle.length); }
 function replaceRegexExactly(source, pattern, replacement, label) { const matches = source.match(pattern); if (!matches || matches.length !== 1) throw new Error('Expected one ' + label + '; found ' + (matches ? matches.length : 0)); return source.replace(pattern, replacement); }
 html = replaceExactly(html, 'const db = createClient(SUPABASE_URL, SUPABASE_KEY);', 'const db = window.__oaSupabaseClient || createClient(SUPABASE_URL, SUPABASE_KEY); window.__oaSupabaseClient = db;', 'shared homepage Supabase client');
-const englishOnlyLanguagePattern = /    function applyLanguage\\(\\)\\{[\\s\\S]*?\\n    \\}/;
+const englishOnlyLanguagePattern = /    function applyLanguage\(\)\{[\s\S]*?\n    \}/;
 const englishOnlyLanguageUpdater = `    function applyLanguage() {
       document.body.classList.remove('np');
       document.documentElement.lang = 'en';
