@@ -66,9 +66,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       style.id = 'oa-live-branding-sizing';
       document.head.appendChild(style);
     }
-    style.textContent =
+    const sizing =
       '.brand-mark,.page-mark{width:' + desktop + 'px!important;height:' + desktop + 'px!important;flex:0 0 ' + desktop + 'px!important}' +
       '@media(max-width:760px){.brand-mark,.page-mark{width:' + mobile + 'px!important;height:' + mobile + 'px!important;flex-basis:' + mobile + 'px!important}}';
+    if (style.textContent !== sizing) style.textContent = sizing;
     document.title = name + ' | Kushma, Parbat';
   }
 
