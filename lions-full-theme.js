@@ -305,7 +305,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           '<p id="oa-services-intro"></p></div>' +
           '<div class="oa-lions-service-grid" id="oa-lions-service-grid"><div class="oa-staff-empty">Loading services…</div></div></div>';
       }
-      setText('#oa-services-intro', profileMap.services_intro || 'Explore Oxford’s study, work, language and application support services.');
+      const servicesIntro = $('#oa-services-intro', services); if (servicesIntro) servicesIntro.textContent = profileMap.services_intro || 'Explore Oxford’s study, work, language and application support services.';
       const serviceGrid = $('#oa-lions-service-grid', services);
       if (serviceGrid) {
         const { data: serviceRows, error: serviceError } = await db.from('oa_services')
@@ -414,7 +414,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         testimonials.innerHTML =
           '<div class="container"><div class="section-head"><span class="section-kicker">STUDENT EXPERIENCES</span><h2>Hear from learners at Oxford.</h2><p id="oa-testimonials-intro"></p></div><div class="oa-testimonial-grid" id="oa-testimonial-grid"><div class="oa-testimonial-empty">Student experiences will appear here after learners give permission for Oxford to publish their feedback.</div></div></div>';
       }
-      setText('#oa-testimonials-intro', profileMap.testimonials_intro || 'Student feedback is shown only after it has been reviewed and approved for publication.');
+      const testimonialsIntro = $('#oa-testimonials-intro', testimonials); if (testimonialsIntro) testimonialsIntro.textContent = profileMap.testimonials_intro || 'Student feedback is shown only after it has been reviewed and approved for publication.';
       const testimonialGrid = $('#oa-testimonial-grid', testimonials);
       if (testimonialGrid) {
         const { data: testimonialRows, error: testimonialError } = await db.from('oa_testimonials')
