@@ -32,7 +32,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const logo = safeUrl(branding.logo_url);
     document.querySelectorAll('.brand-mark,.oa-mark,.page-mark').forEach((node) => {
       if (!logo) {
-        if (!node.querySelector('img')) node.textContent = 'OA';
+        if (!node.querySelector('img') && node.textContent !== 'OA') node.textContent = 'OA';
         return;
       }
       let image = node.querySelector('img[data-oa-brand-logo]');
@@ -45,7 +45,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         image.style.cssText = 'display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;padding:3px;border-radius:inherit';
         image.addEventListener('error', () => {
           image.remove();
-          if (!node.querySelector('img')) node.textContent = 'OA';
+          if (!node.querySelector('img') && node.textContent !== 'OA') node.textContent = 'OA';
           console.error('Oxford Academy logo could not be loaded. Check that the uploaded image is publicly accessible.');
         }, { once: true });
         node.replaceChildren(image);
