@@ -70,7 +70,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       '.brand-mark,.page-mark{width:' + desktop + 'px!important;height:' + desktop + 'px!important;flex:0 0 ' + desktop + 'px!important}' +
       '@media(max-width:760px){.brand-mark,.page-mark{width:' + mobile + 'px!important;height:' + mobile + 'px!important;flex-basis:' + mobile + 'px!important}}';
     if (style.textContent !== sizing) style.textContent = sizing;
-    document.title = name + ' | Kushma, Parbat';
+    // Keep route-specific titles from the static page metadata; branding only updates visible brand text.
   }
 
   async function refreshBranding() {
