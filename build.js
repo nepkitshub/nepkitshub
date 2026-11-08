@@ -391,4 +391,138 @@ for (const [folder, mode] of [['read','detail'],['all','listing']]) {
   fs.mkdirSync(target, { recursive:true });
   fs.writeFileSync(path.join(target, 'index.html'), contentPageHtml(mode));
 }
+
+const servicePageData = {
+  'student-visa': {
+    title:'Student Visa Guidance',
+    kicker:'STUDY IN JAPAN',
+    summary:'Explore study opportunities in Japan with guidance on school selection, application preparation, intake information and student visa documentation.',
+    overview:'Oxford Academic Instruction can help prospective students understand the steps involved in planning further study in Japan. The process begins with a discussion about your educational background, goals and preferred study options.',
+    includes:['Initial education and goal discussion','Guidance on Japanese language school options','Information about admission and intake steps','Application checklist and document organisation','Preparation guidance for interviews and follow-up'],
+    steps:['Discuss your study goals and background','Review suitable school and course options','Prepare the required application documents','Follow the school and visa application instructions'],
+    note:'School admission and visa decisions are made by the relevant schools and Japanese authorities. Requirements and intake availability can change. Contact the academy for guidance based on your circumstances.'
+  },
+  'working-visa-language': {
+    title:'Working Visa Language Preparation',
+    kicker:'LANGUAGE FOR WORK',
+    summary:'Build Japanese language ability for learners exploring employment and work-related pathways in Japan.',
+    overview:'Language preparation helps learners develop practical communication skills for daily life and workplace situations. Oxford can discuss your goals, help identify relevant language preparation and explain the information you should check for your chosen route.',
+    includes:['Japanese language learning for practical communication','Vocabulary and listening practice for work situations','Guidance on relevant language tests and preparation','Information about documents commonly requested for work-related applications','A discussion of next steps for your intended pathway'],
+    steps:['Discuss your experience and career objective','Identify relevant language and preparation needs','Choose an appropriate learning or test-preparation path','Review the application information relevant to your case'],
+    note:'Work visa categories, qualifications and employer requirements vary. Language classes or counselling do not guarantee employment or a visa. Confirm eligibility and current requirements with the relevant employer and authorities.'
+  },
+  'ssw': {
+    title:'Specified Skilled Worker (SSW) Preparation',
+    kicker:'LANGUAGE FOR SSW VISA',
+    summary:'Prepare for the Japanese language and pathway requirements relevant to the Specified Skilled Worker route.',
+    overview:'The SSW pathway can involve Japanese language preparation and a skills assessment for the selected work sector. Oxford can provide language and preparation support and help you understand the steps you may need to check.',
+    includes:['Japanese language preparation for daily and workplace communication','JFT-Basic or relevant Japanese test preparation guidance','Introduction to SSW pathway and sector-specific preparation needs','Guidance on organising application information and documents','Information about checking official eligibility and exam requirements'],
+    steps:['Discuss the work sector you are interested in','Review the relevant language and skills assessment information','Prepare through suitable classes and practice','Check employer, application and official requirements'],
+    note:'SSW conditions, skill tests and language requirements depend on the sector and current Japanese rules. A job offer, test results and visa approval are not guaranteed by taking a course.'
+  },
+  'dependent-visa': {
+    title:'Dependent Visa Guidance',
+    kicker:'FAMILY & DEPENDENT SUPPORT',
+    summary:'Get guidance on the documents and application steps involved when eligible family members plan to join a resident in Japan.',
+    overview:'Dependent applications can involve relationship records, financial support information and documents from the family member living in Japan. Oxford can help you understand the paperwork and organise questions for your case.',
+    includes:['Initial discussion about the family situation','Guidance on relationship and identity documents','Information about financial support evidence','Document checklist and file organisation','Application process and follow-up guidance'],
+    steps:['Discuss the applicant and sponsor circumstances','Review the relevant document checklist','Organise relationship and financial support records','Check the latest official submission instructions'],
+    note:'Eligibility depends on the primary resident’s status and Japanese immigration rules. Requirements differ by case and may change. Approval is determined by the relevant authorities.'
+  },
+  'documentation': {
+    title:'Documentation Support',
+    kicker:'APPLICATION DOCUMENTS',
+    summary:'Understand and organise the academic, identity, sponsor and financial documents needed for Japan-related applications.',
+    overview:'Complete and consistent paperwork is an important part of many study and visa-related applications. Oxford can help applicants understand the document categories relevant to their case and organise a clear checklist.',
+    includes:['Personal identity and passport document checklist','Academic certificates, transcripts and study records','Sponsor, employment and financial document organisation','Relationship evidence where relevant','Application form and supporting document review guidance'],
+    steps:['Identify the application type and applicant profile','Prepare a personalised document checklist','Collect and organise the supporting records','Review completeness before following official submission instructions'],
+    note:'The required documents depend on the application type and individual circumstances. Always follow the current checklist issued by the school, employer, embassy or Japanese immigration authority.'
+  },
+  'career-counselling': {
+    title:'Study & Career Counselling',
+    kicker:'PERSONALISED GUIDANCE',
+    summary:'Discuss your background, interests and future goals before deciding which education or work pathway to explore.',
+    overview:'Choosing a course, school or work pathway is an important decision. Oxford’s counselling service helps learners consider their background, language preparation needs and available options before taking the next step.',
+    includes:['Discussion of academic background and future goals','Information about Japanese education and learning pathways','Guidance on school and programme selection','Language and test preparation planning','Next-step information for applications and documentation'],
+    steps:['Share your goals and current background','Discuss possible education or work directions','Identify language and preparation needs','Plan the next practical steps and questions'],
+    note:'Counselling is informational and does not guarantee admission, employment or visa approval. Final decisions depend on the relevant institutions, employers and authorities.'
+  },
+  'language-tests': {
+    title:'Japanese Language Test Preparation',
+    kicker:'JLPT · NAT · J-CERT · JLCT · JFT-BASIC',
+    summary:'Prepare for Japanese language proficiency and communication tests through structured learning and practice.',
+    overview:'Oxford’s Japanese language preparation can support learners planning to sit proficiency and communication tests. Ask the academy which test sessions, levels and preparation classes are currently available.',
+    includes:['JLPT preparation','NAT-TEST preparation','J-CERT and JLCT preparation','JFT-Basic preparation','Grammar, vocabulary, reading, listening and communication practice'],
+    steps:['Discuss your target test and current level','Review the appropriate class or preparation plan','Build skills through lessons and practice','Check registration dates and exam details with the relevant test provider'],
+    note:'Exam availability, registration dates, formats and requirements are set by the respective test organisations and may change. Confirm the current details before applying.'
+  },
+  'japanese-classes': {
+    title:'Japanese Language Classes',
+    kicker:'N5 · N4 · N3',
+    summary:'Build Japanese language skills from foundational learning through intermediate-level preparation.',
+    overview:'Japanese language learning can support further study, everyday communication and work-related preparation. Oxford can help you ask about the current class levels, teaching schedule and learning plan.',
+    includes:['N5 foundational Japanese','N4 elementary Japanese','N3 intermediate Japanese','Grammar, vocabulary, reading and listening practice','Speaking and practical communication'],
+    steps:['Discuss your previous learning experience','Identify an appropriate level','Ask about the current class schedule','Start learning and prepare for your next level or test'],
+    note:'Class schedules, level availability and course duration should be confirmed with the academy before enrolment.'
+  },
+  'korean-classes': {
+    title:'Korean Language Classes',
+    kicker:'KOREAN LANGUAGE',
+    summary:'Explore Oxford’s Korean language programme and ask the academy about current classes and learning options.',
+    overview:'Oxford lists Korean Language as one of its learning programmes. Contact the academy for the current class level, schedule, course structure and enrolment information.',
+    includes:['Programme information and class availability','Guidance on current learning levels','Information about course schedules','Enrolment enquiry and follow-up'],
+    steps:['Contact the academy with your learning goals','Ask about currently available classes','Review the course information','Confirm the schedule and enrolment details'],
+    note:'Please contact Oxford to confirm the latest Korean class availability and course details.'
+  }
+};
+const servicePageStyles = \`
+  .oa-service-hero{position:relative;overflow:hidden;padding:55px 42px;border-radius:13px;background:linear-gradient(120deg,#10395f,#1b6096);color:#fff;box-shadow:0 17px 42px rgba(15,48,79,.13)}
+  .oa-service-hero:after{position:absolute;content:"";width:300px;height:300px;right:-95px;top:-140px;border:1px solid rgba(255,255,255,.22);border-radius:50%;box-shadow:0 0 0 35px rgba(255,255,255,.04),0 0 0 70px rgba(255,255,255,.035)}
+  .oa-service-kicker{display:inline-flex;padding:6px 11px;border:1px solid rgba(255,255,255,.32);border-radius:4px;color:#ffd18c;font-size:10px;font-weight:900;letter-spacing:.14em}
+  .oa-service-hero h1{position:relative;z-index:1;max-width:780px;margin:16px 0 12px;color:#fff;font:700 clamp(33px,5vw,54px)/1.1 'Playfair Display',Georgia,serif}
+  .oa-service-hero p{position:relative;z-index:1;max-width:760px;margin:0;color:#e3edf7;font-size:14px;line-height:1.9}
+  .oa-service-hero-actions{position:relative;z-index:1;display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+  .oa-service-hero-actions a{display:inline-flex;padding:12px 18px;border-radius:6px;background:#f2a33a;color:#1a2d40;font-size:12px;font-weight:900}
+  .oa-service-hero-actions a.secondary{border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff}
+  .oa-service-columns{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(240px,.75fr);gap:22px;margin-top:25px}
+  .oa-service-panel{padding:27px;background:#fff;border:1px solid #e3eaf1;border-radius:11px;box-shadow:0 8px 25px rgba(15,48,79,.045)}
+  .oa-service-panel h2{margin:0 0 15px;color:#173f69;font:700 25px/1.2 'Playfair Display',Georgia,serif}
+  .oa-service-panel p{color:#687b8e;font-size:13px;line-height:1.9}
+  .oa-service-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+  .oa-service-list li{position:relative;padding-left:24px;color:#53697e;font-size:12px;line-height:1.7}
+  .oa-service-list li:before{position:absolute;left:0;top:0;color:#d89434;content:"✓";font-weight:900}
+  .oa-service-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:22px}
+  .oa-service-step{padding:19px;border:1px solid #e3eaf1;border-radius:10px;background:#fff}
+  .oa-service-step b{display:block;margin-bottom:9px;color:#d89434;font-size:22px}
+  .oa-service-step strong{display:block;margin-bottom:6px;color:#173f69;font-size:13px}
+  .oa-service-step span{display:block;color:#708194;font-size:11px;line-height:1.7}
+  .oa-service-note{margin-top:20px;padding:16px 18px;border-left:3px solid #e6a34c;border-radius:0 8px 8px 0;background:#fff8ee;color:#675844;font-size:11px;line-height:1.8}
+  .oa-service-bottom{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:24px;padding:25px;background:#edf4fa;border-radius:11px}
+  .oa-service-bottom h2{margin:0 0 4px;color:#173f69;font:700 22px/1.2 'Playfair Display',Georgia,serif}
+  .oa-service-bottom p{margin:0;color:#6c7f91;font-size:11px}
+  .oa-service-bottom a{display:inline-flex;flex:0 0 auto;padding:12px 17px;border-radius:6px;background:#185da0;color:#fff;font-size:11px;font-weight:900}
+  @media(max-width:760px){.oa-service-hero{padding:32px 22px}.oa-service-columns{grid-template-columns:1fr;gap:13px}.oa-service-panel{padding:20px}.oa-service-steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.oa-service-bottom{align-items:flex-start;flex-direction:column;padding:20px}.oa-service-bottom a{width:100%;justify-content:center}}
+  @media(max-width:420px){.oa-service-steps{grid-template-columns:1fr}}
+\`;
+const servicePageHtml = '<!doctype html>\\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>Oxford Academic Instruction Pvt. Ltd. | Services</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + '</style></head><body>' +
+  '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Japanese & Korean Language · Japan Study Guidance</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
+  '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/#oa-lions-services">Back to services ↗</a></div></header>' +
+  '<main class="page-main"><nav class="page-breadcrumb"><a href="/">Home</a><span> / </span><a href="/#oa-lions-services">Services</a><span> / </span><span id="service-breadcrumb-title">Service details</span></nav><div id="service-detail"><div class="content-empty">Loading service information…</div></div></main>' +
+  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a> <a href="/admin/">Admin access ↗</a></footer>' +
+  '<script>const servicePages=' + JSON.stringify(servicePageData) + ';' +
+  'const params=new URLSearchParams(location.search);const key=params.get("type")||"student-visa";const item=servicePages[key]||servicePages["student-visa"];' +
+  'const esc=(v)=>String(v??"").replace(/[&<>\\\\"\\x27]/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\\\\"":"&quot;","\\x27":"&#39;"}[c]));' +
+  'document.title=item.title+" | Oxford Academic Instruction Pvt. Ltd.";document.getElementById("service-breadcrumb-title").textContent=item.title;' +
+  'const steps=["Consultation","Plan & preparation","Documents","Next steps"];' +
+  'const root=document.getElementById("service-detail");' +
+  'root.innerHTML="<section class=\\\\"oa-service-hero\\\\"><span class=\\\\"oa-service-kicker\\\\">"+esc(item.kicker)+"</span><h1>"+esc(item.title)+"</h1><p>"+esc(item.summary)+"</p><div class=\\\\"oa-service-hero-actions\\\\"><a href=\\\\"/#admission?service="+encodeURIComponent(key)+"\\\\">Enquire about this service ↗</a><a class=\\\\"secondary\\\\" href=\\\\"/#oa-lions-services\\\\">Explore all services</a></div></section>"+' +
+  '"<div class=\\\\"oa-service-columns\\\\"><section class=\\\\"oa-service-panel\\\\"><h2>About this service</h2><p>"+esc(item.overview)+"</p><h2 style=\\\\"margin-top:24px\\\\">What we can help with</h2><ul class=\\\\"oa-service-list\\\\">"+item.includes.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul></section>"+' +
+  '"<aside class=\\\\"oa-service-panel\\\\"><h2>How to get started</h2><ul class=\\\\"oa-service-list\\\\">"+item.steps.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul><p style=\\\\"margin-top:18px;font-size:11px\\\\">Contact either Oxford branch for current availability and details.</p></aside></div>"+' +
+  '"<section class=\\\\"oa-service-panel\\\\\\" style=\\\\"margin-top:22px\\\\"><h2>Important information</h2><p>"+esc(item.note)+"</p></section>"+' +
+  '"<section class=\\\\"oa-service-bottom\\\\"><div><h2>Ready to discuss your next step?</h2><p>Send an enquiry and choose the Oxford branch you would like to contact.</p></div><a href=\\\\"/#admission?service="+encodeURIComponent(key)+"\\\\">Contact Oxford ↗</a></section>";' +
+  '</script></body></html>';
+const servicesDir = path.join(output, 'services');
+fs.mkdirSync(servicesDir, { recursive:true });
+fs.writeFileSync(path.join(servicesDir, 'index.html'), servicePageHtml);
+
 console.log('Built Oxford Academy static site with public content detail pages (' + html.length + ' bytes) from ' + partsDir);
