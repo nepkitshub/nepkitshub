@@ -259,6 +259,9 @@ html = replaceExactly(html, '</body>', settingsButtonFallback + '</body>', 'sett
 const homepageOverridesSource = fs.readFileSync(path.join(__dirname, 'homepage-overrides.js'), 'utf8');
 const homepageOverridesScript = '<script type="module">\n' + homepageOverridesSource + '\n</script>';
 html = replaceExactly(html, '</body>', homepageOverridesScript + '</body>', 'homepage mobile and posts overrides');
+const lionsFullThemeSource = fs.readFileSync(path.join(__dirname, 'lions-full-theme.js'), 'utf8');
+const lionsFullThemeScript = '<script type="module">\n' + lionsFullThemeSource + '\n</script>';
+html = replaceExactly(html, '</body>', lionsFullThemeScript + '</body>', 'full Lions-inspired Oxford theme');
 
 html = replaceExactly(html, '</head>', '<style id="oa-hidden-state-fix">[hidden],.notice-list[hidden]{display:none!important}</style></head>', 'hidden notice fallback style');
 
@@ -333,12 +336,56 @@ const contentPageStyles = `
   @media(max-width:760px){.page-top{padding:13px 15px}.page-main{width:calc(100% - 28px);margin:27px auto 48px}#content-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.content-card{border-radius:15px}.content-card-body{padding:14px}.content-card h2{font-size:18px}.content-card p{font-size:11px}.content-detail-cover{aspect-ratio:4/3}}
   @media(max-width:480px){#content-list{grid-template-columns:1fr}.page-brand{font-size:14px}.page-brand small{font-size:9px}}
   `;
-const contentPageHtml = (mode) => '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b4e"><title>Oxford Academic Instruction Pvt. Ltd.</title><style>' + contentPageStyles + '</style></head><body>' +
-  '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA, PARBAT</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
+
+contentPageStyles += `
+  :root{--navy:#123d67;--gold:#f2a33a;--ink:#1c2b3b;--muted:#687b8e;--line:#e3eaf1}
+  body{font-family:'DM Sans',Arial,sans-serif;background:#f6f9fc;color:#1c2b3b}
+  .page-contact-strip{background:#102f52;color:#e9f2fa;font-size:10px;font-weight:700;letter-spacing:.02em}
+  .page-contact-strip-inner{width:min(1180px,calc(100% - 44px));min-height:37px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .page-contact-strip a{color:#ffd18c}
+  .page-top{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97)!important;color:#173f69!important;padding:12px 22px!important;border-bottom:1px solid #e4ebf1;box-shadow:0 5px 22px rgba(15,48,79,.06);backdrop-filter:blur(12px)}
+  .page-top-inner{width:min(1180px,100%);max-width:none}
+  .page-brand{font-family:'DM Sans',Arial,sans-serif}
+  .page-mark{border-radius:10px!important;background:#185da0!important;color:#fff!important;border-color:#f2a33a!important;box-shadow:0 7px 18px rgba(24,93,160,.15)}
+  .page-brand-name{font-size:15px;font-weight:900;letter-spacing:-.02em;color:#173f69}
+  .page-brand small{color:#75879a!important;font-size:9px;letter-spacing:.12em}
+  .page-home{display:inline-flex;align-items:center;padding:10px 15px;border-radius:6px;background:#f2a33a;color:#193047!important;font-size:11px;font-weight:900}
+  .page-main{width:min(1180px,calc(100% - 44px));margin:36px auto 66px}
+  .page-breadcrumb{color:#78899a}
+  .page-breadcrumb a{color:#185da0}
+  .page-main h1{font-family:'Playfair Display',Georgia,serif;color:#173f69}
+  .content-card,.content-detail-card{border-radius:12px;box-shadow:0 10px 28px rgba(15,48,79,.07)}
+  .content-card h2{font-family:'Playfair Display',Georgia,serif;color:#173f69}
+  .content-meta{color:#185da0}
+  .content-read-more{color:#185da0}
+  .content-detail-body h1{font-family:'Playfair Display',Georgia,serif;color:#173f69}
+  .content-back-link{color:#185da0}
+  .content-empty{border-radius:11px;background:#fff}
+  .page-content-footer{background:#0c2948;color:#d7e5f1;padding:30px 22px;text-align:center;font-size:11px}
+  .page-content-footer a{display:inline-flex;margin-left:10px;color:#ffd18c;font-weight:900}
+  @media(max-width:760px){
+    .page-contact-strip-inner{width:calc(100% - 28px);min-height:34px;justify-content:center;font-size:9px}
+    .page-contact-strip-inner span:nth-child(2){display:none}
+    .page-top{padding:11px 14px!important}
+    .page-top-inner{gap:10px}
+    .page-brand{min-width:0;gap:8px;font-size:12px}
+    .page-mark{width:39px!important;height:39px!important;flex:0 0 39px}
+    .page-brand-name{font-size:12px}
+    .page-brand small{font-size:8px}
+    .page-home{padding:9px 10px;font-size:10px;white-space:nowrap}
+    .page-main{width:calc(100% - 28px);margin:25px auto 46px}
+    #content-list{grid-template-columns:1fr!important;gap:13px}
+    .content-card{border-radius:11px}
+    .content-card-body{padding:18px}
+  }
+`;
+const contentPageHtml = (mode) => '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b4e"><title>Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + '</style></head><body>' +
+  '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Japanese & Korean Language · Japan Study Guidance</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
+  '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb" id="content-breadcrumb"></nav>' +
   (mode === 'detail' ? '<div id="content-detail"><div class="content-empty">Loading content…</div></div>' :
     '<h1 id="content-heading">Academy updates</h1><div id="content-list"><div class="content-empty">Loading content…</div></div>') +
-  '</main><script type="module">\n' + contentPageSource + '\n</script></body></html>';
+  '</main><footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a> <a href="/admin/">Admin access ↗</a></footer><script type="module">\n' + contentPageSource + '\n</script></body></html>';
 for (const [folder, mode] of [['read','detail'],['all','listing']]) {
   const target = path.join(output, folder);
   fs.mkdirSync(target, { recursive:true });
