@@ -551,3 +551,56 @@ body.admin-route .oa-enquiry-card:hover { box-shadow: 0 14px 34px rgba(16,43,78,
   }
 }
 
+/* Keep the tablet drawer as a true vertical navigation list. */
+@media (max-width: 880px) {
+  body.oa-lions-full .nav-actions > :not(.menu-btn) {
+    display: none !important;
+  }
+  body.oa-lions-full .nav-links {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 2px !important;
+  }
+  body.oa-lions-full .nav-links > a,
+  body.oa-lions-full .nav-links .oa-nav-drop {
+    display: flex !important;
+    width: 100% !important;
+    flex: 0 0 auto;
+  }
+  body.oa-lions-full .nav-links .oa-nav-drop {
+    display: block !important;
+  }
+  body.oa-lions-full .nav-links .oa-nav-drop > summary {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+  body.oa-lions-full .nav-links .oa-nav-drop[open] > .oa-nav-menu {
+    position: static !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 2px 0 8px !important;
+    padding: 4px 0 4px 12px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #f5f8fb !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+  body.oa-lions-full .nav-links .oa-nav-menu a {
+    display: flex !important;
+    align-items: center;
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 12px;
+    white-space: normal;
+  }
+}
+
