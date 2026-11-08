@@ -509,7 +509,7 @@ const servicePageScript = '<script>' + [
   "const params = new URLSearchParams(location.search);",
   "const key = params.get('type') || 'student-visa';",
   "const item = servicePages[key] || servicePages['student-visa'];",
-  "const escapeHtml = (value) => String(value ?? '').replace(/[&<>\\\"']/g, (ch) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '\\\"':'&quot;', \\\"'\\\":'&#39;' }[ch]));",
+  "const escapeHtml = (value) => String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;').replace(/'/g, '&#39;');",
   "document.title = item.title + ' | Oxford Academic Instruction Pvt. Ltd.';",
   "document.getElementById('service-breadcrumb-title').textContent = item.title;",
   "const root = document.getElementById('service-detail');",
@@ -518,7 +518,7 @@ const servicePageScript = '<script>' + [
   "'<aside class=\\'oa-service-panel\\'><h2>How to get started</h2><ul class=\\'oa-service-list\\'>' + item.steps.map((entry) => '<li>' + escapeHtml(entry) + '</li>').join('') + '</ul><p style=\\'margin-top:18px;font-size:11px\\'>Contact either Oxford branch for current availability and details.</p></aside></div>' +",
   "'<section class=\\'oa-service-panel\\' style=\\'margin-top:22px\\'><h2>Important information</h2><p>' + escapeHtml(item.note) + '</p></section>' +",
   "'<section class=\\'oa-service-bottom\\'><div><h2>Ready to discuss your next step?</h2><p>Send an enquiry and choose the Oxford branch you would like to contact.</p></div><a href=\\'/?service=' + encodeURIComponent(key) + '#admission\\'>Contact Oxford ↗</a></section>';",
-].join('\\n') + '</script>';
+].join(String.fromCharCode(10)) + '</script>';
 const servicePageHtml = '<!doctype html>\\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>Oxford Academic Instruction Pvt. Ltd. | Services</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + '</style></head><body>' +
   '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Japanese & Korean Language · Japan Study Guidance</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
   '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/#oa-lions-services">Back to services ↗</a></div></header>' +
