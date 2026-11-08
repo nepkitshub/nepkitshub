@@ -507,12 +507,12 @@ const servicePageStyles = `
 const servicePageScript = String.raw`<script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const db = createClient('https://gsfhhvkipvoutqqgyick.supabase.co', 'sb_publishable_lzdJkHCS88esovlNn2_kow_8mmAQgh-');
-const fallbackServices = \${JSON.stringify(servicePageData)};
+const fallbackServices = ${JSON.stringify(servicePageData)};
 const params = new URLSearchParams(location.search);
 const key = params.get('type') || 'student-visa';
 const fallback = fallbackServices[key] || fallbackServices['student-visa'];
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-const lines = (value) => String(value || '').split(/\\r?\\n/).map((entry) => entry.trim()).filter(Boolean);
+const lines = (value) => String(value || '').split(String.fromCharCode(10)).map((entry) => entry.trim()).filter(Boolean);
 let item = fallback;
 try {
   const { data, error } = await db.from('oa_services')
@@ -531,7 +531,7 @@ try {
 document.title = item.title + ' | Oxford Academic Instruction Pvt. Ltd.';
 document.getElementById('service-breadcrumb-title').textContent = item.title;
 const root = document.getElementById('service-detail');
-const image = /^https:\\/\\//i.test(item.image || '') ? '<img src="' + esc(item.image) + '" alt="' + esc(item.title) + '" style="display:block;width:100%;max-height:280px;object-fit:cover;border-radius:12px;margin-top:20px">' : '';
+const image = (() => { try { const url = new URL(String(item.image || '')); return url.protocol === 'https:' ? '<img src="' + esc(url.toString()) + '" alt="' + esc(item.title) + '" style="display:block;width:100%;max-height:280px;object-fit:cover;border-radius:12px;margin-top:20px">' : ''; } catch (_) { return ''; } })();
 root.innerHTML =
   '<section class="oa-service-hero"><span class="oa-service-kicker">' + esc(item.kicker) + '</span><h1>' + esc(item.title) + '</h1><p>' + esc(item.summary) + '</p><div class="oa-service-hero-actions"><a href="/?service=' + encodeURIComponent(key) + '#admission">Enquire about this service ↗</a><a class="secondary" href="/#oa-lions-services">Explore all services</a></div>' + image + '</section>' +
   '<div class="oa-service-columns"><section class="oa-service-panel"><h2>About this service</h2><p>' + esc(item.overview) + '</p><h2 style="margin-top:24px">What we can help with</h2><ul class="oa-service-list">' + item.includes.map((entry) => '<li>' + esc(entry) + '</li>').join('') + '</ul></section>' +
@@ -661,7 +661,7 @@ try {
   root.innerHTML = data && data.length ? data.map((event) => {
     const date = new Date(event.event_date + 'T00:00:00').toLocaleDateString('en', {day:'numeric',month:'long',year:'numeric'});
     const endDate = event.end_date ? ' – ' + new Date(event.end_date + 'T00:00:00').toLocaleDateString('en', {day:'numeric',month:'short',year:'numeric'}) : '';
-    const image = /^https:\\/\\//i.test(event.image_url || '') ? '<img src="' + esc(event.image_url) + '" alt="' + esc(event.title_en) + '" style="width:100%;height:155px;object-fit:cover;border-radius:8px;margin-bottom:12px">' : '';
+    const image = (() => { try { const url = new URL(String(event.image_url || '')); return url.protocol === 'https:' ? '<img src="' + esc(url.toString()) + '" alt="' + esc(event.title_en) + '" style="width:100%;height:155px;object-fit:cover;border-radius:8px;margin-bottom:12px">' : ''; } catch (_) { return ''; } })();
     return '<article class="oa-event-card">' + image + '<span class="oa-event-category">' + esc(event.category || 'Academy update') + '</span><span class="oa-event-date">' + esc(date + endDate) + '</span><h2>' + esc(event.title_en) + '</h2><p>' + esc(event.summary_en || '') + '</p>' +
       (event.body_en ? '<p>' + esc(event.body_en) + '</p>' : '') +
       (event.time_label ? '<p><b>Time:</b> ' + esc(event.time_label) + '</p>' : '') +
