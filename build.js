@@ -709,6 +709,33 @@ fs.mkdirSync(calendarDir, { recursive:true });
 fs.writeFileSync(path.join(calendarDir, 'index.html'), calendarPageHtml);
 
 
+
+/*
+ * Public launch assets: sitemap, crawler policy, and a branded not-found page.
+ * The admin portal is intentionally excluded from search indexing.
+ */
+const publicSiteOrigin = 'https://oxford-academy-kushma.vercel.app';
+const publicSitemapPaths = [
+  '/',
+  '/about/',
+  '/calendar/',
+  '/all/',
+  '/services/'
+];
+const sitemapXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+  publicSitemapPaths.map((route) =>
+    '  <url><loc>' + publicSiteOrigin + route + '</loc><changefreq>' +
+    (route === '/' ? 'weekly' : 'monthly') + '</changefreq></url>'
+  ).join('\n') + '\n</urlset>\n';
+fs.writeFileSync(path.join(output, 'sitemap.xml'), sitemapXml);
+fs.writeFileSync(path.join(output, 'robots.txt'),
+  'User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: ' + publicSiteOrigin + '/sitemap.xml\n'
+);
+const notFoundDir = path.join(output, '404.html');
+const notFoundHtml = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow"><title>Page not found | Oxford Academic Instruction</title><meta name="description" content="The page you are looking for is unavailable. Return to Oxford Academic Instruction or send us an enquiry."></head><body><main class="page-main" style="min-height:78vh;display:grid;place-items:center;text-align:center"><div style="max-width:620px"><div class="page-mark" style="margin:0 auto 20px">OA</div><span class="section-kicker">ERROR 404</span><h1 style="margin:12px 0 14px">This page could not be found.</h1><p style="color:#68798d;line-height:1.9">The link may be outdated or the page may have moved. Return to the Oxford Academy homepage or contact our team for help.</p><p style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:25px"><a class="btn btn-navy" href="/">Back to homepage</a><a class="btn btn-gold" href="/#admission">Send an enquiry</a></p></div></main></body></html>';
+fs.writeFileSync(notFoundDir, notFoundHtml);
+
 /*
  * Final design pass: every generated public route and the dedicated admin route
  * receives the same maintained CSS and accessibility/interaction enhancements.
@@ -726,6 +753,21 @@ function applyProfessionalLayer(folder) {
     if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
     let page = fs.readFileSync(filePath, 'utf8');
     if (page.includes('id="oa-professional-design-system"')) continue;
+    if (entry.name === 'index.html' || entry.name === '404.html') {
+      const titleMatch = page.match(/<title>([\\s\\S]*?)<\\/title>/i);
+      const title = titleMatch ? titleMatch[1].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : 'Oxford Academic Instruction Pvt. Ltd.';
+      const relative = path.relative(output, filePath).split(path.sep).join('/');
+      const canonicalPath = relative === 'index.html' ? '/' : relative === '404.html' ? null : '/' + relative.replace(/index\\.html$/, '');
+      const meta = [
+        '<meta property="og:site_name" content="Oxford Academic Instruction Pvt. Ltd.">',
+        '<meta property="og:type" content="website">',
+        '<meta property="og:title" content="' + title + '">',
+        '<meta name="twitter:card" content="summary_large_image">',
+        canonicalPath ? '<link rel="canonical" href="' + publicSiteOrigin + canonicalPath + '">' : '',
+        relative === 'admin/index.html' ? '<meta name="robots" content="noindex,nofollow">' : ''
+      ].filter(Boolean).join('\\n');
+      page = page.replace('</head>', meta + '</head>');
+    }
     if (!page.includes('</head>') || !page.includes('</body>')) {
       throw new Error('Cannot apply the Oxford professional theme to ' + filePath);
     }
