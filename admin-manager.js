@@ -71,6 +71,14 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     ['about_text', 'About section description'],
     ['mission_title', 'Mission banner heading'],
     ['mission_text', 'Mission banner description'],
+    ['company_story', 'About Oxford'],
+    ['company_mission', 'Our mission'],
+    ['company_vision', 'Our vision'],
+    ['company_goals', 'Our goals'],
+    ['leadership_message', 'Message from Oxford'],
+    ['services_intro', 'Services section introduction'],
+    ['classes_intro', 'Classes section introduction'],
+    ['testimonials_intro', 'Student experiences introduction'],
     ['contact_address', 'Contact address'],
     ['contact_email', 'Contact email'],
     ['contact_phone', 'Contact phone']
@@ -132,6 +140,40 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       ],
       label: (row) => row.title_en,
       sub: () => 'Gallery photo'
+    },
+    services: {
+      title: 'Services & Japan guidance',
+      table: 'oa_services',
+      noun: 'service',
+      fields: [
+        ['slug', 'URL slug', true],
+        ['title_en', 'Service title', true],
+        ['category', 'Category'],
+        ['summary_en', 'Short description', false, 'area'],
+        ['body_en', 'Full service overview', false, 'area'],
+        ['highlights_en', 'What we help with (one point per line)', false, 'area'],
+        ['steps_en', 'Application / preparation steps (one per line)', false, 'area'],
+        ['note_en', 'Important note / disclaimer', false, 'area'],
+        ['image_url', 'Service image', false, 'image'],
+        ['sort_order', 'Display order', false, 'number']
+      ],
+      label: (row) => row.title_en,
+      sub: (row) => row.category || row.slug || 'Service'
+    },
+    testimonials: {
+      title: 'Student testimonials',
+      table: 'oa_testimonials',
+      noun: 'student experience',
+      fields: [
+        ['student_name', 'Student name', true],
+        ['course_name', 'Course / pathway'],
+        ['quote_en', 'Student feedback (approved wording)', true, 'area'],
+        ['location', 'Location (optional)'],
+        ['photo_url', 'Student photo (with permission)', false, 'image'],
+        ['sort_order', 'Display order', false, 'number']
+      ],
+      label: (row) => row.student_name,
+      sub: (row) => row.course_name || 'Student experience'
     }
   };
 
@@ -174,6 +216,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       "<button data-section='programs'>▦ &nbsp; Programmes</button>" +
       "<button data-section='faculty'>♙ &nbsp; Teachers & staff</button>" +
       "<button data-section='gallery'>▧ &nbsp; Photo gallery</button>" +
+      "<button data-section='services'>◎ &nbsp; Services & visa guidance</button>" +
+      "<button data-section='testimonials'>☆ &nbsp; Student testimonials</button>" +
       "<button data-section='admissions'>✉ &nbsp; Admissions</button><button data-section='branches'>⌖ &nbsp; Branches & contacts</button></nav>" +
       "<a href='/' target='_blank' rel='noopener'>View live website ↗</a></aside>" +
       "<main class='oa-main'><div class='oa-top'><div><small>OXFORD ACADEMY / ADMIN</small><h1 id='oa-title'>Dashboard overview</h1></div>" +
@@ -199,6 +243,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     programs: 'Academic programmes',
     faculty: 'Teachers & staff',
     gallery: 'Photo gallery',
+    services: 'Services & Japan guidance',
+    testimonials: 'Student testimonials',
     admissions: 'Admission enquiries',
     branches: 'Branches & contact details'
   };
@@ -221,11 +267,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   async function renderOverview() {
     const view = $('#oa-view');
     view.innerHTML =
-      "<div class='oa-card'><h2>Welcome to Oxford Academy website manager</h2><p>Manage website branding, homepage content, programmes, staff, notices, gallery, branch contacts and admission enquiries from one place.</p></div>" +
+      "<div class='oa-card'><h2>Welcome to Oxford Academic Instruction</h2><p>Manage the full public website: brand and About content, Japan services, language programmes, student testimonials, staff, notices, gallery, branch contacts and admission enquiries.</p></div>" +
       "<div class='oa-stats' id='oa-stats'></div><div class='oa-card'><h2>Quick actions</h2><div class='oa-actions'>" +
       "<button class='oa-button' data-go='branding'>Change logo</button><button class='oa-button' data-go='notices'>Create a post</button>" +
       "<button class='oa-button light' data-go='gallery'>Upload photos</button><button class='oa-button light' data-go='homepage'>Edit homepage</button></div></div>";
-    const tables = [['oa_notices','Posts'],['oa_programs','Programmes'],['oa_faculty','Staff'],['oa_gallery','Gallery photos'],['oa_admissions','Enquiries']];
+    const tables = [['oa_services','Services'],['oa_programs','Classes / programmes'],['oa_testimonials','Testimonials'],['oa_notices','Posts'],['oa_faculty','Staff'],['oa_gallery','Gallery photos'],['oa_admissions','Enquiries']];
     const counts = await Promise.all(tables.map(async (item) => {
       const { count, error } = await db.from(item[0]).select('id', { count: 'exact', head: true });
       return [item[1], error ? '—' : (count || 0)];
