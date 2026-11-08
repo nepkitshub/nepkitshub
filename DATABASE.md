@@ -22,9 +22,11 @@ Production migration ledger recorded in Supabase:
 | `20261108051504_add_oxford_partner_institutions` | Partner institution content |
 | `20261108051818_restrict_public_write_grants_oxford_content_tables` | Public write grant reduction for new Oxford content tables |
 | `20261108055210_limit_oxford_anon_table_grants` | Final least-privilege anonymous grants: public content read-only |
-| `20261108135618_secure_shared_legacy_access` | Enables RLS on the legacy store tables; preserves public catalog and portfolio reads; denies public access to private customer/order records |
+| `20261108135618_secure_shared_legacy_access` | Enables RLS on legacy store tables; preserves public catalog and portfolio reads; denies browser access to private customer/order records |
+| `20261108140918_oxford_admission_invoker_rls` | Replaces the admission `SECURITY DEFINER` function with a validated `SECURITY INVOKER` function and an INSERT-only RLS policy |
+| `20261108144550_grant_oxford_admission_insert` | Grants only INSERT on admissions to `anon` and `authenticated`, allowing the invoker function to pass table privileges and RLS |
 
-The hosted ledger currently contains 20 migrations. This repository retains executable SQL for the 2026-11-08 Oxford grants migration and the 2026-11-08 shared-access lockdown migration; 18 earlier historical migration files are not present in Git. Do not claim that this repository alone can recreate the hosted database from an empty project. The ledger table above records their names and purposes; a full clean-room schema/data export remains a separate recovery task.
+The hosted ledger currently contains 22 migrations. This repository retains executable SQL for four recent migrations (Oxford anonymous grants, shared-access lockdown, admission invoker/RLS, and admission INSERT grant); 18 earlier historical migration files are not present in Git. Do not claim that this repository alone can recreate the hosted database from an empty project. The ledger table above records their names and purposes; a full clean-room schema/data export remains a separate recovery task.
 
 
 ## Shared-project security remediation
@@ -70,7 +72,7 @@ Never grant admin based on a submitted email address, a browser-controlled user 
 
 Public pages may read published content and active branch data. The content tables grant the `anon` database role SELECT only; writes require an authenticated admin session and must also satisfy the relevant RLS policy.
 
-The admissions form calls `public.oa_submit_admission`. It validates student name, phone, email length and that the selected branch is active, then inserts a new enquiry. The browser does not receive direct SELECT/INSERT privileges on `oa_admissions`. The admin portal reads enquiries and updates their status after role checks and RLS evaluation. The function is intentionally callable by `anon` and `authenticated`; Supabase's security advisor flags this public SECURITY DEFINER RPC, which is expected for the public form but should remain narrow, validated and reviewed. Its fixed empty `search_path`, fully qualified table references and active-branch validation are part of that boundary.
+The admissions form calls `public.oa_submit_admission` through the publishable key. The function is `SECURITY INVOKER` with an empty `search_path`, validates student name, phone, email, guardian/message lengths and an active branch, then inserts a new enquiry. The `anon` and `authenticated` roles receive INSERT only on `oa_admissions`; an INSERT RLS policy independently checks the same constraints and forces `status = 'new'`. Neither browser role can SELECT or DELETE enquiries, and anonymous UPDATE is not granted. The authenticated admin portal reads enquiries and updates their status through separate admin-only policies.
 
 ## Media storage
 
@@ -91,7 +93,7 @@ This Supabase project also contains NepKits Hub commerce tables and portfolio ta
 
 Private store tables (profiles, addresses, carts, orders, payments, shipments, returns, notifications, role/permission data, audit logs and internal media) intentionally have no browser-role policy or grant. This is a fail-closed state: the legacy store profile uses a custom password hash and its row does not match a verified Supabase Auth user. It must not be exposed until the store frontend is migrated to Supabase Auth and a server-side checkout/admin flow. Existing commerce records were retained. The public product catalogue remains readable.
 
-Portfolio tables retain published/visible read policies. The contact form has a bounded insert-only policy; message rows cannot be read using public keys. Portfolio administration remains closed until an approved Supabase Auth admin mapping is configured.
+Portfolio tables retain published/visible read policies. The contact form has column-level INSERT grants and a bounded insert-only policy; message rows cannot be read using public keys. Portfolio administration and media metadata remain closed until an approved Supabase Auth admin mapping is configured.
 
 A check of the hosted schema now returns zero non-Oxford public tables with RLS disabled. Some private tables intentionally have RLS but no policies; the advisor's informational `RLS Enabled No Policy` findings describe this deny-all state. The migration tooling could not change the owner-level default privileges, so each new public table or function must explicitly enable RLS and receive only narrowly required grants/policies.
 
@@ -101,7 +103,9 @@ After schema changes:
 
 - Read back the grants and RLS policies for every affected `oa_*` table.
 - Run Supabase Security Advisors.
-- Exercise `oa_submit_admission` in a transaction that is rolled back.
+- Confirm `oa_submit_admission` is `SECURITY INVOKER` with `search_path = ''`.
+- Confirm `anon` and `authenticated` have INSERT but not SELECT/UPDATE/DELETE on `oa_admissions`.
+- Exercise a valid anonymous `oa_submit_admission` call inside a transaction that is rolled back.
 - Confirm the production enquiries count is unchanged after the rollback test.
 - Verify Storage upload and public object reads without exposing any service key.
 - Confirm admin user-role writes remain protected by RLS.
