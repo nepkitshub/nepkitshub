@@ -96,6 +96,14 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     body.oa-lions-full .oa-lions-testimonials{background:#f6f9fc}
     body.oa-lions-full .oa-testimonial-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
     body.oa-lions-full .oa-testimonial-card{display:flex;flex-direction:column;min-width:0;padding:23px;background:#fff;border:1px solid #e3eaf1;border-radius:12px;box-shadow:0 10px 28px rgba(15,48,79,.06)}
+    body.oa-lions-full .oa-lions-calendar{background:#fff}
+    body.oa-lions-full .oa-calendar-preview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    body.oa-lions-full .oa-calendar-preview-card{min-width:0;padding:21px;border:1px solid #e2eaf1;border-radius:11px;background:#fff;box-shadow:0 8px 22px rgba(15,48,79,.05)}
+    body.oa-lions-full .oa-calendar-preview-card>span{display:inline-flex;margin-right:8px;padding:4px 7px;border-radius:4px;background:#eaf3fb;color:#185da0;font-size:9px;font-weight:900;text-transform:uppercase}
+    body.oa-lions-full .oa-calendar-preview-card>b{display:inline-flex;color:#d89434;font-size:10px}
+    body.oa-lions-full .oa-calendar-preview-card h3{margin:12px 0 7px;color:#173f69;font:700 19px/1.25 "Playfair Display",Georgia,serif}
+    body.oa-lions-full .oa-calendar-preview-card p{color:#708194;font-size:11px;line-height:1.8}
+    body.oa-lions-full .oa-calendar-preview-card small{display:block;margin-top:6px;color:#748496;font-size:10px}
     body.oa-lions-full .oa-testimonial-stars{margin-bottom:14px;color:#e3a03a;letter-spacing:.12em;font-size:14px}
     body.oa-lions-full .oa-testimonial-quote{flex:1;margin:0 0 19px;color:#52677c;font-size:13px;line-height:1.9;white-space:pre-line}
     body.oa-lions-full .oa-testimonial-person{display:flex;align-items:center;gap:11px;padding-top:14px;border-top:1px solid #e9eef3}
@@ -119,14 +127,14 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     @media(max-width:900px){
       body.oa-lions-full .oa-lions-service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       body.oa-lions-full .oa-class-level-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-      body.oa-lions-full .oa-testimonial-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      body.oa-lions-full .oa-testimonial-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body.oa-lions-full .oa-calendar-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
     @media(max-width:760px){
       body.oa-lions-full .oa-company-profile{padding:58px 0}
       body.oa-lions-full .oa-company-profile-grid{grid-template-columns:1fr;gap:12px}
       body.oa-lions-full .oa-company-panel{padding:20px}
       body.oa-lions-full .oa-company-panel.goals,body.oa-lions-full .oa-company-panel.leadership{grid-column:auto}
-      body.oa-lions-full .oa-testimonial-grid{grid-template-columns:1fr}
+      body.oa-lions-full .oa-testimonial-grid,body.oa-lions-full .oa-calendar-preview-grid{grid-template-columns:1fr}
       body.oa-lions-full .oa-class-level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       body.oa-lions-full .oa-class-skills{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
@@ -195,7 +203,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
             '<a href="/services/?type=ssw-preparation">SSW Preparation Class</a>' +
             '<a href="/services/?type=korean-classes">Korean Language</a>' +
           '</div></details>' +
-          '<a href="#oa-lions-testimonials">Student Experiences</a><a href="#team">Our Team</a>' +
+          '<a href="#oa-lions-testimonials">Student Experiences</a><a href="/calendar/">Calendar</a><a href="#team">Our Team</a>' +
           '<a href="#notices">News & Notices</a><a href="#contact">Contact Us</a>';
         nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMobileMenu));
       }
@@ -247,10 +255,14 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           '</div></div>';
       }
       setText('#aboutText', profileMap.company_story || $('#aboutText')?.textContent || '');
-      setText('#oa-company-mission', profileMap.company_mission || '');
-      setText('#oa-company-vision', profileMap.company_vision || '');
-      setText('#oa-company-goals', profileMap.company_goals || '');
-      setText('#oa-company-leadership', profileMap.leadership_message || '');
+      const profileText = (id, value) => {
+        const node = companyProfile.querySelector('#' + id);
+        if (node) node.textContent = value || '';
+      };
+      profileText('oa-company-mission', profileMap.company_mission);
+      profileText('oa-company-vision', profileMap.company_vision);
+      profileText('oa-company-goals', profileMap.company_goals);
+      profileText('oa-company-leadership', profileMap.leadership_message);
 
       const values = $('#why-choose-oxford');
       if (values) {
@@ -414,6 +426,36 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         }
       }
 
+      let calendarSection = $('#oa-lions-calendar');
+      if (!calendarSection) {
+        calendarSection = document.createElement('section');
+        calendarSection.id = 'oa-lions-calendar';
+        calendarSection.className = 'section oa-lions-calendar';
+        calendarSection.innerHTML =
+          '<div class="container"><div class="section-head"><span class="section-kicker">CALENDAR & INTAKES</span><h2>Upcoming events and course updates.</h2><p>See announcements and dates published by Oxford, or contact a branch to confirm the next available course or application intake.</p></div>' +
+          '<div class="oa-calendar-preview-grid" id="oa-calendar-preview-grid"><div class="oa-testimonial-empty">Loading calendar updates…</div></div>' +
+          '<div style="margin-top:22px"><a class="btn btn-navy" href="/calendar/">View full calendar ↗</a></div></div>';
+      }
+      const calendarGrid = $('#oa-calendar-preview-grid', calendarSection);
+      if (calendarGrid) {
+        const today = new Date().toISOString().slice(0,10);
+        const { data: eventRows, error: eventError } = await db.from('oa_events')
+          .select('title_en,category,summary_en,event_date,end_date,time_label,location')
+          .eq('is_published', true).gte('event_date', today)
+          .order('event_date', { ascending:true }).limit(3);
+        if (!eventError && eventRows && eventRows.length) {
+          calendarGrid.innerHTML = eventRows.map((event) => {
+            const date = new Date(event.event_date + 'T00:00:00').toLocaleDateString('en', {day:'numeric',month:'short',year:'numeric'});
+            return '<article class="oa-calendar-preview-card"><span>' + esc(event.category || 'Academy update') + '</span><b>' + esc(date) + '</b><h3>' + esc(event.title_en) + '</h3><p>' + esc(event.summary_en || '') + '</p>' +
+              (event.time_label ? '<small>' + esc(event.time_label) + '</small>' : '') +
+              (event.location ? '<small>' + esc(event.location) + '</small>' : '') + '</article>';
+          }).join('');
+        } else {
+          calendarGrid.innerHTML = '<div class="oa-testimonial-empty">There are no upcoming events or intake dates published yet. Contact Kushma or Baglung for current class schedules and application availability.</div>';
+          if (eventError) console.warn('Oxford calendar could not be loaded:', eventError.message);
+        }
+      }
+
       // Turn the existing notices area into the updates section instead of inventing student testimonials.
       sectionHead($('#team'), 'OUR PEOPLE', 'Meet the Oxford team.', 'Get to know the people who support the academy and its learning programmes.');
       sectionHead($('#notices'), 'NEWS & NOTICES', 'Latest updates from Oxford.', 'Read the latest academy notices, announcements and updates.');
@@ -467,7 +509,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const contact = $('#contact');
       const admission = $('#admission');
       if (main && hero) {
-        const ordered = [hero, trust, about, companyProfile, values, services, callout, academics, supportJourney, testimonials, team, notices, gallery, offices, contact, admission].filter(Boolean);
+        const ordered = [hero, trust, about, companyProfile, values, services, callout, academics, supportJourney, calendarSection, testimonials, team, notices, gallery, offices, contact, admission].filter(Boolean);
         ordered.forEach((node) => main.appendChild(node));
       }
 
