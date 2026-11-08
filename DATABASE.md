@@ -22,6 +22,21 @@ Current Oxford migrations recorded in Supabase:
 | `20261108051504_add_oxford_partner_institutions` | Partner institution content |
 | `20261108051818_restrict_public_write_grants_oxford_content_tables` | Public write grant reduction for new Oxford content tables |
 | `20261108055210_limit_oxford_anon_table_grants` | Final least-privilege anonymous grants: public content read-only |
+| `20261108135618_secure_shared_legacy_access` | Enables RLS on the legacy store tables; preserves public catalog and portfolio reads; denies public access to private customer/order records |
+
+## Shared-project security remediation
+
+The 2026-11-08 `secure_shared_legacy_access` migration was applied to the shared Supabase project.
+
+- RLS is enabled on every public store table (including the previously exposed commerce tables) and on `app_state`; there are now zero non-Oxford public tables with RLS disabled.
+- Anonymous and authenticated browser roles no longer have direct read/write access to profiles, password hashes, addresses, carts, orders, order items, payments, shipments, returns, notifications, inventory movements, audit logs, coupons, role tables, or internal media metadata.
+- The public store catalogue remains read-only: active products, variants, categories, brands, collections, banners, homepage sections, tags, product relationships, approved reviews and public site settings. Product costing/low-stock thresholds, reserved variant stock and profile password hashes are not selectable.
+- Portfolio content remains public-read under its existing publication/visibility policies. The public portfolio contact form can submit bounded fields only; messages cannot be listed by public credentials. Portfolio administration/media metadata remains unavailable through browser credentials until an Auth admin mapping is configured.
+- Existing rows were preserved. The migration did not delete or rewrite store orders, order items, shipments or the legacy profile.
+
+**Important compatibility boundary:** the existing store `profiles` record has no matching verified Supabase Auth user. The former `password_hash`-based browser model cannot securely identify that customer, so private customer and admin CRUD operations are intentionally denied rather than exposing them. The store frontend must migrate sign-in to Supabase Auth and use a trusted server-side checkout/admin path before customer cart/order updates and store administration can be re-enabled. Never put a Supabase service-role/secret key in a browser. Public catalogue browsing remains available.
+
+The database tooling did not permit changing default privileges for the underlying object-owner roles. Therefore, every future public-schema table/function must explicitly enable RLS and receive only the required grants/policies in its migration; verify this with the Security Advisor after each schema change.
 
 ## Data model
 
