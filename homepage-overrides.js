@@ -146,7 +146,7 @@ if (!isAdminRoute) {
         programmeRoot.innerHTML = '<div class="oa-program-empty">Our programmes will be announced here.</div>';
         return;
       }
-      const iconFor = (title) => /japan/i.test(title) ? 'あ' : (/korean/i.test(title) ? '한' : (/montessori|early childhood/i.test(title) ? '✿' : '✦'));
+      const iconFor = (title) => /japan/i.test(title) ? 'あ' : (/korean/i.test(title) ? '한' : '✦');
       programmeRoot.innerHTML = data.map((item) => {
         const title = escapeHtml(item.title_en || 'Academy programme');
         const description = escapeHtml(item.description_en || '');
