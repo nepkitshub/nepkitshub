@@ -174,6 +174,28 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       ],
       label: (row) => row.student_name,
       sub: (row) => row.course_name || 'Student experience'
+    },
+    events: {
+      title: 'Calendar & course intakes',
+      table: 'oa_events',
+      noun: 'calendar item',
+      order: 'event_date',
+      ascending: true,
+      fields: [
+        ['slug', 'URL slug', true],
+        ['title_en', 'Event / intake title', true],
+        ['category', 'Category'],
+        ['summary_en', 'Short description', false, 'area'],
+        ['body_en', 'Full details', false, 'area'],
+        ['event_date', 'Start date', true, 'date'],
+        ['end_date', 'End date (optional)', false, 'date'],
+        ['time_label', 'Time / schedule'],
+        ['location', 'Location / branch'],
+        ['image_url', 'Event image', false, 'image'],
+        ['sort_order', 'Display order', false, 'number']
+      ],
+      label: (row) => row.title_en,
+      sub: (row) => [row.category, row.event_date].filter(Boolean).join(' · ')
     }
   };
 
@@ -218,6 +240,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       "<button data-section='gallery'>▧ &nbsp; Photo gallery</button>" +
       "<button data-section='services'>◎ &nbsp; Services & visa guidance</button>" +
       "<button data-section='testimonials'>☆ &nbsp; Student testimonials</button>" +
+      "<button data-section='events'>▦ &nbsp; Calendar & intakes</button>" +
       "<button data-section='admissions'>✉ &nbsp; Admissions</button><button data-section='branches'>⌖ &nbsp; Branches & contacts</button></nav>" +
       "<a href='/' target='_blank' rel='noopener'>View live website ↗</a></aside>" +
       "<main class='oa-main'><div class='oa-top'><div><small>OXFORD ACADEMY / ADMIN</small><h1 id='oa-title'>Dashboard overview</h1></div>" +
@@ -245,6 +268,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     gallery: 'Photo gallery',
     services: 'Services & Japan guidance',
     testimonials: 'Student testimonials',
+    events: 'Calendar & course intakes',
     admissions: 'Admission enquiries',
     branches: 'Branches & contact details'
   };
@@ -271,7 +295,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       "<div class='oa-stats' id='oa-stats'></div><div class='oa-card'><h2>Quick actions</h2><div class='oa-actions'>" +
       "<button class='oa-button' data-go='branding'>Change logo</button><button class='oa-button' data-go='notices'>Create a post</button>" +
       "<button class='oa-button light' data-go='gallery'>Upload photos</button><button class='oa-button light' data-go='homepage'>Edit homepage</button></div></div>";
-    const tables = [['oa_services','Services'],['oa_programs','Classes / programmes'],['oa_testimonials','Testimonials'],['oa_notices','Posts'],['oa_faculty','Staff'],['oa_gallery','Gallery photos'],['oa_admissions','Enquiries']];
+    const tables = [['oa_services','Services'],['oa_programs','Classes / programmes'],['oa_events','Calendar items'],['oa_testimonials','Testimonials'],['oa_notices','Posts'],['oa_faculty','Staff'],['oa_gallery','Gallery photos'],['oa_admissions','Enquiries']];
     const counts = await Promise.all(tables.map(async (item) => {
       const { count, error } = await db.from(item[0]).select('id', { count: 'exact', head: true });
       return [item[1], error ? '—' : (count || 0)];
@@ -427,7 +451,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       ? "<textarea name='" + esc(name) + "'></textarea>"
       : kind === 'number'
         ? "<input type='number' min='0' step='1' name='" + esc(name) + "' value='0'" + required + ">"
-        : "<input name='" + esc(name) + "' placeholder=''" + required + ">";
+        : kind === 'date'
+          ? "<input type='date' name='" + esc(name) + "' value=''" + required + ">"
+          : "<input name='" + esc(name) + "' placeholder=''" + required + ">";
     return "<div class='oa-field" + (kind === 'area' ? ' full' : '') + "'><label>" + esc(label) + "</label>" + input + "</div>";
   }
 
@@ -435,7 +461,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const config = collections[name];
     const view = $('#oa-view');
     view.innerHTML = "<div class='oa-card'><h2>" + esc(config.title) + "</h2><p>Loading entries…</p></div>";
-    const { data, error } = await db.from(config.table).select('*').order('created_at', { ascending: false }).limit(100);
+    const { data, error } = await db.from(config.table).select('*').order(config.order || 'created_at', { ascending: typeof config.ascending === 'boolean' ? config.ascending : false }).limit(100);
     if (error) {
       view.innerHTML = "<div class='oa-card'>" + esc(error.message) + "</div>";
       return;
