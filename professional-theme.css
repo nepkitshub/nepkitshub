@@ -570,7 +570,7 @@ body.admin-route .oa-enquiry-card:hover { box-shadow: 0 14px 34px rgba(16,43,78,
   body.oa-lions-full #menuBtn {
     position: absolute !important;
     top: 50% !important;
-    left: 8px !important;
+    left: -50px !important;
     right: auto !important;
     width: 42px !important;
     height: 42px !important;
