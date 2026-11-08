@@ -292,7 +292,7 @@ fs.mkdirSync(adminDir, { recursive: true });
 fs.writeFileSync(path.join(adminDir, 'index.html'), adminPage);
 
 const contentPageSource = fs.readFileSync(path.join(__dirname, 'public-content-pages.js'), 'utf8');
-const contentPageStyles = `
+let contentPageStyles = `
   :root{--navy:#102b4e;--gold:#d5ad5c;--ink:#17283b;--muted:#647488;--line:#e5eaf0}
   *{box-sizing:border-box}body{margin:0;background:#f7f8fa;color:var(--ink);font-family:Arial,sans-serif;line-height:1.65}
   a{color:inherit;text-decoration:none}.page-top{background:#102b4e;color:#fff;padding:17px 22px}
