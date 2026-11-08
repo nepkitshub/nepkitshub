@@ -204,6 +204,26 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       ],
       label: (row) => row.title_en,
       sub: (row) => [row.category, row.event_date].filter(Boolean).join(' · ')
+    },
+    partners: {
+      title: 'Partner institutions',
+      table: 'oa_partners',
+      noun: 'partner institution',
+      publishDefault: false,
+      description: 'Add only education or service partners with a current, confirmed relationship and permission to publish their details.',
+      fields: [
+        ['name', 'Institution / partner name', true],
+        ['category', 'Partnership category'],
+        ['country_or_region', 'Country / region'],
+        ['description_en', 'Description / relationship', false, 'area'],
+        ['website_url', 'Official website (HTTPS)'],
+        ['email', 'Public contact email'],
+        ['phone', 'Public contact phone'],
+        ['logo_url', 'Partner logo (with permission)', false, 'image'],
+        ['sort_order', 'Display order', false, 'number']
+      ],
+      label: (row) => row.name,
+      sub: (row) => [row.category, row.country_or_region].filter(Boolean).join(' · ')
     }
   };
 
@@ -249,6 +269,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       "<button data-section='services'>◎ &nbsp; Services & visa guidance</button>" +
       "<button data-section='testimonials'>☆ &nbsp; Student testimonials</button>" +
       "<button data-section='events'>▦ &nbsp; Calendar & intakes</button>" +
+      "<button data-section='partners'>◇ &nbsp; Partner institutions</button>" +
       "<button data-section='admissions'>✉ &nbsp; Admissions</button><button data-section='branches'>⌖ &nbsp; Branches & contacts</button></nav>" +
       "<a href='/' target='_blank' rel='noopener'>View live website ↗</a></aside>" +
       "<main class='oa-main'><div class='oa-top'><div><small>OXFORD ACADEMY / ADMIN</small><h1 id='oa-title'>Dashboard overview</h1></div>" +
@@ -277,6 +298,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     services: 'Services & Japan guidance',
     testimonials: 'Student testimonials',
     events: 'Calendar & course intakes',
+    partners: 'Partner institutions',
     admissions: 'Admission enquiries',
     branches: 'Branches & contact details'
   };
@@ -303,7 +325,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       "<div class='oa-stats' id='oa-stats'></div><div class='oa-card'><h2>Quick actions</h2><div class='oa-actions'>" +
       "<button class='oa-button' data-go='branding'>Change logo</button><button class='oa-button' data-go='notices'>Create a post</button>" +
       "<button class='oa-button light' data-go='gallery'>Upload photos</button><button class='oa-button light' data-go='homepage'>Edit homepage</button></div></div>";
-    const tables = [['oa_services','Services'],['oa_programs','Classes / programmes'],['oa_events','Calendar items'],['oa_testimonials','Testimonials'],['oa_notices','Posts'],['oa_faculty','Staff'],['oa_gallery','Gallery photos'],['oa_admissions','Enquiries']];
+    const tables = [['oa_services','Services'],['oa_programs','Classes / programmes'],['oa_events','Calendar items'],['oa_testimonials','Testimonials'],['oa_partners','Partners'],['oa_notices','Posts'],['oa_faculty','Staff'],['oa_gallery','Gallery photos'],['oa_admissions','Enquiries']];
     const counts = await Promise.all(tables.map(async (item) => {
       const { count, error } = await db.from(item[0]).select('id', { count: 'exact', head: true });
       return [item[1], error ? '—' : (count || 0)];
