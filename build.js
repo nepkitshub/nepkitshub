@@ -754,18 +754,27 @@ function applyProfessionalLayer(folder) {
     let page = fs.readFileSync(filePath, 'utf8');
     if (page.includes('id="oa-professional-design-system"')) continue;
     if (entry.name === 'index.html' || entry.name === '404.html') {
-      const titleMatch = page.match(/<title>([\\s\\S]*?)<\\/title>/i);
-      const title = titleMatch ? titleMatch[1].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : 'Oxford Academic Instruction Pvt. Ltd.';
+      const titleStart = page.indexOf('<title>');
+      const titleEnd = page.indexOf('</title>', titleStart + 7);
+      const rawTitle = titleStart >= 0 && titleEnd > titleStart
+        ? page.slice(titleStart + 7, titleEnd)
+        : 'Oxford Academic Instruction Pvt. Ltd.';
+      const title = rawTitle.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       const relative = path.relative(output, filePath).split(path.sep).join('/');
-      const canonicalPath = relative === 'index.html' ? '/' : relative === '404.html' ? null : '/' + relative.replace(/index\\.html$/, '');
+      const isAdminPage = relative === 'admin/index.html';
+      let canonicalPath = null;
+      if (relative === 'index.html') canonicalPath = '/';
+      else if (relative.endsWith('/index.html') && !isAdminPage) {
+        canonicalPath = '/' + relative.slice(0, -'index.html'.length);
+      }
       const meta = [
         '<meta property="og:site_name" content="Oxford Academic Instruction Pvt. Ltd.">',
         '<meta property="og:type" content="website">',
         '<meta property="og:title" content="' + title + '">',
         '<meta name="twitter:card" content="summary_large_image">',
         canonicalPath ? '<link rel="canonical" href="' + publicSiteOrigin + canonicalPath + '">' : '',
-        relative === 'admin/index.html' ? '<meta name="robots" content="noindex,nofollow">' : ''
-      ].filter(Boolean).join('\\n');
+        isAdminPage ? '<meta name="robots" content="noindex,nofollow">' : ''
+      ].filter(Boolean).join('');
       page = page.replace('</head>', meta + '</head>');
     }
     if (!page.includes('</head>') || !page.includes('</body>')) {
