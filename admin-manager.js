@@ -430,7 +430,41 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       "</div><div class='oa-actions'><button class='oa-button' type='submit'>Save branding</button></div></form></div>";
     const form=$('#oa-brand-form');bindUploads(form.querySelector('[name=hero_image_url]').closest('.oa-field').parentElement);
     const fileInput=$('#oa-logo-file');
-    fileInput.addEventListener('change',()=>{const file=fileInput.files&&fileInput.files[0];if(!file)return;openLogoCropper(file,async cropped=>{const note=fileInput.closest('.oa-upload').querySelector('small');note.textContent='Uploading cropped logo…';fileInput.disabled=true;try{const url=await uploadImage(cropped,'branding');form.querySelector('[name=logo_url]').value=url;const preview=$('#oa-logo-preview');preview.src=url;preview.classList.remove('hide');note.textContent='Logo uploaded. Save branding to apply it.';}catch(error){note.textContent=error.message||'Logo upload failed.';}finally{fileInput.disabled=false;fileInput.value='';}});});
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+      openLogoCropper(file, async (cropped) => {
+        const note = fileInput.closest('.oa-upload').querySelector('small');
+        const saveButton = form.querySelector('button[type="submit"]');
+        note.textContent = 'Uploading and saving your cropped logo…';
+        fileInput.disabled = true;
+        if (saveButton) saveButton.disabled = true;
+        try {
+          const url = await uploadImage(cropped, 'branding');
+          if (!url) throw new Error('The uploaded file did not return a valid public image URL.');
+          const { error } = await db.from('oa_site_content').upsert({
+            content_key: 'logo_url',
+            value_en: url
+          }, { onConflict: 'content_key' });
+          if (error) throw error;
+          form.querySelector('[name="logo_url"]').value = url;
+          const preview = $('#oa-logo-preview');
+          preview.src = url;
+          preview.classList.remove('hide');
+          await applyBranding();
+          window.dispatchEvent(new Event('oa-branding-updated'));
+          note.textContent = 'Logo uploaded, saved and applied. Save branding after changing the academy name or logo sizes.';
+          showMessage('Academy logo updated successfully.');
+        } catch (error) {
+          note.textContent = error.message || 'Logo upload failed. The image may have uploaded, but it was not saved as the active logo.';
+          showMessage(note.textContent);
+        } finally {
+          fileInput.disabled = false;
+          if (saveButton) saveButton.disabled = false;
+          fileInput.value = '';
+        }
+      });
+    });
     $('#oa-desktop-slider').addEventListener('input',e=>$('#oa-desktop-value').textContent=e.target.value+' px');
     $('#oa-mobile-slider').addEventListener('input',e=>$('#oa-mobile-value').textContent=e.target.value+' px');
     form.addEventListener('submit',async event=>{event.preventDefault();const f=new FormData(form);const rows=[
