@@ -57,7 +57,7 @@ db.auth.getSession().then(async ({ data }) => {
     const { data: accountRole, error } = await db.from('oa_users').select('role').eq('user_id', data.session.user.id).maybeSingle();
     if (!error && accountRole?.role === 'admin') {
       currentAdmin = data.session.user;
-      if (isAdminRoute) { openAdmin(); renderAdmin(); }
+      if (isAdminRoute) openAdmin(); // The dedicated admin-manager module renders the authenticated dashboard.
     } else {
       await db.auth.signOut();
       currentAdmin = null;
