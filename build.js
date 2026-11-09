@@ -243,18 +243,6 @@ html = replaceVisibleFieldByName(
 );
 html = replaceFirstBodyMarkup(
   html,
-  'data-en="Admission enquiry">Admission enquiry',
-  'data-en="Send an enquiry">Send an enquiry',
-  'public enquiry form heading'
-);
-html = replaceFirstBodyMarkup(
-  html,
-  "Let's talk about your child's learning journey.",
-  'Tell us what you are looking for.',
-  'public enquiry section heading'
-);
-html = replaceFirstBodyMarkup(
-  html,
   '<div class="about-photo"><img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&amp;fit=crop&amp;w=1100&amp;q=85" alt="A classroom learning environment" loading="lazy" /></div>',
   '<div class="about-photo"><img alt="Oxford Academy learning photograph" loading="lazy" hidden /></div>',
   'generic about stock photo'
