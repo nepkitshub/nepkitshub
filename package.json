@@ -2,5 +2,8 @@
   "name": "oxford-academy-kushma",
   "version": "1.0.0",
   "private": true,
-  "scripts": { "build": "node build.js" }
+  "scripts": {
+    "build": "node build.js && node scripts/verify-build.js",
+    "verify": "node scripts/verify-build.js"
+  }
 }

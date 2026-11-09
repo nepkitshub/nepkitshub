@@ -6,6 +6,38 @@ const db = window.__oaSupabaseClient || createClient(SUPABASE_URL, SUPABASE_KEY)
 window.__oaSupabaseClient = db;
 const isAdminRoute = window.location.pathname.replace(/\/+$/, '') === '/admin';
 
+function applySavedAcademyHeroImage() {
+  if (isAdminRoute) return;
+  const styleId = 'oa-saved-academy-hero';
+  let style = document.getElementById(styleId);
+  if (!style) {
+    style = document.createElement('style');
+    style.id = styleId;
+    document.body.appendChild(style);
+  }
+  const selector = 'body.oa-lions-full .hero:before, body.oa-lions-inspired-preview .hero:before';
+  const fallback = 'linear-gradient(90deg,rgba(7,27,49,.94) 0%,rgba(9,39,69,.86) 48%,rgba(9,39,69,.52) 100%)';
+  style.textContent = selector + '{background-image:' + fallback + '!important;background-position:center 42%!important;background-size:cover!important}';
+  db.from('oa_site_content').select('value_en').eq('content_key','hero_image_url').maybeSingle()
+    .then(({data,error}) => {
+      if (error) throw error;
+      const value = String(data?.value_en || '').trim();
+      if (!value) return;
+      let url;
+      try { url = new URL(value); } catch (_) { return; }
+      if (url.protocol !== 'https:' || url.hostname !== 'gsfhhvkipvoutqqgyick.supabase.co' || !url.pathname.startsWith('/storage/v1/object/public/oa-academy-media/')) return;
+      const preload = new Image();
+      preload.onload = () => {
+        const safeUrl = url.href.replaceAll('"','%22');
+        style.textContent = selector + '{background-image:' + fallback + ',url("' + safeUrl + '")!important;background-position:center 42%!important;background-size:cover!important}';
+      };
+      preload.onerror = () => console.warn('Saved Oxford hero image could not be loaded; retaining branded gradient.');
+      preload.src = url.href;
+    })
+    .catch(error => console.warn('Oxford hero image setting could not be loaded:', error));
+}
+applySavedAcademyHeroImage();
+
 const style = document.createElement('style');
 style.id = 'oa-homepage-overrides';
 style.textContent = [
@@ -162,7 +194,7 @@ if (!isAdminRoute) {
       programmeRoot.innerHTML = '<div class="oa-program-empty">Our programmes could not be loaded right now. Please refresh the page.</div>';
     }
   };
-  loadProgrammes();
+  // Programme cards are fetched once by lions-full-theme.js.
 
   const postRoot = document.getElementById('oa-live-posts');
   const escapeHtml = (value = '') => String(value ?? '').replace(/[&<>"']/g, (char) => ({
@@ -247,7 +279,8 @@ if (!isAdminRoute) {
         .limit(2);
       if (error) throw error;
       if (!data || !data.length) {
-        staffRoot.innerHTML = '<div class="oa-staff-empty">Our teachers and staff profiles will appear here as the academy publishes them.</div>';
+        staffRoot.closest('section')?.remove();
+        document.querySelectorAll('#navLinks a[href="#team"]').forEach((link) => link.remove());
         return;
       }
       staffRoot.innerHTML = data.map((member) => {
@@ -291,11 +324,24 @@ if (!isAdminRoute) {
         .order('sort_order', { ascending:true })
         .limit(4);
       if (error) throw error;
-      if (!data || !data.length) {
-        galleryRoot.innerHTML = '<div class="oa-staff-empty">Gallery photos will appear here when the academy publishes them.</div>';
+      const publishedPhotos = (data || []).filter((item) => {
+        try { return new URL(String(item.image_url || '')).protocol === 'https:'; }
+        catch (_) { return false; }
+      });
+      if (!publishedPhotos.length) {
+        galleryRoot.closest('section')?.remove();
         return;
       }
-      galleryRoot.innerHTML = data.map((item) => {
+      const aboutImage = document.querySelector('.about-photo img');
+      if (aboutImage) {
+        const firstPhoto = publishedPhotos[0];
+        aboutImage.alt = String(firstPhoto.title_en || 'Oxford Academy learning photograph');
+        aboutImage.hidden = true;
+        aboutImage.addEventListener('load', () => { aboutImage.hidden = false; }, { once:true });
+        aboutImage.addEventListener('error', () => { aboutImage.hidden = true; }, { once:true });
+        aboutImage.src = firstPhoto.image_url;
+      }
+      galleryRoot.innerHTML = publishedPhotos.map((item) => {
         const title = escapeHtml(item.title_en || 'Oxford Academy');
         const image = typeof item.image_url === 'string' && /^https:\/\//i.test(item.image_url)
           ? escapeHtml(item.image_url) : '';

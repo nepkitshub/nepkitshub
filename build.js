@@ -8,6 +8,8 @@ const parts = fs.readdirSync(partsDir).filter((name) => name.startsWith('part-')
 if (parts.length !== 6) throw new Error('Expected 6 site parts; found ' + parts.length);
 const encoded = parts.map((name) => fs.readFileSync(path.join(partsDir, name), 'utf8').trim()).join('');
 let html = zlib.gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8');
+html = html.replace(/url\((['"]?)https:\/\/images\.unsplash\.com\/[^'")]+\1\)/gi, 'none');
+html = html.replace(/<img\b(?=[^>]*\bsrc=["']https:\/\/images\.unsplash\.com\/)[^>]*>/gi, '<img alt="Academy photograph" loading="lazy" hidden />');
 html = html.replace('<title>Oxford Academy | Kushma, Parbat</title>', '<title>Oxford Academic Instruction Pvt. Ltd. | Kushma, Parbat</title>');
 html = html.replace('content="Oxford Academy, Kushma, Parbat — learning, character and confidence."', 'content="Oxford Academic Instruction Pvt. Ltd. | Education, learning and student development in Kushma, Parbat."');
 function replaceExactly(source, needle, replacement, label) { const first = source.indexOf(needle); if (first === -1) throw new Error('Could not find ' + label); if (source.indexOf(needle, first + needle.length) !== -1) throw new Error('Found ' + label + ' more than once'); return source.slice(0, first) + replacement + source.slice(first + needle.length); }
@@ -200,6 +202,47 @@ for (const [needle, replacement, label] of publicMarkupPatches) {
     html = replaceExactly(html, needle, replacement, label);
   }
 }
+
+
+function replaceVisibleFieldByName(source, fieldName, replacement, label) {
+  const bodyStart = source.indexOf('<body');
+  const marker = source.indexOf('name="' + fieldName + '"', bodyStart);
+  if (bodyStart < 0 || marker < 0) throw new Error('Could not find visible ' + label);
+  const start = source.lastIndexOf('<div class="field', marker);
+  const close = source.indexOf('</div>', marker);
+  if (start < bodyStart || close < 0) throw new Error('Could not identify the visible ' + label + ' wrapper');
+  return source.slice(0, start) + replacement + source.slice(close + '</div>'.length);
+}
+
+function replaceFirstBodyMarkup(source, needle, replacement, label) {
+  const bodyStart = source.indexOf('<body');
+  const index = source.indexOf(needle, bodyStart);
+  if (bodyStart < 0 || index < 0) throw new Error('Could not find visible ' + label);
+  return source.slice(0, index) + replacement + source.slice(index + needle.length);
+}
+
+// Use live content as the source of truth. Keep the initial HTML honest while
+// Supabase content loads, instead of flashing prototype programme/profile cards.
+const programmeCardPattern = /<div class="cards" id="programCards">[\s\S]*?<\/div><\/div><\/section>/;
+html = replaceRegexExactly(
+  html,
+  programmeCardPattern,
+  '<div class="cards" id="programCards"><div class="oa-program-empty" role="status">Loading published programmes…</div></div></div></section>',
+  'initial programme loading state'
+);
+html = replaceFirstBodyMarkup(
+  html,
+  'Faculty profiles will appear here after the academy adds them.',
+  'Loading the Oxford team…',
+  'faculty loading state'
+);
+html = replaceVisibleFieldByName(
+  html,
+  'guardian_name',
+  '<div class="field"><label for="enquiryType">What do you need help with? *</label><select id="enquiryType" name="enquiry_type" required><option value="">Choose an enquiry type</option><option value="Japanese Language Classes (N5–N1)">Japanese Language Classes (N5–N1)</option><option value="Korean Language Classes">Korean Language Classes</option><option value="Japanese Language Test Preparation (JLPT, NAT, J-CERT, JLCT, JFT-Basic)">Japanese Language Test Preparation</option><option value="SSW Preparation Class">SSW Preparation Class</option><option value="Study in Japan / Student Visa Guidance">Study in Japan / Student Visa Guidance</option><option value="Working Visa Language Preparation">Working Visa Language Preparation</option><option value="Documentation and Application Support">Documentation and Application Support</option><option value="Other Enquiry or Issue">Other Enquiry or Issue</option></select></div>',
+  'public enquiry type selector'
+);
+
 
 const admissionGradePattern = /<div class="field full"><label for="grade"[^>]*>[\s\S]*?<\/div>/;
 const admissionBranchField = '<div class="field full"><label for="admissionBranch">Preferred branch *</label><select id="admissionBranch" name="branch_name" required><option value="">Choose a branch</option></select><small style="display:block;margin-top:5px;color:#718096;font-size:11px">Choose the academy branch you want to contact.</small></div>';
