@@ -187,7 +187,7 @@ const publicMarkupPatches = [
   ["$('menuBtn').addEventListener('click',()=>$('navLinks').classList.toggle('open'));", "/* The responsive menu is initialized by homepage-overrides.js. */", "legacy mobile menu listener"],
   ["$('adminOpen').addEventListener('click',openAdmin); $('adminFooterLink').addEventListener('click',e=>{e.preventDefault();openAdmin();});$('adminClose').addEventListener('click',closeAdmin);$('adminModal').addEventListener('click',e=>{if(e.target===$('adminModal'))closeAdmin();});", "if($('adminOpen'))$('adminOpen').addEventListener('click',openAdmin); const footerAdminTrigger=$('adminFooterLink'); if(footerAdminTrigger)footerAdminTrigger.addEventListener('click',e=>{e.preventDefault();openAdmin();}); $('adminClose').addEventListener('click',closeAdmin); $('adminModal').addEventListener('click',e=>{if(e.target===$('adminModal'))closeAdmin();});", "optional footer admin binding"],
   ['<a href="#home" id="adminFooterLink">Admin access</a>', '', "old footer admin link"],
-  ['<div class="copyright"><span>© <span id="yearNow"></span> Oxford Academy, Kushma, Parbat. All rights reserved.</span><span>Designed for learning. Built for the community.</span></div>', '<div class="copyright"><span>© <span id="yearNow"></span> Oxford Academy, Kushma, Parbat. All rights reserved.</span><span>Designed for learning. Built for the community. <a class="oa-footer-admin" href="/admin/">Admin access ↗</a></span></div>', "footer admin destination"],
+  ['<div class="copyright"><span>© <span id="yearNow"></span> Oxford Academy, Kushma, Parbat. All rights reserved.</span><span>Designed for learning. Built for the community.</span></div>', '<div class="copyright"><span>© <span id="yearNow"></span> Oxford Academy, Kushma, Parbat. All rights reserved.</span><span>Designed for learning. Built for the community.</span></div>', "footer copyright without public admin link"],
   ['<span class="brand-place">Kushma · Parbat</span>', '<span class="brand-place">Kushma, Parbat</span>', "brand location"],
   ['<div class="notice-list" id="noticeList">', '<div class="oa-live-posts" id="oa-live-posts" aria-live="polite">Loading latest posts…</div><div class="notice-list" id="noticeList" hidden>', "public live posts feed"]
 ];
@@ -447,13 +447,41 @@ contentPageStyles += `
     .content-card{border-radius:11px}
     .content-card-body{padding:18px}
   }
+
+  @media(min-width:961px){
+    .oa-section-header{grid-template-columns:minmax(260px,1fr) auto minmax(235px,auto);gap:clamp(9px,1.35vw,18px)}
+    .oa-section-header .oa-header-actions{gap:6px}
+    .oa-section-header .oa-header-actions .page-home{padding:10px 12px;font-size:10px}
+    .oa-section-header-label{padding:8px 12px;font-size:9px;letter-spacing:.09em}
+  }
+  @media(max-width:960px){
+    .page-top:has(.oa-section-header){padding:12px 14px!important}
+    .oa-section-header{display:grid!important;grid-template-columns:minmax(0,1fr);grid-template-areas:"brand" "label" "actions";gap:10px;padding:0}
+    .oa-section-header .page-brand{grid-area:brand;grid-column:1;width:100%;max-width:100%;min-width:0;gap:9px}
+    .oa-section-header .page-mark{width:42px!important;height:42px!important;flex:0 0 42px}
+    .oa-section-header .page-brand-name{display:block;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;line-height:1.3}
+    .oa-section-header .page-brand small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:8px}
+    .oa-section-header-label{grid-area:label;grid-column:1;justify-self:center;max-width:100%;padding:7px 12px;font-size:9px}
+    .oa-section-header .oa-header-actions{grid-area:actions;grid-column:1;width:100%;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .oa-section-header .oa-header-actions .page-home{grid-column:auto;justify-self:stretch;justify-content:center;width:100%;min-width:0;margin:0;padding:10px 8px;font-size:10px;white-space:nowrap;text-align:center}
+    .oa-section-header .oa-header-actions .oa-back-action{background:#fff;color:#185da0!important;border:1px solid #cbd9e6}
+  }
+  @media(max-width:390px){
+    .page-top:has(.oa-section-header){padding:10px 12px!important}
+    .oa-section-header .page-mark{width:38px!important;height:38px!important;flex-basis:38px}
+    .oa-section-header .page-brand-name{font-size:11px}
+    .oa-section-header .page-brand small{font-size:7px;letter-spacing:.1em}
+    .oa-section-header .oa-header-actions{gap:6px}
+    .oa-section-header .oa-header-actions .page-home{padding:9px 5px;font-size:9px}
+    .oa-section-header-label{padding:6px 10px;font-size:8px;letter-spacing:.08em}
+  }
 `;
 const contentPageHtml = (mode) => '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b4e"><title>Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + '</style></head><body>' +
   '<header class="page-top"><div class="page-top-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><span class="oa-section-header-label">ACADEMY UPDATES</span><div class="oa-header-actions"><a class="page-home oa-contact-action" href="/#admission">Contact Oxford ↗</a><a class="page-home oa-back-action" href="/">Back to homepage ↗</a></div></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb" id="content-breadcrumb"></nav>' +
   (mode === 'detail' ? '<div id="content-detail"><div class="content-empty">Loading content…</div></div>' :
     '<h1 id="content-heading">Academy updates</h1><div id="content-list"><div class="content-empty">Loading content…</div></div>') +
-  '</main><footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a> <a href="/admin/">Admin access ↗</a></footer><script type="module">\n' + contentPageSource + '\n</script></body></html>';
+  '</main><footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a></footer><script type="module">\n' + contentPageSource + '\n</script></body></html>';
 for (const [folder, mode] of [['read','detail'],['all','listing']]) {
   const target = path.join(output, folder);
   fs.mkdirSync(target, { recursive:true });
@@ -611,7 +639,7 @@ root.innerHTML =
 const servicePageHtml = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>Oxford Academic Instruction Pvt. Ltd. | Services</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + '</style></head><body>' +
   '<header class="page-top"><div class="page-top-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><span class="oa-section-header-label">OXFORD SERVICES</span><div class="oa-header-actions"><a class="page-home oa-contact-action" href="/#admission">Contact Oxford ↗</a><a class="page-home oa-back-action" href="/">Back to homepage ↗</a></div></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb"><a href="/">Home</a><span> / </span><a href="/#oa-lions-services">Services</a><span> / </span><span id="service-breadcrumb-title">Service details</span></nav><div id="service-detail"><div class="content-empty">Loading service information…</div></div></main>' +
-  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a> <a href="/admin/">Admin access ↗</a></footer>' +
+  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a></footer>' +
   servicePageScript + '</body></html>';
 const servicesDir = path.join(output, 'services');
 fs.mkdirSync(servicesDir, { recursive:true });
@@ -729,7 +757,7 @@ const aboutPageHtml = '<!doctype html>\n<html lang="en"><head><meta charset="utf
   '<section class="oa-about-section"><h2>Our Offices</h2><p>Contact our Kushma or Baglung branch for current programme and enrolment information.</p><div id="oa-about-offices" class="oa-about-offices"><div class="content-empty">Loading branch information…</div></div></section>' +
   '<section class="oa-about-section"><h2>Meet Our Team</h2><p>Get to know the published team members who support Oxford Academic Instruction.</p><div id="oa-about-team" class="oa-about-team"><div class="content-empty">Loading team profiles…</div></div></section>' +
   '<section class="oa-about-section" id="oa-about-partners" hidden><h2>Our Partner Institutions</h2><p>Organisations with confirmed relationships published by Oxford Academic Instruction.</p><div id="oa-about-partner-list" class="oa-about-partners"></div></section></main>' +
-  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a> <a href="/admin/">Admin access ↗</a></footer>' +
+  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a></footer>' +
   aboutPageScript + '</body></html>';
 const aboutDir = path.join(output, 'about');
 fs.mkdirSync(aboutDir, { recursive:true });
@@ -780,12 +808,15 @@ const calendarPageStyles = [
   ".oa-calendar-header-label:before{content:\"\";width:6px;height:6px;border-radius:50%;background:#e6a34c;box-shadow:0 0 0 4px rgba(230,163,76,.14)}",
   ".oa-calendar-header-inner .page-home{grid-column:3;justify-self:end;display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:9px;background:#f2a33a;color:#18334e!important;font-size:11px;font-weight:900;box-shadow:0 7px 18px rgba(242,163,58,.18);transition:transform .18s,background .18s}",
   ".oa-calendar-header-inner .page-home:hover{transform:translateY(-1px);background:#ffc16a}",
-  ".oa-calendar-header-inner .oa-header-actions{grid-column:3;justify-self:end;display:flex;gap:8px;align-items:center}",,
-  ".oa-calendar-header-inner .oa-header-actions .page-home{grid-column:auto;justify-self:auto;white-space:nowrap}",,
+  ".oa-calendar-header-inner .oa-header-actions{grid-column:3;justify-self:end;display:flex;gap:8px;align-items:center}",
+  ".oa-calendar-header-inner .oa-header-actions .page-home{grid-column:auto;justify-self:auto;white-space:nowrap}",
   ".oa-calendar-header-inner .oa-header-actions .oa-back-action{background:#fff;color:#185da0!important;border:1px solid #cbd9e6;box-shadow:none}",
 
   "@media(max-width:760px){.oa-calendar-header-inner{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:\"brand action\" \"calendar calendar\";gap:9px 10px}.oa-calendar-header-inner .page-brand{grid-area:brand;grid-column:1;max-width:100%}.oa-calendar-header-label{grid-area:calendar;grid-column:1/-1;justify-self:center;padding:6px 11px;font-size:9px}.oa-calendar-header-inner .oa-header-actions{grid-area:action;grid-column:2;justify-self:end;gap:5px}.oa-calendar-header-inner .oa-header-actions .page-home{grid-area:auto;grid-column:auto;padding:8px 9px;font-size:9px}.page-top:has(.oa-calendar-header-inner){padding:10px 14px!important}}",
-  "@media(max-width:390px){.oa-calendar-header-inner .page-brand-name{font-size:11px}.oa-calendar-header-inner .page-brand small{font-size:7px}.oa-calendar-header-inner .page-home{padding:8px 9px;font-size:9px}.oa-calendar-header-label{font-size:8px;letter-spacing:.08em}}"
+  "@media(max-width:390px){.oa-calendar-header-inner .page-brand-name{font-size:11px}.oa-calendar-header-inner .page-brand small{font-size:7px}.oa-calendar-header-inner .page-home{padding:8px 9px;font-size:9px}.oa-calendar-header-label{font-size:8px;letter-spacing:.08em}}",
+  "@media(min-width:961px){.oa-calendar-header-inner{grid-template-columns:minmax(260px,1fr) auto minmax(235px,auto);gap:clamp(9px,1.35vw,18px)}.oa-calendar-header-inner .oa-header-actions{grid-column:3;justify-self:end;gap:6px}.oa-calendar-header-inner .oa-header-actions .page-home{padding:10px 12px;font-size:10px}.oa-calendar-header-label{padding:8px 12px;font-size:9px}}",
+  "@media(max-width:960px){.page-top:has(.oa-calendar-header-inner){padding:12px 14px!important}.oa-calendar-header-inner{display:grid!important;grid-template-columns:minmax(0,1fr);grid-template-areas:'brand' 'calendar' 'actions';gap:10px}.oa-calendar-header-inner .page-brand{grid-area:brand;grid-column:1;width:100%;max-width:100%;min-width:0;gap:9px}.oa-calendar-header-inner .page-mark{width:42px!important;height:42px!important;flex:0 0 42px}.oa-calendar-header-inner .page-brand-name{display:block;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;line-height:1.3}.oa-calendar-header-inner .page-brand small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:8px}.oa-calendar-header-label{grid-area:calendar;grid-column:1;justify-self:center;max-width:100%;padding:7px 12px;font-size:9px}.oa-calendar-header-inner .oa-header-actions{grid-area:actions;grid-column:1;width:100%;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.oa-calendar-header-inner .oa-header-actions .page-home{grid-column:auto;justify-self:stretch;justify-content:center;width:100%;min-width:0;margin:0;padding:10px 8px;font-size:10px;white-space:nowrap}.oa-calendar-header-inner .oa-header-actions .oa-back-action{background:#fff;color:#185da0!important;border:1px solid #cbd9e6}}",
+  "@media(max-width:390px){.page-top:has(.oa-calendar-header-inner){padding:10px 12px!important}.oa-calendar-header-inner .page-mark{width:38px!important;height:38px!important;flex-basis:38px}.oa-calendar-header-inner .page-brand-name{font-size:11px}.oa-calendar-header-inner .page-brand small{font-size:7px;letter-spacing:.1em}.oa-calendar-header-inner .oa-header-actions{gap:6px}.oa-calendar-header-inner .oa-header-actions .page-home{padding:9px 5px;font-size:9px}.oa-calendar-header-label{padding:6px 10px;font-size:8px;letter-spacing:.08em}}",
 ].join("");
 
 const calendarPageScriptSource = fs.readFileSync(path.join(__dirname, 'calendar-page.js'), 'utf8');
@@ -801,7 +832,7 @@ const calendarPageHtml = [
   '<aside class="oa-cal-side"><section class="oa-cal-panel" aria-label="Selected date details"><div id="oa-cal-selected"><div class="oa-cal-loading">Loading date details…</div></div><p class="oa-cal-panel-note">Calendar dates are provided for general information. Confirm important school closures and examination dates with official notices.</p></section><section class="oa-cal-panel"><h2>Oxford events this month</h2><div id="oa-cal-upcoming"><div class="oa-cal-upcoming-empty">Loading Oxford events…</div></div></section></aside></div>',
   '<div class="oa-cal-source"><span>BS calendar data by <a href="https://trisambat.com/?lang=en" target="_blank" rel="noopener noreferrer">Trisambat ↗</a>.</span><span>Calendar data is not an official government Panchanga.</span></div>',
   '</main>',
-  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a> <a href="/admin/">Admin access ↗</a></footer>',
+  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a></footer>',
   calendarPageScript,
   '</body></html>'
 ].join('');
