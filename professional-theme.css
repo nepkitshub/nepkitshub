@@ -54,7 +54,7 @@ body.oa-lions-full .hero {
   min-height: clamp(560px, 72vh, 720px); background-color: #102e50;
 }
 body.oa-lions-full .hero:before {
-  background-image: linear-gradient(90deg,rgba(7,27,49,.92) 0%,rgba(9,39,69,.82) 48%,rgba(9,39,69,.42) 100%),url("https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=2000&q=85");
+  background-image: linear-gradient(90deg,rgba(7,27,49,.94) 0%,rgba(9,39,69,.86) 48%,rgba(9,39,69,.52) 100%);
   background-position: center 42%; background-size: cover;
 }
 body.oa-lions-full .hero:after { opacity: .55; }
@@ -1517,4 +1517,14 @@ body.oa-lions-full #oa-lions-class-types { display:none !important; }
     margin:0 !important;
     white-space:nowrap !important;
   }
+}
+
+
+/* No generic stock photography: the homepage hero uses the photo selected
+   in Oxford's admin portal, with a branded gradient while that image loads. */
+body.oa-lions-full .hero:before,
+body.oa-lions-inspired-preview .hero:before {
+  background-image:linear-gradient(90deg,rgba(7,27,49,.94) 0%,rgba(9,39,69,.86) 48%,rgba(9,39,69,.52) 100%) !important;
+  background-position:center 42% !important;
+  background-size:cover !important;
 }
