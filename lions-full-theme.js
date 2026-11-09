@@ -483,6 +483,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         partnerSection = null;
       }
 
+      // Keep the existing navigation labels, but route Contact to the consolidated branch cards.
+      document.querySelectorAll('a[href="#contact"]').forEach((link) => {
+        link.setAttribute('href', '#oa-lions-offices');
+      });
+
       // Contact options are consolidated in Contact Offices; remove the duplicate Get in Touch panel.
       const oldContactSection = $('#contact');
       if (oldContactSection) oldContactSection.remove();
