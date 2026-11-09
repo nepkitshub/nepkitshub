@@ -6,6 +6,38 @@ const db = window.__oaSupabaseClient || createClient(SUPABASE_URL, SUPABASE_KEY)
 window.__oaSupabaseClient = db;
 const isAdminRoute = window.location.pathname.replace(/\/+$/, '') === '/admin';
 
+function applySavedAcademyHeroImage() {
+  if (isAdminRoute) return;
+  const styleId = 'oa-saved-academy-hero';
+  let style = document.getElementById(styleId);
+  if (!style) {
+    style = document.createElement('style');
+    style.id = styleId;
+    document.head.appendChild(style);
+  }
+  const selector = 'body.oa-lions-full .hero:before, body.oa-lions-inspired-preview .hero:before';
+  const fallback = 'linear-gradient(90deg,rgba(7,27,49,.94) 0%,rgba(9,39,69,.86) 48%,rgba(9,39,69,.52) 100%)';
+  style.textContent = selector + '{background-image:' + fallback + '!important;background-position:center 42%!important;background-size:cover!important}';
+  db.from('oa_site_content').select('value_en').eq('content_key','hero_image_url').maybeSingle()
+    .then(({data,error}) => {
+      if (error) throw error;
+      const value = String(data?.value_en || '').trim();
+      if (!value) return;
+      let url;
+      try { url = new URL(value); } catch (_) { return; }
+      if (url.protocol !== 'https:' || url.hostname !== 'gsfhhvkipvoutqqgyick.supabase.co' || !url.pathname.startsWith('/storage/v1/object/public/oa-academy-media/')) return;
+      const preload = new Image();
+      preload.onload = () => {
+        const safeUrl = url.href.replaceAll('"','%22');
+        style.textContent = selector + '{background-image:' + fallback + ',url("' + safeUrl + '")!important;background-position:center 42%!important;background-size:cover!important}';
+      };
+      preload.onerror = () => console.warn('Saved Oxford hero image could not be loaded; retaining branded gradient.');
+      preload.src = url.href;
+    })
+    .catch(error => console.warn('Oxford hero image setting could not be loaded:', error));
+}
+applySavedAcademyHeroImage();
+
 const style = document.createElement('style');
 style.id = 'oa-homepage-overrides';
 style.textContent = [
