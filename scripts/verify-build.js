@@ -66,7 +66,9 @@ const bodyIndex = homepage.indexOf('<body');
 assert.ok(bodyIndex >= 0, 'Homepage body is missing.');
 const scriptIndex = homepage.indexOf('<script', bodyIndex);
 const visibleMarkup = homepage.slice(bodyIndex, scriptIndex > -1 ? scriptIndex : homepage.length);
-assert.ok(visibleMarkup.includes('name="enquiry_type"'), 'Homepage enquiry type selector is missing.');
+assert.ok(visibleMarkup.includes('A place to learn, grow & lead.'), 'The existing Oxford homepage headline must remain unchanged.');
+assert.ok(visibleMarkup.includes('Building knowledge, nurturing character and inspiring every learner to discover their potential.'), 'The existing Oxford hero description must remain unchanged.');
+assert.ok(visibleMarkup.includes('id="admissionForm"'), 'Homepage enquiry form is missing.');
 assert.ok(!visibleMarkup.includes('name="guardian_name"'), 'Legacy parent/guardian field is still in visible homepage markup.');
 assert.ok(!visibleMarkup.includes('images.unsplash.com'), 'A generic Unsplash URL is still present in visible homepage markup.');
 assert.ok(visibleMarkup.includes('id="admissionForm"'), 'Homepage enquiry form is missing.');
@@ -82,6 +84,8 @@ assert.ok(redesign.includes('body.admin-route .oa-app'), 'Admin redesign styles 
 assert.ok(redesign.includes('body.oa-lions-full .hero'), 'Homepage redesign styles are missing.');
 assert.ok(/@media\s*\([^)]*max-width\s*:\s*760px/i.test(css), 'Mobile breakpoint at 760px is missing.');
 assert.ok(/prefers-reduced-motion\s*:\s*reduce/i.test(css), 'Reduced-motion support is missing.');
+assert.ok(/hero:before[\s\S]*?width:min\(44%,560px\)/.test(redesign), 'Desktop split hero image layout is missing.');
+assert.ok(redesign.includes('body.oa-lions-full .hero-inner'), 'Split hero copy layout is missing.');
 
 for (const file of ['robots.txt', 'sitemap.xml']) {
   read(file);
