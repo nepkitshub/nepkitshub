@@ -653,7 +653,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
               '</nav>' +
             '</section>' +
             '<section class="oa-footer-connect"><span class="oa-footer-kicker">CONTACT & SOCIAL</span><h3>Connect with Oxford</h3>' +
-              (branchFooterHtml || '<p>Contact details will be published by the academy.</p>') +
+              '<div class="oa-footer-branch-grid">' + (branchFooterHtml || '<p>Contact details will be published by the academy.</p>') + '</div>' +
             '</section>' +
           '</div><div class="oa-footer-bottom"><span>© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. All rights reserved.</span>' +
             '<span>Designed by <a href="https://wa.me/9779867947202?text=Hello%20Saksham%2C%20I%20came%20from%20the%20Oxford%20Academy%20website." target="_blank" rel="noopener noreferrer"><strong>Saksham Lamsal</strong></a></span>' +
