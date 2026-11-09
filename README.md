@@ -4,7 +4,9 @@ Public website and Supabase-managed administration portal for Oxford Academic In
 
 ## Build and deployment
 
-- Build command: `npm run build` (runs `node build.js`).
+- Build command: `npm run build` (runs `node build.js` and the output verifier in `scripts/verify-build.js`).
+- Run the verifier separately with `npm run verify` after regenerating `dist`.
+- The verifier checks all generated routes, shared page layers, inline-script syntax, homepage enquiry markup, admin `noindex`, responsive CSS, reduced-motion support, `robots.txt` and `sitemap.xml`.
 - Output directory: `dist`.
 - The build creates the public homepage, admin route, content listings/details, About, Calendar, service pages, sitemap, crawler policy and branded 404 page.
 - The final build pass injects the shared design and UX layer into all generated routes.
