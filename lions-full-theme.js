@@ -208,7 +208,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         const phone = String(primaryBranch.phone || '');
         const email = String(primaryBranch.email || '');
         topMeta.innerHTML =
-          (phone ? '<span class="oa-top-contact"><span aria-hidden="true">☎</span><a href="tel:' + esc(phone.replace(/[^\\d+]/g, '')) + '">' + esc(phone) + '</a></span>' : '') +
+          (phone ? '<span class="oa-top-contact"><span aria-hidden="true">☎</span><a href="tel:' + esc(phone.replace(/[^\d+]/g, '')) + '">' + esc(phone) + '</a></span>' : '') +
           (email ? '<span class="oa-top-contact"><span aria-hidden="true">✉</span><a href="mailto:' + esc(email) + '">' + esc(email) + '</a></span>' : '');
       }
 
@@ -614,7 +614,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           const facebook = safeHttps(item.facebook_url || '');
           const instagram = safeHttps(item.instagram_url || '');
           const tiktok = safeHttps(item.tiktok_url || '');
-          const phoneHtml = phone ? '<a href="tel:' + esc(phone.replace(/[^\\d+]/g, '')) + '"><span aria-hidden="true">☎</span>' + esc(phone) + '</a>' : '';
+          const phoneHtml = phone ? '<a href="tel:' + esc(phone.replace(/[^\d+]/g, '')) + '"><span aria-hidden="true">☎</span>' + esc(phone) + '</a>' : '';
           const emailHtml = email ? '<a href="mailto:' + esc(email) + '"><span aria-hidden="true">✉</span>' + esc(email) + '</a>' : '';
           const whatsappHtml = whatsapp ? '<a href="https://wa.me/' + esc(whatsappInternational) + '" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">◉</span>WhatsApp</a>' : '';
           const facebookHtml = facebook ? '<a href="' + esc(facebook) + '" target="_blank" rel="noopener noreferrer"><span class="oa-social-icon facebook" aria-hidden="true">f</span>Facebook</a>' : '';
