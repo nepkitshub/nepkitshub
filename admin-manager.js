@@ -648,7 +648,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     view.innerHTML =
       "<div class='oa-card'><div class='oa-admissions-heading'><div><h2>Enquiries</h2><p>Search enquiries, review contact details and messages, and update each enquiry’s status.</p></div><button type='button' class='oa-button light' id='oa-refresh-enquiries'>Refresh ↻</button></div>" +
       "<div id='oa-enquiries-summary' class='oa-enquiries-summary'>Loading enquiries…</div>" +
-      "<div class='oa-admissions-tools'><input id='oa-enquiry-search' type='search' placeholder='Search student, parent, phone, email or message' aria-label='Search enquiries'><select id='oa-enquiry-filter' aria-label='Filter enquiries by status'><option value='all'>All enquiries</option><option value='new'>New</option><option value='contacted'>Contacted</option><option value='closed'>Closed</option></select></div>" +
+      "<div class='oa-admissions-tools'><input id='oa-enquiry-search' type='search' placeholder='Search name, course, phone, email, branch or enquiry details' aria-label='Search enquiries'><select id='oa-enquiry-filter' aria-label='Filter enquiries by status'><option value='all'>All enquiries</option><option value='new'>New</option><option value='contacted'>Contacted</option><option value='closed'>Closed</option></select></div>" +
       "<div id='oa-enquiries' class='oa-enquiries-list'></div></div>";
 
     const dateLabel = (value) => {
