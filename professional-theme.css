@@ -941,3 +941,403 @@ body:not(.oa-lions-full):not(.admin-route) #content-list {
     gap: 11px !important;
   }
 }
+
+
+/* Homepage navigation and footer refinement */
+body.oa-lions-full .brand,
+body.oa-lions-full .nav-wrap .brand {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+body.oa-lions-full .nav-wrap .brand-mark {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+body.oa-lions-full .nav-links { gap: clamp(10px,1.05vw,15px); font-size: 12px; }
+body.oa-lions-full .nav-links .oa-nav-more > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 11px;
+  border: 1px solid #e2e9f0;
+  border-radius: 8px;
+  background: #f7f9fc;
+  color: #173f69;
+  font-weight: 900;
+}
+body.oa-lions-full .nav-links .oa-nav-more[open] > summary {
+  background: #eaf3fb;
+  border-color: #c8d9e8;
+}
+body.oa-lions-full .nav-links .oa-nav-more .oa-nav-menu {
+  left: auto;
+  right: 0;
+  min-width: 190px;
+}
+@media (min-width:1261px) and (max-width:1440px) {
+  body.oa-lions-full .navbar { gap: 12px !important; }
+  body.oa-lions-full .nav-wrap .brand {
+    min-width: 64px !important;
+    max-width: 64px !important;
+    width: 64px !important;
+    flex: 0 0 64px !important;
+  }
+  body.oa-lions-full .nav-wrap .brand-name,
+  body.oa-lions-full .nav-wrap .brand-place {
+    display: none !important;
+  }
+  body.oa-lions-full .nav-wrap .brand-mark {
+    width: 62px !important;
+    height: 62px !important;
+    flex: 0 0 62px !important;
+  }
+  body.oa-lions-full .nav-links {
+    gap: clamp(9px,.9vw,13px) !important;
+    font-size: 11px !important;
+  }
+  body.oa-lions-full .nav-actions .btn {
+    min-height: 42px;
+    padding: 9px 13px;
+    font-size: 11px;
+  }
+}
+body.oa-lions-full .top-meta .oa-top-contact { display:flex; align-items:center; gap:7px; }
+body.oa-lions-full .top-meta .oa-top-contact > span { color:#ffd18c; font-weight:900; }
+body.oa-lions-full .topbar .container > a {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:30px;
+  padding:5px 12px;
+  border:1px solid rgba(255,209,140,.42);
+  border-radius:7px;
+  background:rgba(255,255,255,.06);
+  color:#ffd18c;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+}
+body.oa-lions-full .topbar .container > a:hover { background:rgba(255,209,140,.13); }
+@media (max-width:760px) {
+  body.oa-lions-full .topbar .container {
+    min-height:34px !important;
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:8px !important;
+    padding:5px 0 !important;
+  }
+  body.oa-lions-full .top-meta { gap:8px !important; min-width:0; font-size:9px !important; }
+  body.oa-lions-full .top-meta .oa-top-contact:nth-child(2) { display:none !important; }
+  body.oa-lions-full .topbar .container > a {
+    display:inline-flex !important;
+    min-height:27px;
+    padding:4px 7px;
+    font-size:8px;
+    flex:0 0 auto;
+  }
+}
+@media (max-width:380px) {
+  body.oa-lions-full .top-meta { font-size:8px !important; }
+  body.oa-lions-full .topbar .container > a { font-size:7px; padding:4px 5px; }
+}
+
+/* Student review form opens only when the visitor asks to write a review. */
+body.oa-lions-full .oa-review-actions {
+  display:flex;
+  justify-content:center;
+  margin:22px auto 0;
+}
+body.oa-lions-full .oa-review-open {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-height:46px;
+  padding:12px 22px;
+  border:0;
+  border-radius:9px;
+  background:#185da0;
+  color:#fff;
+  font:900 12px "DM Sans",Arial,sans-serif;
+  cursor:pointer;
+  box-shadow:0 9px 22px rgba(24,93,160,.17);
+  transition:transform .18s,background .18s,box-shadow .18s;
+}
+body.oa-lions-full .oa-review-open:hover {
+  transform:translateY(-2px);
+  background:#104a80;
+  box-shadow:0 13px 28px rgba(24,93,160,.22);
+}
+body.oa-lions-full .oa-review-dialog {
+  width:min(660px,calc(100% - 28px));
+  max-width:660px;
+  max-height:min(90dvh,900px);
+  margin:auto;
+  padding:0;
+  overflow:auto;
+  border:1px solid #e1e9f0;
+  border-radius:18px;
+  background:#fff;
+  color:var(--oa-ink);
+  box-shadow:0 26px 90px rgba(5,22,40,.28);
+}
+body.oa-lions-full .oa-review-dialog::backdrop { background:rgba(7,25,43,.68); backdrop-filter:blur(3px); }
+body.oa-lions-full .oa-review-dialog-head {
+  position:relative;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  padding:22px 24px 15px;
+  border-bottom:1px solid #edf1f5;
+}
+body.oa-lions-full .oa-review-dialog-head .section-kicker { margin:0 0 6px; }
+body.oa-lions-full .oa-review-dialog-head h3 {
+  margin:0 0 7px;
+  color:#173f69;
+  font:700 24px/1.2 "Playfair Display",Georgia,serif;
+}
+body.oa-lions-full .oa-review-dialog-head p { margin:0; color:#748496; font-size:11px; line-height:1.7; }
+body.oa-lions-full .oa-review-close {
+  display:grid;
+  place-items:center;
+  width:36px;
+  height:36px;
+  flex:0 0 36px;
+  border:0;
+  border-radius:9px;
+  background:#edf3f8;
+  color:#173f69;
+  font-size:22px;
+  cursor:pointer;
+}
+body.oa-lions-full .oa-review-dialog .oa-testimonial-submit {
+  max-width:none;
+  margin:0;
+  padding:18px 24px 24px;
+  border:0;
+  border-radius:0;
+  background:#fff;
+  box-shadow:none;
+}
+body.oa-lions-full .oa-review-dialog .oa-testimonial-submit-head { display:none; }
+@media (max-width:560px) {
+  body.oa-lions-full .oa-review-dialog { width:calc(100% - 18px); max-height:92dvh; border-radius:14px; }
+  body.oa-lions-full .oa-review-dialog-head { padding:17px 16px 13px; }
+  body.oa-lions-full .oa-review-dialog-head h3 { font-size:21px; }
+  body.oa-lions-full .oa-review-dialog .oa-testimonial-submit { padding:15px 16px 18px; }
+  body.oa-lions-full .oa-testimonial-form-grid { grid-template-columns:1fr; gap:11px; }
+  body.oa-lions-full .oa-testimonial-field.full { grid-column:1; }
+}
+
+/* Contact offices become the single, complete source for public contact channels. */
+body.oa-lions-full .oa-lions-office-grid { gap:16px !important; }
+body.oa-lions-full .oa-lions-office-card { padding:21px !important; }
+body.oa-lions-full .oa-office-actions { gap:8px !important; padding-top:14px !important; }
+body.oa-lions-full .oa-office-actions .oa-office-action {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:37px;
+  padding:8px 10px;
+  border:1px solid #dce7f0;
+  border-radius:8px;
+  background:#f4f8fc;
+  color:#185da0;
+  font-size:10px;
+  font-weight:900;
+  text-decoration:none;
+}
+body.oa-lions-full .oa-office-actions .oa-office-action:hover { background:#e8f2fa; border-color:#b9d0e3; }
+body.oa-lions-full .oa-office-actions .oa-whatsapp-action { background:#eef8f0; border-color:#d4ecd9; color:#176b37; }
+body.oa-lions-full .oa-office-actions .oa-map-action { background:#185da0; border-color:#185da0; color:#fff; }
+body.oa-lions-full .oa-social-icon {
+  display:inline-grid;
+  place-items:center;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#185da0;
+  color:#fff;
+  font-size:11px;
+  font-weight:900;
+  line-height:1;
+}
+body.oa-lions-full .oa-social-icon.instagram { background:#9b4b7c; }
+body.oa-lions-full .oa-social-icon.tiktok { background:#1b2633; }
+body.oa-lions-full .oa-office-line { align-items:flex-start; }
+
+/* Compact two-column footer: Explore on the left, all contact methods on the right. */
+body.oa-lions-full .footer.oa-clean-footer {
+  padding:34px 0 16px !important;
+  background:#0b2340 !important;
+  color:#d6e3ef;
+}
+body.oa-lions-full .oa-footer-grid {
+  display:grid;
+  grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+  gap:clamp(22px,4vw,54px);
+  padding-bottom:24px;
+}
+body.oa-lions-full .oa-footer-kicker {
+  display:block;
+  margin-bottom:9px;
+  color:#f1c47d;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.14em;
+}
+body.oa-lions-full .oa-footer-brand {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin-bottom:17px;
+}
+body.oa-lions-full .oa-footer-brand .brand-mark {
+  width:48px !important;
+  height:48px !important;
+  flex:0 0 48px !important;
+  border:0 !important;
+  border-radius:11px !important;
+  background:#fff !important;
+}
+body.oa-lions-full .oa-footer-brand .brand-name {
+  display:block;
+  color:#fff !important;
+  font:800 14px/1.25 "DM Sans",Arial,sans-serif;
+}
+body.oa-lions-full .oa-footer-brand .brand-place {
+  display:block;
+  margin-top:4px;
+  color:#b8c9d9 !important;
+  font-size:8px;
+  letter-spacing:.12em;
+}
+body.oa-lions-full .oa-footer-grid h3 {
+  margin:0 0 12px;
+  color:#fff;
+  font:700 20px/1.2 "Playfair Display",Georgia,serif;
+}
+body.oa-lions-full .oa-footer-links {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px 18px;
+}
+body.oa-lions-full .oa-footer-links a {
+  display:inline-flex;
+  align-items:center;
+  min-width:0;
+  color:#d6e3ef;
+  font-size:11px;
+  font-weight:700;
+  text-decoration:none;
+}
+body.oa-lions-full .oa-footer-links a:before {
+  content:"›";
+  margin-right:8px;
+  color:#f1c47d;
+  font-size:16px;
+}
+body.oa-lions-full .oa-footer-links a:hover,
+body.oa-lions-full .oa-footer-branch a:hover { color:#ffd18c; }
+body.oa-lions-full .oa-footer-connect {
+  min-width:0;
+  padding-left:clamp(18px,3vw,38px);
+  border-left:1px solid rgba(255,255,255,.15);
+}
+body.oa-lions-full .oa-footer-branch-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+body.oa-lions-full .oa-footer-branch {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:7px;
+  min-width:0;
+  padding:13px;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:11px;
+  background:rgba(255,255,255,.045);
+}
+body.oa-lions-full .oa-footer-branch > b { margin-bottom:2px; color:#fff; font-size:11px; }
+body.oa-lions-full .oa-footer-branch > a,
+body.oa-lions-full .oa-footer-address {
+  display:flex;
+  align-items:flex-start;
+  gap:7px;
+  min-width:0;
+  color:#d6e3ef;
+  font-size:10px;
+  line-height:1.5;
+  text-decoration:none;
+  overflow-wrap:anywhere;
+}
+body.oa-lions-full .oa-footer-branch > a > span,
+body.oa-lions-full .oa-footer-address > span { flex:0 0 16px; color:#f1c47d; text-align:center; font-weight:900; }
+body.oa-lions-full .oa-footer-bottom {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px 16px;
+  padding-top:13px;
+  border-top:1px solid rgba(255,255,255,.15);
+  color:#afc1d2;
+  font-size:10px;
+}
+body.oa-lions-full .oa-footer-bottom a { color:#ffd18c; text-decoration:none; }
+body.oa-lions-full .oa-footer-bottom strong { color:#fff; font-weight:900; text-decoration:underline; text-underline-offset:3px; }
+@media (max-width:760px) {
+  body.oa-lions-full .footer.oa-clean-footer { padding:27px 0 14px !important; }
+  body.oa-lions-full .oa-footer-grid { grid-template-columns:1fr; gap:20px; padding-bottom:17px; }
+  body.oa-lions-full .oa-footer-connect { padding:17px 0 0; border-left:0; border-top:1px solid rgba(255,255,255,.15); }
+  body.oa-lions-full .oa-footer-branch-grid { grid-template-columns:1fr; gap:8px; }
+  body.oa-lions-full .oa-footer-branch { padding:11px 12px; }
+  body.oa-lions-full .oa-footer-links { gap:7px 12px; }
+  body.oa-lions-full .oa-footer-bottom { flex-direction:column; align-items:flex-start; }
+}
+@media (max-width:380px) {
+  body.oa-lions-full .oa-footer-links { grid-template-columns:1fr 1fr; gap:7px 8px; }
+  body.oa-lions-full .oa-footer-links a { font-size:10px; }
+}
+
+/* Slightly more breathing room around the Japanese programme CTA, without adding a new tall section. */
+body.oa-lions-full .oa-lions-class-types { margin:20px 0 24px; }
+body.oa-lions-full .oa-lions-class-heading { margin-bottom:14px; }
+body.oa-lions-full .oa-japanese-about-link { display:inline-flex; min-height:39px; margin-top:8px; padding:9px 14px; font-size:10px; }
+body.oa-lions-full .oa-class-level-grid { gap:10px; }
+body.oa-lions-full .oa-class-level { padding:15px; }
+@media (max-width:760px) {
+  body.oa-lions-full .oa-lions-class-types { margin:14px 0 18px; }
+  body.oa-lions-full .oa-japanese-about-link { min-height:38px; width:auto; }
+}
+
+/* Improve the narrow-screen Bikram Sambat calendar: compact, readable seven-day grid. */
+@media (max-width:700px) {
+  body:not(.oa-lions-full) .oa-cal-layout { grid-template-columns:minmax(0,1fr) !important; }
+  body:not(.oa-lions-full) .oa-cal-side { grid-template-columns:1fr !important; }
+  body:not(.oa-lions-full) .oa-cal-weekdays,
+  body:not(.oa-lions-full) .oa-cal-days { grid-template-columns:repeat(7,minmax(0,1fr)) !important; gap:3px !important; }
+  body:not(.oa-lions-full) .oa-cal-day {
+    min-width:0;
+    min-height:58px;
+    padding:6px 3px;
+    align-items:center;
+    text-align:center;
+    border-radius:7px;
+  }
+  body:not(.oa-lions-full) .oa-cal-bs { font-size:clamp(13px,3.8vw,16px); }
+  body:not(.oa-lions-full) .oa-cal-ad { font-size:7px; line-height:1.15; }
+  body:not(.oa-lions-full) .oa-cal-dot { right:4px; bottom:5px; width:5px; height:5px; }
+  body:not(.oa-lions-full) .oa-cal-toolbar { gap:6px; }
+  body:not(.oa-lions-full) .oa-cal-toolbar select { min-width:0; }
+}
+@media (max-width:380px) {
+  body:not(.oa-lions-full) .oa-cal-day { min-height:52px; padding:5px 2px; }
+  body:not(.oa-lions-full) .oa-cal-bs { font-size:13px; }
+  body:not(.oa-lions-full) .oa-cal-ad { font-size:6px; }
+}
