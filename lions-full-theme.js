@@ -392,7 +392,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
       // Re-title the live course cards and keep them connected to published Supabase data.
       const academics = $('#academics');
-      sectionHead(academics, 'CLASSES & PROGRAMMES', 'Japanese and Korean language classes for your next step.', 'Explore Japanese and Korean language classes, N5–N1 learning levels, JLPT, NAT, J-CERT, JLCT and JFT-Basic preparation, plus SSW-related language preparation. Contact Oxford for current class schedules and availability.');
+      sectionHead(academics, 'CLASSES & PROGRAMMES', 'Japanese and Korean language classes for your next step.', 'Explore Japanese and Korean language classes, Japanese test preparation and SSW-related language preparation. Contact Oxford for current class schedules and availability.');
       const programRoot = $('#programCards');
       if (programRoot && !$('#oa-lions-class-types')) {
         const classTypes = document.createElement('div');
@@ -430,7 +430,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
               '</article>';
           }).join('');
         } else {
-          programRoot.innerHTML = '<div class="oa-program-empty">Programme information will be published by the academy.</div>';
+          const academicSection = programRoot.closest('section');
+          academicSection?.remove();
+          document.querySelectorAll('#navLinks a[href="#academics"]').forEach((link) => link.remove());
         }
       }
 
