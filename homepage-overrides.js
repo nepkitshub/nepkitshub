@@ -162,7 +162,7 @@ if (!isAdminRoute) {
       programmeRoot.innerHTML = '<div class="oa-program-empty">Our programmes could not be loaded right now. Please refresh the page.</div>';
     }
   };
-  loadProgrammes();
+  // Programme cards are fetched once by lions-full-theme.js.
 
   const postRoot = document.getElementById('oa-live-posts');
   const escapeHtml = (value = '') => String(value ?? '').replace(/[&<>"']/g, (char) => ({
