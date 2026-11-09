@@ -216,16 +216,24 @@ const oldAdmissionHandler = `$('admissionForm').addEventListener('submit',async 
 const newAdmissionHandler = `async function loadAdmissionBranches(){
       const select=$('admissionBranch');
       if(!select)return;
-      const {data,error}=await db.from('oa_branches').select('branch_name').eq('is_active',true).order('sort_order');
+      const {data,error}=await db.from('oa_branches').select('slug,branch_name').eq('is_active',true).in('slug',['kushma','baglung']).order('sort_order');
       if(error||!data||!data.length){
         select.innerHTML='<option value="">Branches are unavailable. Please refresh.</option>';
         select.disabled=true;
         return;
       }
+      const allowed=data.filter(row=>['kushma','baglung'].includes(String(row.slug||'').toLowerCase()));
+      if(!allowed.length){
+        select.innerHTML='<option value="">Branches are unavailable. Please contact Oxford.</option>';
+        select.disabled=true;
+        return;
+      }
       select.disabled=false;
-      select.innerHTML='<option value="">Choose a branch</option>'+data.map(row=>{
-        const name=String(row.branch_name||'').trim();
-        return name?'<option value="'+esc(name)+'">'+esc(name)+'</option>':'';
+      select.innerHTML='<option value="">Choose a branch</option>'+allowed.map(row=>{
+        const slug=String(row.slug||'').toLowerCase();
+        const databaseName=String(row.branch_name||'').trim();
+        const label=slug==='kushma'?'Kushma':'Baglung';
+        return databaseName?'<option value="'+esc(databaseName)+'">'+label+'</option>':'';
       }).join('');
     }
     loadAdmissionBranches();

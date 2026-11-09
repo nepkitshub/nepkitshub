@@ -31,8 +31,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       if(!logo){node.textContent='OA';return;}
       const image=document.createElement('img');image.src=logo;image.alt=nameEn+' logo';image.style.cssText='width:100%;height:100%;object-fit:contain;padding:3px;border-radius:inherit';node.replaceChildren(image);node.style.background='#fff';node.style.overflow='hidden';
     });
-    const desktop=Math.max(40,Math.min(160,Number(map.logo_size_desktop?.value_en||48)));
-    const mobile=Math.max(34,Math.min(60,Number(map.logo_size_mobile?.value_en||42)));
+    const desktop=Math.max(40,Math.min(128,Number(map.logo_size_desktop?.value_en||58)));
+    const mobile=Math.max(34,Math.min(84,Number(map.logo_size_mobile?.value_en||50)));
     let style=$('#oa-public-logo-sizing');if(!style){style=document.createElement('style');style.id='oa-public-logo-sizing';document.head.appendChild(style);}
     style.textContent='.brand-mark{width:'+desktop+'px!important;height:'+desktop+'px!important;flex:0 0 '+desktop+'px!important}.nav-wrap .navbar{height:auto!important;min-height:'+Math.max(82,desktop+28)+'px;padding-top:8px;padding-bottom:8px}@media(max-width:760px){.brand-mark{width:'+mobile+'px!important;height:'+mobile+'px!important;flex-basis:'+mobile+'px!important}.nav-wrap .navbar{min-height:'+Math.max(70,mobile+24)+'px}}';
     document.title=nameEn+' | Kushma, Parbat';
@@ -48,19 +48,24 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
   async function uploadImage(file, folder) {
     if (!file) throw new Error('Choose an image first.');
-    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-      throw new Error('Use a JPG, PNG or WebP image.');
-    }
+    const extension = String(file.name || '').split('.').pop().toLowerCase();
+    const typeByExtension = { jpg:'image/jpeg', jpeg:'image/jpeg', png:'image/png', webp:'image/webp' };
+    const contentType = ['image/jpeg','image/png','image/webp'].includes(file.type)
+      ? file.type
+      : (typeByExtension[extension] || '');
+    if (!contentType) throw new Error('This image format is not supported. Use JPG, PNG or WebP.');
     if (file.size > maxFileBytes) throw new Error('Image must be 5 MB or smaller.');
-    const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '-').slice(-80) || 'image';
-    const filePath = folder + '/' + Date.now() + '-' + filename;
+    const safeName = String(file.name || 'image').replace(/[^a-zA-Z0-9._-]/g, '-').slice(-80) || 'image';
+    const filePath = folder + '/' + Date.now() + '-' + Math.random().toString(36).slice(2,8) + '-' + safeName;
     const { data, error } = await db.storage.from(bucket).upload(filePath, file, {
       cacheControl: '3600',
       upsert: false,
-      contentType: file.type
+      contentType
     });
     if (error) throw error;
-    return safeUrl(db.storage.from(bucket).getPublicUrl(data.path).data.publicUrl);
+    const publicUrl = safeUrl(db.storage.from(bucket).getPublicUrl(data.path).data.publicUrl);
+    if (!publicUrl) throw new Error('The image uploaded, but its public URL could not be verified.');
+    return publicUrl;
   }
 
   const contentKeys = [
@@ -378,6 +383,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           if (note) note.textContent = error.message || 'Upload failed.';
         } finally {
           input.disabled = false;
+          input.value = '';
         }
       });
     });
@@ -397,7 +403,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const objectUrl=URL.createObjectURL(file),image=new Image();
     image.onload=()=>{
       const overlay=document.createElement('div');overlay.className='oa-crop-overlay';
-      overlay.innerHTML="<section class='oa-crop-dialog' role='dialog' aria-modal='true'><header><div><h2>Crop academy logo</h2><p>Drag to position the image and use zoom to adjust the square crop.</p></div><button type='button' class='oa-crop-close'>×</button></header><div class='oa-crop-stage' id='oa-crop-stage'><img id='oa-crop-image' alt='Logo crop'></div><label class='oa-crop-zoom'>Zoom <input id='oa-crop-zoom' type='range' min='100' max='300' value='100'><span id='oa-crop-zoom-label'>100%</span></label><div class='oa-crop-actions'><button type='button' class='oa-button light' id='oa-crop-cancel'>Cancel</button><button type='button' class='oa-button' id='oa-crop-save'>Crop & use logo</button></div></section>";
+      overlay.innerHTML="<section class='oa-crop-dialog' role='dialog' aria-modal='true'><header><div><h2>Crop academy logo</h2><p>Drag to position the image and use zoom to adjust the square crop.</p></div><button type='button' class='oa-crop-close'>×</button></header><div class='oa-crop-stage' id='oa-crop-stage'><img id='oa-crop-image' alt='Logo crop'></div><label class='oa-crop-zoom'>Zoom <input id='oa-crop-zoom' type='range' min='100' max='300' value='100'><span id='oa-crop-zoom-label'>100%</span></label><div class='oa-crop-actions'><button type='button' class='oa-button light' id='oa-crop-cancel'>Cancel</button><button type='button' class='oa-button light' id='oa-crop-original'>Use original image</button><button type='button' class='oa-button' id='oa-crop-save'>Crop & use logo</button></div></section>";
       document.body.appendChild(overlay);
       const stage=overlay.querySelector('#oa-crop-stage'),preview=overlay.querySelector('#oa-crop-image'),zoomInput=overlay.querySelector('#oa-crop-zoom'),zoomLabel=overlay.querySelector('#oa-crop-zoom-label');
       const size=320,fit=Math.max(size/image.naturalWidth,size/image.naturalHeight);let zoom=1,dx=0,dy=0,drag=null,closed=false;preview.src=objectUrl;
@@ -407,15 +413,18 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       stage.addEventListener('pointermove',e=>{if(!drag)return;dx=drag.dx+e.clientX-drag.x;dy=drag.dy+e.clientY-drag.y;redraw();});
       stage.addEventListener('pointerup',()=>{drag=null;});stage.addEventListener('pointercancel',()=>{drag=null;});
       function close(){if(closed)return;closed=true;URL.revokeObjectURL(objectUrl);overlay.remove();}
-      overlay.querySelector('.oa-crop-close').addEventListener('click',close);overlay.querySelector('#oa-crop-cancel').addEventListener('click',close);overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+      overlay.querySelector('.oa-crop-close').addEventListener('click',close);
+      overlay.querySelector('#oa-crop-cancel').addEventListener('click',close);
+      overlay.querySelector('#oa-crop-original').addEventListener('click',()=>{close();onDone(file);});
+      overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
       overlay.querySelector('#oa-crop-save').addEventListener('click',()=>{const output=1024,canvas=document.createElement('canvas');canvas.width=output;canvas.height=output;const ctx=canvas.getContext('2d'),scale=output/size,w=image.naturalWidth*fit*zoom*scale,h=image.naturalHeight*fit*zoom*scale;ctx.clearRect(0,0,output,output);ctx.drawImage(image,(output-w)/2+dx*scale,(output-h)/2+dy*scale,w,h);canvas.toBlob(blob=>{if(!blob){showMessage('Could not crop this image.');return;}const cropped=new File([blob],'academy-logo.png',{type:'image/png'});close();onDone(cropped);},'image/png');});
       redraw();
     };
-    image.onerror=()=>{URL.revokeObjectURL(objectUrl);showMessage('Could not open this image. Choose another JPG or PNG.');};image.src=objectUrl;
+    image.onerror=()=>{URL.revokeObjectURL(objectUrl);showMessage('The image preview could not be opened. Trying the original image upload…');onDone(file);};image.src=objectUrl;
   }
   function logoUploadField(value){
     const url=safeUrl(value||'');
-    return "<div class='oa-field full'><label>Academy logo</label><input type='url' name='logo_url' value='"+esc(url)+"' placeholder='https://…'><div class='oa-upload'><small>Choose an image to open the crop popup. Drag and zoom, then save the cropped PNG.</small><input type='file' id='oa-logo-file' accept='image/png,image/jpeg,image/webp'></div><img class='oa-preview "+(url?'':'hide')+"' id='oa-logo-preview' src='"+esc(url)+"' alt='Logo preview'></div>";
+    return "<div class='oa-field full'><label>Academy logo</label><input type='url' name='logo_url' value='"+esc(url)+"' placeholder='https://…'><div class='oa-upload'><small>Choose a new image to replace the logo. Crop and zoom it, or upload the original image without cropping.</small><input type='file' id='oa-logo-file' accept='image/png,image/jpeg,image/webp'></div><img class='oa-preview "+(url?'':'hide')+"' id='oa-logo-preview' src='"+esc(url)+"' alt='Logo preview'></div>";
   }
 
   async function renderBranding() {
@@ -426,8 +435,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       "<div class='oa-field'><label>Academy name</label><input name='brand_en' required value='"+esc(brand.value_en||'Oxford Academy')+"'></div>"+
 
       logoUploadField(map.logo_url?.value_en||'')+imageField('hero_image_url','Homepage hero background',map.hero_image_url?.value_en||'','branding')+
-      "<div class='oa-field full'><label>Desktop logo size: <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='160' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
-      "<div class='oa-field full'><label>Mobile logo size: <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='60' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
+      "<div class='oa-field full'><label>Desktop logo size (company text stays the same): <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='128' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
+      "<div class='oa-field full'><label>Mobile logo size (company text stays the same): <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='84' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
       "</div><div class='oa-actions'><button class='oa-button' type='submit'>Save branding</button></div></form></div>";
     const form=$('#oa-brand-form');bindUploads(form.querySelector('[name=hero_image_url]').closest('.oa-field').parentElement);
     const fileInput=$('#oa-logo-file');
@@ -885,8 +894,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     style.id='oa-supplemental-styles';
     style.textContent=[
       '.oa-crop-overlay{position:fixed;inset:0;z-index:10000;background:rgba(6,18,33,.78);display:flex;align-items:center;justify-content:center;padding:14px}',
-      '.oa-crop-dialog{width:min(460px,100%);background:#fff;border-radius:18px;padding:17px;box-shadow:0 25px 90px #0007}.oa-crop-dialog header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.oa-crop-dialog h2{font:700 20px Georgia;color:#102b4e;margin:0 0 4px}.oa-crop-dialog p{font-size:11px;color:#647488;margin:0}.oa-crop-close{border:0;background:#edf1f5;color:#102b4e;border-radius:9px;width:34px;height:34px;font-size:21px}',
-      '.oa-crop-stage{width:min(320px,100%);aspect-ratio:1;margin:12px auto 15px;position:relative;overflow:hidden;touch-action:none;background-color:#f5f7fa;background-image:linear-gradient(45deg,#e9edf2 25%,transparent 25%),linear-gradient(-45deg,#e9edf2 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e9edf2 75%),linear-gradient(-45deg,transparent 75%,#e9edf2 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0;border:1px solid #d7e0e9;border-radius:12px;cursor:grab}.oa-crop-stage img{position:absolute;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}.oa-crop-zoom{display:grid;grid-template-columns:auto 1fr 48px;align-items:center;gap:9px;font-size:11px;color:#506176;font-weight:800}.oa-crop-zoom span{text-align:right}.oa-crop-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}',
+      '.oa-crop-dialog{width:min(460px,100%);max-height:calc(100dvh - 28px);overflow:auto;background:#fff;border-radius:18px;padding:17px;box-shadow:0 25px 90px #0007}.oa-crop-dialog header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.oa-crop-dialog h2{font:700 20px Georgia;color:#102b4e;margin:0 0 4px}.oa-crop-dialog p{font-size:11px;color:#647488;margin:0}.oa-crop-close{border:0;background:#edf1f5;color:#102b4e;border-radius:9px;width:34px;height:34px;font-size:21px}',
+      '.oa-crop-stage{width:min(320px,100%);aspect-ratio:1;margin:12px auto 15px;position:relative;overflow:hidden;touch-action:none;background-color:#f5f7fa;background-image:linear-gradient(45deg,#e9edf2 25%,transparent 25%),linear-gradient(-45deg,#e9edf2 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e9edf2 75%),linear-gradient(-45deg,transparent 75%,#e9edf2 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0;border:1px solid #d7e0e9;border-radius:12px;cursor:grab}.oa-crop-stage img{position:absolute;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}.oa-crop-zoom{display:grid;grid-template-columns:auto 1fr 48px;align-items:center;gap:9px;font-size:11px;color:#506176;font-weight:800}.oa-crop-zoom span{text-align:right}.oa-crop-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;margin-top:16px}@media(max-width:480px){.oa-crop-actions{display:grid;grid-template-columns:1fr}.oa-crop-actions .oa-button{width:100%;justify-content:center}}',
       '.oa-branch-picker{background:#fff;border:1px solid #e2e8ef;border-radius:13px;padding:14px;margin-bottom:13px}.oa-branch-picker label{display:block;font-size:11px;font-weight:900;color:#506176;margin-bottom:7px}.oa-branch-picker select{width:100%;border:1px solid #d8e1e9;background:#fff;border-radius:9px;padding:11px;font-size:13px;color:#17283b}',
       '.oa-social-links{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 20px}.oa-social-link{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:9px 12px;background:#eaf0f5;color:#173d67;font-size:11px;font-weight:800}.oa-social-link.oa-whatsapp{background:#e5f5e8;color:#176b37}',
       '.oa-admissions-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.oa-admissions-heading p{margin:4px 0 12px}.oa-enquiries-summary{font-size:11px;font-weight:800;color:#526579;padding:10px 0}',

@@ -204,17 +204,18 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       if (topMeta) {
         const phone = String(primaryBranch.phone || '+977 9857631100');
         const email = String(primaryBranch.email || 'oxfordmilankushma@gmail.com');
-        const address = String(primaryBranch.address || 'Kushma, Parbat, Nepal');
         topMeta.innerHTML =
-          '<span>⌖ ' + esc(address) + '</span>' +
-          '<span>☎ <a href="tel:' + esc(phone.replace(/[^\d+]/g, '')) + '">' + esc(phone) + '</a></span>' +
-          '<span>✉ <a href="mailto:' + esc(email) + '">' + esc(email) + '</a></span>';
+          '<span class="oa-top-contact"><span aria-hidden="true">☎</span><a href="tel:' + esc(phone.replace(/[^\d+]/g, '')) + '">' + esc(phone) + '</a></span>' +
+          '<span class="oa-top-contact"><span aria-hidden="true">✉</span><a href="mailto:' + esc(email) + '">' + esc(email) + '</a></span>';
       }
       const topFollow = $('.topbar .container > a');
       if (topFollow) {
-        topFollow.href = '#admission';
-        topFollow.textContent = 'Send an enquiry ↗';
-        topFollow.removeAttribute('target');
+        const facebookUrl = safeHttps(primaryBranch.facebook_url || '') || 'https://www.facebook.com/';
+        topFollow.href = facebookUrl;
+        topFollow.textContent = 'Follow us on Facebook ↗';
+        topFollow.target = '_blank';
+        topFollow.rel = 'noopener noreferrer';
+        topFollow.setAttribute('aria-label', 'Follow Oxford Academic Instruction on Facebook');
       }
 
       const nav = $('#navLinks');
@@ -236,8 +237,12 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
             '<a href="/services/?type=ssw-preparation">SSW Preparation Class</a>' +
             '<a href="/services/?type=korean-classes">Korean Language</a>' +
           '</div></details>' +
-          '<a href="#oa-lions-testimonials">Student Experiences</a><a href="/calendar/">Calendar</a><a href="#team">Our Team</a>' +
-          '<a href="#notices">News & Notices</a><a href="#contact">Contact Us</a>';
+          '<a href="#oa-lions-testimonials">Student Experiences</a><a href="/calendar/">Calendar</a>' +
+          '<details class="oa-nav-drop oa-nav-more"><summary>More</summary><div class="oa-nav-menu">' +
+            '<a href="#team">Our Team</a><a href="#notices">News & Notices</a>' +
+            '<a href="#gallery">Gallery</a><a href="#oa-lions-offices">Contact Offices</a>' +
+            '<a href="#admission">Enquire / Apply</a>' +
+          '</div></details>';
         nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMobileMenu));
       }
 
@@ -394,7 +399,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         classTypes.id = 'oa-lions-class-types';
         classTypes.className = 'oa-lions-class-types';
         classTypes.innerHTML =
-          '<div class="oa-lions-class-heading"><span class="section-kicker">JAPANESE COURSE OPTIONS</span><h3>Build your language skills step by step.</h3></div>' +
+          '<div class="oa-lions-class-heading"><span class="section-kicker">JAPANESE LANGUAGE · N5–N1</span><h3>Build your Japanese skills step by step.</h3><p>Explore the levels and learning areas, then view the complete Japanese language programme.</p><a class="btn btn-gold oa-japanese-about-link" href="/services/?type=japanese-classes">Explore Japanese Language ↗</a></div>' +
           '<div class="oa-class-level-grid">' +
           '<article class="oa-class-level"><strong>N5</strong><span>Beginner — scripts, basic vocabulary and everyday expressions</span></article>' +
           '<article class="oa-class-level"><strong>N4</strong><span>Elementary — foundational grammar, vocabulary and comprehension</span></article>' +
@@ -407,7 +412,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           '<article><b>JLPT · NAT · J-CERT · JLCT · JFT-Basic</b><p>Prepare for Japanese language proficiency and communication tests. Confirm current formats and registrations with the exam providers.</p><a href="/services/?type=language-tests">View test preparation →</a></article>' +
           '<article><b>SSW Preparation Class</b><p>Japanese language and pathway preparation for learners exploring the Specified Skilled Worker route.</p><a href="/services/?type=ssw-preparation">View SSW preparation →</a></article>' +
           '</div>';
-        programRoot.insertAdjacentElement('afterend', classTypes);
+        programRoot.insertAdjacentElement('beforebegin', classTypes);
       }
       if (programRoot) {
         const { data: programs, error: programError } = await db.from('oa_programs')
@@ -419,7 +424,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
             const icon = /japan/i.test(title) ? 'あ' : (/korean/i.test(title) ? '한' : '✦');
             return '<article class="oa-program-card"><div class="program-icon">' + icon + '</div>' +
               '<h3>' + esc(title) + '</h3><p>' + esc(item.description_en || 'Contact Oxford for programme information.') + '</p>' +
-              '<a class="oa-program-enquire" href="#admission">Contact us about this class →</a></article>';
+              (/japanese/i.test(title)
+                ? '<a class="oa-program-enquire" href="/services/?type=japanese-classes">About this language →</a>'
+                : '<a class="oa-program-enquire" href="/services/?type=korean-classes">About this language →</a>') +
+              '</article>';
           }).join('');
         } else {
           programRoot.innerHTML = '<div class="oa-program-empty">Programme information will be published by the academy.</div>';
@@ -452,15 +460,19 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         testimonials.innerHTML =
           '<div class="container"><div class="section-head"><span class="section-kicker">STUDENT EXPERIENCES</span><h2>Hear from learners at Oxford.</h2><p id="oa-testimonials-intro"></p></div>' +
           '<div class="oa-testimonial-grid" id="oa-testimonial-grid"><div class="oa-testimonial-empty">Student experiences will appear here after learners give permission for Oxford to publish their feedback.</div></div>' +
-          '<div class="oa-testimonial-submit"><div class="oa-testimonial-submit-head"><span class="section-kicker">SHARE YOUR EXPERIENCE</span><h3>Tell us about your learning journey.</h3><p>We welcome honest feedback from Oxford learners. Complete the form below. Your review will be checked by our team and displayed here only after it is approved.</p></div>' +
-          '<form id="oa-testimonial-form"><div class="oa-testimonial-form-grid">' +
-          '<div class="oa-testimonial-field"><label for="oa-review-name">Your name *</label><input id="oa-review-name" name="student_name" type="text" minlength="2" maxlength="100" autocomplete="name" required placeholder="Enter your full name"></div>' +
-          '<div class="oa-testimonial-field"><label for="oa-review-course">Course / programme *</label><input id="oa-review-course" name="course_name" type="text" minlength="2" maxlength="120" required placeholder="e.g. Japanese Language"></div>' +
-          '<div class="oa-testimonial-field full"><label for="oa-review-location">Your location or branch (optional)</label><input id="oa-review-location" name="location" type="text" maxlength="120" autocomplete="address-level2" placeholder="e.g. Kushma or Baglung"></div>' +
-          '<div class="oa-testimonial-field full"><label for="oa-review-message">Your review *</label><textarea id="oa-review-message" name="quote_en" minlength="15" maxlength="1200" rows="4" required placeholder="Share what you learned and how your experience at Oxford has been…"></textarea></div>' +
-          '</div><label class="oa-testimonial-consent"><input type="checkbox" name="consent" required><span>I confirm this is my own feedback and agree that Oxford may publish it on this website after reviewing and approving it.</span></label>' +
-          '<div class="oa-testimonial-honeypot" aria-hidden="true"><label>Leave this field empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>' +
-          '<div class="oa-testimonial-form-actions"><button class="oa-testimonial-submit-btn" type="submit">Submit review</button><p class="oa-testimonial-form-status" id="oa-testimonial-form-status" role="status" aria-live="polite"></p></div></form></div></div>';
+          '<div class="oa-review-actions"><button class="oa-review-open" type="button" id="oa-review-open">Write a review <span aria-hidden="true">↗</span></button></div>' +
+          '<dialog class="oa-review-dialog" id="oa-review-dialog" aria-labelledby="oa-review-dialog-title">' +
+            '<div class="oa-review-dialog-head"><div><span class="section-kicker">SHARE YOUR EXPERIENCE</span><h3 id="oa-review-dialog-title">Tell us about your learning journey.</h3><p>Reviews are checked by the Oxford team and appear publicly only after approval.</p></div><button class="oa-review-close" type="button" id="oa-review-close" aria-label="Close review form">×</button></div>' +
+            '<div class="oa-testimonial-submit">' +
+              '<form id="oa-testimonial-form"><div class="oa-testimonial-form-grid">' +
+              '<div class="oa-testimonial-field"><label for="oa-review-name">Your name *</label><input id="oa-review-name" name="student_name" type="text" minlength="2" maxlength="100" autocomplete="name" required placeholder="Enter your full name"></div>' +
+              '<div class="oa-testimonial-field"><label for="oa-review-course">Course / programme *</label><input id="oa-review-course" name="course_name" type="text" minlength="2" maxlength="120" required placeholder="e.g. Japanese Language"></div>' +
+              '<div class="oa-testimonial-field full"><label for="oa-review-location">Your location or branch (optional)</label><input id="oa-review-location" name="location" type="text" maxlength="120" autocomplete="address-level2" placeholder="e.g. Kushma or Baglung"></div>' +
+              '<div class="oa-testimonial-field full"><label for="oa-review-message">Your review *</label><textarea id="oa-review-message" name="quote_en" minlength="15" maxlength="1200" rows="4" required placeholder="Share what you learned and how your experience at Oxford has been…"></textarea></div>' +
+              '</div><label class="oa-testimonial-consent"><input type="checkbox" name="consent" required><span>I confirm this is my own feedback and agree that Oxford may publish it on this website after reviewing and approving it.</span></label>' +
+              '<div class="oa-testimonial-honeypot" aria-hidden="true"><label>Leave this field empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>' +
+              '<div class="oa-testimonial-form-actions"><button class="oa-testimonial-submit-btn" type="submit">Submit review</button><p class="oa-testimonial-form-status" id="oa-testimonial-form-status" role="status" aria-live="polite"></p></div></form>' +
+            '</div></dialog></div>';
       }
       const testimonialsIntro = $('#oa-testimonials-intro', testimonials); if (testimonialsIntro) testimonialsIntro.textContent = profileMap.testimonials_intro || 'Student feedback is shown only after it has been reviewed and approved for publication.';
       const testimonialGrid = $('#oa-testimonial-grid', testimonials);
@@ -484,6 +496,30 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         }
       }
 
+
+      const reviewDialog = $('#oa-review-dialog', testimonials);
+      const reviewOpen = $('#oa-review-open', testimonials);
+      const reviewClose = $('#oa-review-close', testimonials);
+      if (reviewOpen && reviewDialog && reviewOpen.dataset.bound !== 'true') {
+        reviewOpen.dataset.bound = 'true';
+        reviewOpen.addEventListener('click', () => {
+          if (typeof reviewDialog.showModal === 'function') reviewDialog.showModal();
+          else reviewDialog.setAttribute('open', '');
+        });
+      }
+      if (reviewClose && reviewDialog && reviewClose.dataset.bound !== 'true') {
+        reviewClose.dataset.bound = 'true';
+        reviewClose.addEventListener('click', () => {
+          if (typeof reviewDialog.close === 'function') reviewDialog.close();
+          else reviewDialog.removeAttribute('open');
+        });
+      }
+      if (reviewDialog && reviewDialog.dataset.bound !== 'true') {
+        reviewDialog.dataset.bound = 'true';
+        reviewDialog.addEventListener('click', (event) => {
+          if (event.target === reviewDialog && typeof reviewDialog.close === 'function') reviewDialog.close();
+        });
+      }
 
       const testimonialForm = $('#oa-testimonial-form', testimonials);
       if (testimonialForm && testimonialForm.dataset.bound !== 'true') {
@@ -530,35 +566,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         });
       }
 
-      let calendarSection = $('#oa-lions-calendar');
-      if (!calendarSection) {
-        calendarSection = document.createElement('section');
-        calendarSection.id = 'oa-lions-calendar';
-        calendarSection.className = 'section oa-lions-calendar';
-        calendarSection.innerHTML =
-          '<div class="container"><div class="section-head"><span class="section-kicker">CALENDAR & INTAKES</span><h2>Upcoming events and course updates.</h2><p>See announcements and dates published by Oxford, or contact a branch to confirm the next available course or application intake.</p></div>' +
-          '<div class="oa-calendar-preview-grid" id="oa-calendar-preview-grid"><div class="oa-testimonial-empty">Loading calendar updates…</div></div>' +
-          '<div style="margin-top:22px"><a class="btn btn-navy" href="/calendar/">View full calendar ↗</a></div></div>';
-      }
-      const calendarGrid = $('#oa-calendar-preview-grid', calendarSection);
-      if (calendarGrid) {
-        const today = new Date().toISOString().slice(0,10);
-        const { data: eventRows, error: eventError } = await db.from('oa_events')
-          .select('title_en,category,summary_en,event_date,end_date,time_label,location')
-          .eq('is_published', true).gte('event_date', today)
-          .order('event_date', { ascending:true }).limit(3);
-        if (!eventError && eventRows && eventRows.length) {
-          calendarGrid.innerHTML = eventRows.map((event) => {
-            const date = new Date(event.event_date + 'T00:00:00').toLocaleDateString('en', {day:'numeric',month:'short',year:'numeric'});
-            return '<article class="oa-calendar-preview-card"><span>' + esc(event.category || 'Academy update') + '</span><b>' + esc(date) + '</b><h3>' + esc(event.title_en) + '</h3><p>' + esc(event.summary_en || '') + '</p>' +
-              (event.time_label ? '<small>' + esc(event.time_label) + '</small>' : '') +
-              (event.location ? '<small>' + esc(event.location) + '</small>' : '') + '</article>';
-          }).join('');
-        } else {
-          calendarGrid.innerHTML = '<div class="oa-testimonial-empty">There are no upcoming events or intake dates published yet. Contact Kushma or Baglung for current class schedules and application availability.</div>';
-          if (eventError) console.warn('Oxford calendar could not be loaded:', eventError.message);
-        }
-      }
+      const oldCalendarPreview = $('#oa-lions-calendar');
+      if (oldCalendarPreview) oldCalendarPreview.remove();
+      const legacyCalendarSection = $('#calendar');
+      if (legacyCalendarSection) legacyCalendarSection.remove();
+      document.querySelectorAll('.oa-lions-calendar').forEach((node) => node.remove());
 
       // Turn the existing notices area into the updates section instead of inventing student testimonials.
       sectionHead($('#team'), 'OUR PEOPLE', 'Meet the Oxford team.', 'Get to know the people who support the academy and its learning programmes.');
@@ -585,19 +597,67 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
             const phone = String(item.phone || '');
             const email = String(item.email || '');
             const whatsapp = digits(item.whatsapp_number || phone);
+            const whatsappInternational = whatsapp.startsWith('977') ? whatsapp : '977' + whatsapp.replace(/^0+/, '');
+            const facebook = safeHttps(item.facebook_url || '');
+            const instagram = safeHttps(item.instagram_url || '');
+            const tiktok = safeHttps(item.tiktok_url || '');
             const mapUrl = safeHttps(item.maps_url) || 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(item.address || item.branch_name || '');
-            const phoneLink = phone ? '<a href="tel:' + esc(phone.replace(/[^\d+]/g, '')) + '">Call branch ↗</a>' : '';
-            const emailLink = email ? '<a href="mailto:' + esc(email) + '">Email branch ↗</a>' : '';
-            const whatsappLink = whatsapp ? '<a href="https://wa.me/' + esc(whatsapp) + '" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>' : '';
+            const phoneLink = phone ? '<a class="oa-office-action" href="tel:' + esc(phone.replace(/[^\d+]/g, '')) + '"><span aria-hidden="true">☎</span>Call</a>' : '';
+            const emailLink = email ? '<a class="oa-office-action" href="mailto:' + esc(email) + '"><span aria-hidden="true">✉</span>Email</a>' : '';
+            const whatsappLink = whatsapp ? '<a class="oa-office-action oa-whatsapp-action" href="https://wa.me/' + esc(whatsappInternational) + '" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">◉</span>WhatsApp</a>' : '';
+            const facebookLink = facebook ? '<a class="oa-office-action" href="' + esc(facebook) + '" target="_blank" rel="noopener noreferrer"><span class="oa-social-icon facebook" aria-hidden="true">f</span>Facebook</a>' : '';
+            const instagramLink = instagram ? '<a class="oa-office-action" href="' + esc(instagram) + '" target="_blank" rel="noopener noreferrer"><span class="oa-social-icon instagram" aria-hidden="true">◎</span>Instagram</a>' : '';
+            const tiktokLink = tiktok ? '<a class="oa-office-action" href="' + esc(tiktok) + '" target="_blank" rel="noopener noreferrer"><span class="oa-social-icon tiktok" aria-hidden="true">♪</span>TikTok</a>' : '';
             return '<article class="oa-lions-office-card"><span class="oa-office-tag">Oxford Branch</span><h3>' + esc(item.branch_name || 'Oxford Branch') + '</h3>' +
-              '<div class="oa-office-line"><b>⌖</b><span>' + address + '</span></div>' +
-              (phone ? '<div class="oa-office-line"><b>☎</b><a href="tel:' + esc(phone.replace(/[^\d+]/g, '')) + '">' + esc(phone) + '</a></div>' : '') +
-              (email ? '<div class="oa-office-line"><b>✉</b><a href="mailto:' + esc(email) + '">' + esc(email) + '</a></div>' : '') +
-              '<div class="oa-office-actions">' + phoneLink + emailLink + whatsappLink + '<a class="primary" href="' + esc(mapUrl) + '" target="_blank" rel="noopener noreferrer">Open in Maps ↗</a></div></article>';
+              '<div class="oa-office-line"><b aria-hidden="true">⌖</b><span>' + address + '</span></div>' +
+              (phone ? '<div class="oa-office-line"><b aria-hidden="true">☎</b><a href="tel:' + esc(phone.replace(/[^\d+]/g, '')) + '">' + esc(phone) + '</a></div>' : '') +
+              (email ? '<div class="oa-office-line"><b aria-hidden="true">✉</b><a href="mailto:' + esc(email) + '">' + esc(email) + '</a></div>' : '') +
+              '<div class="oa-office-actions">' + phoneLink + emailLink + whatsappLink + facebookLink + instagramLink + tiktokLink +
+              '<a class="oa-office-action oa-map-action" href="' + esc(mapUrl) + '" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">⌖</span>Maps</a></div></article>';
           }).join('');
         } else {
           officeGrid.innerHTML = '<div class="oa-staff-empty">Branch contact details are unavailable right now.</div>';
         }
+      }
+
+      const footer = $('.footer');
+      if (footer) {
+        const branchFooterHtml = activeBranches.map((item) => {
+          const phone = String(item.phone || '');
+          const email = String(item.email || '');
+          const whatsapp = digits(item.whatsapp_number || phone);
+          const whatsappInternational = whatsapp.startsWith('977') ? whatsapp : '977' + whatsapp.replace(/^0+/, '');
+          const facebook = safeHttps(item.facebook_url || '');
+          const instagram = safeHttps(item.instagram_url || '');
+          const tiktok = safeHttps(item.tiktok_url || '');
+          const phoneHtml = phone ? '<a href="tel:' + esc(phone.replace(/[^\d+]/g, '')) + '"><span aria-hidden="true">☎</span>' + esc(phone) + '</a>' : '';
+          const emailHtml = email ? '<a href="mailto:' + esc(email) + '"><span aria-hidden="true">✉</span>' + esc(email) + '</a>' : '';
+          const whatsappHtml = whatsapp ? '<a href="https://wa.me/' + esc(whatsappInternational) + '" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">◉</span>WhatsApp</a>' : '';
+          const facebookHtml = facebook ? '<a href="' + esc(facebook) + '" target="_blank" rel="noopener noreferrer"><span class="oa-social-icon facebook" aria-hidden="true">f</span>Facebook</a>' : '';
+          const instagramHtml = instagram ? '<a href="' + esc(instagram) + '" target="_blank" rel="noopener noreferrer"><span class="oa-social-icon instagram" aria-hidden="true">◎</span>Instagram</a>' : '';
+          const tiktokHtml = tiktok ? '<a href="' + esc(tiktok) + '" target="_blank" rel="noopener noreferrer"><span class="oa-social-icon tiktok" aria-hidden="true">♪</span>TikTok</a>' : '';
+          return '<div class="oa-footer-branch"><b>' + esc(item.branch_name || 'Oxford Branch') + '</b>' +
+            (item.address ? '<span class="oa-footer-address"><span aria-hidden="true">⌖</span>' + esc(item.address) + '</span>' : '') +
+            phoneHtml + emailHtml + whatsappHtml + facebookHtml + instagramHtml + tiktokHtml + '</div>';
+        }).join('');
+        footer.classList.add('oa-clean-footer');
+        footer.innerHTML =
+          '<div class="container"><div class="oa-footer-grid">' +
+            '<section class="oa-footer-explore"><span class="oa-footer-kicker">OXFORD ACADEMIC INSTRUCTION</span>' +
+              '<div class="oa-footer-brand"><span class="brand-mark">OA</span><div><b class="brand-name">Oxford Academic Instruction Pvt. Ltd.</b><small class="brand-place">Kushma · Baglung, Nepal</small></div></div>' +
+              '<h3>Explore</h3><nav class="oa-footer-links" aria-label="Footer navigation">' +
+                '<a href="/about/">About Oxford</a><a href="#oa-lions-services">Services</a>' +
+                '<a href="/services/?type=japanese-classes">Japanese Language</a><a href="/services/?type=korean-classes">Korean Language</a>' +
+                '<a href="/calendar/">Calendar & Intakes</a><a href="#oa-lions-testimonials">Student Experiences</a>' +
+                '<a href="#notices">News & Notices</a><a href="#oa-lions-offices">Contact Offices</a>' +
+              '</nav>' +
+            '</section>' +
+            '<section class="oa-footer-connect"><span class="oa-footer-kicker">CONTACT & SOCIAL</span><h3>Connect with Oxford</h3>' +
+              '<div class="oa-footer-branch-grid">' + (branchFooterHtml || '<p>Contact details will be published by the academy.</p>') + '</div>' +
+            '</section>' +
+          '</div><div class="oa-footer-bottom"><span>© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. All rights reserved.</span>' +
+            '<span>Designed by <a href="https://wa.me/9779867947202?text=Hello%20Saksham%2C%20I%20came%20from%20the%20Oxford%20Academy%20website." target="_blank" rel="noopener noreferrer"><strong>Saksham Lamsal</strong></a></span>' +
+          '</div></div>';
       }
 
       // Show partner institutions only after Oxford adds and publishes verified relationships.
@@ -638,20 +698,22 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         partnerSection = null;
       }
 
-      sectionHead($('#contact'), 'GET IN TOUCH', 'Have any questions? Contact us.', 'Call, email or choose your preferred branch to get in touch with Oxford Academic Instruction.');
-      sectionHead($('#admission'), 'CONTACT US', 'Write us your message and we will follow up.', 'Complete the form and choose the Oxford branch you would like to contact. Sending the form does not confirm enrolment.');
+      sectionHead($('#admission'), 'CONTACT US', 'Write us your message and we will follow up.', 'Complete the form and choose Kushma or Baglung. Sending the form does not confirm enrolment.');
 
-      // Reorder sections to match the reference site's customer journey.
+      // Contact options are consolidated in Contact Offices; remove the duplicate Get in Touch panel.
+      const oldContactSection = $('#contact');
+      if (oldContactSection) oldContactSection.remove();
+
+      // The homepage keeps the main learning journey; full calendar and intakes live on /calendar/.
       const main = $('main');
       const hero = $('#home');
       const trust = $('.trust-row');
       const gallery = $('#gallery');
       const team = $('#team');
       const notices = $('#notices');
-      const contact = $('#contact');
       const admission = $('#admission');
       if (main && hero) {
-        const ordered = [hero, trust, quickAccess, about, companyProfile, values, services, callout, academics, supportJourney, calendarSection, testimonials, team, notices, gallery, offices, partnerSection, contact, admission].filter(Boolean);
+        const ordered = [hero, trust, quickAccess, about, companyProfile, values, services, callout, academics, supportJourney, testimonials, team, notices, gallery, offices, partnerSection, admission].filter(Boolean);
         ordered.forEach((node) => main.appendChild(node));
       }
 

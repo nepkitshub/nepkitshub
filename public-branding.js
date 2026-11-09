@@ -59,8 +59,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       node.style.overflow = 'hidden';
     });
 
-    const desktop = Math.max(40, Math.min(160, Number(branding.logo_size_desktop || 48)));
-    const mobile = Math.max(34, Math.min(60, Number(branding.logo_size_mobile || 42)));
+    const desktop = Math.max(40, Math.min(128, Number(branding.logo_size_desktop || 58)));
+    const mobile = Math.max(34, Math.min(84, Number(branding.logo_size_mobile || 50)));
     let style = document.getElementById('oa-live-branding-sizing');
     if (!style) {
       style = document.createElement('style');
@@ -69,7 +69,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     }
     const sizing =
       '.brand-mark,.page-mark{width:' + desktop + 'px!important;height:' + desktop + 'px!important;flex:0 0 ' + desktop + 'px!important}' +
-      '@media(max-width:760px){.brand-mark,.page-mark{width:' + mobile + 'px!important;height:' + mobile + 'px!important;flex-basis:' + mobile + 'px!important}}';
+      '.brand-name{font-size:16px!important;line-height:1.12!important}' +
+      '@media(max-width:760px){.brand-mark,.page-mark{width:' + mobile + 'px!important;height:' + mobile + 'px!important;flex-basis:' + mobile + 'px!important}.brand-name{font-size:clamp(12px,3.3vw,14px)!important;line-height:1.16!important}}';
     if (style.textContent !== sizing) style.textContent = sizing;
     // Keep route-specific titles from the static page metadata; branding only updates visible brand text.
   }
