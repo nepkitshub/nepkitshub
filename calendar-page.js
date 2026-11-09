@@ -105,7 +105,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const mobile = Math.max(34, Math.min(60, Number(values.logo_size_mobile || 46)));
       const style = document.createElement('style');
       style.id = 'oa-calendar-logo-size';
-      style.textContent = '#oa-cal-logo{width:' + desktop + 'px;height:' + desktop + 'px;flex-basis:' + desktop + 'px}@media(max-width:700px){#oa-cal-logo{width:' + mobile + 'px;height:' + mobile + 'px;flex-basis:' + mobile + 'px}}';
+      style.textContent = '#oa-cal-logo{width:' + desktop + 'px!important;height:' + desktop + 'px!important;flex-basis:' + desktop + 'px!important}@media(max-width:700px){#oa-cal-logo{width:' + mobile + 'px!important;height:' + mobile + 'px!important;flex-basis:' + mobile + 'px!important}}';
       document.head.appendChild(style);
       document.title = name + ' | Nepali Calendar 2083';
     } catch (error) {
