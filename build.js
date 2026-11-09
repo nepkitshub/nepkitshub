@@ -202,6 +202,17 @@ for (const [needle, replacement, label] of publicMarkupPatches) {
   }
 }
 
+
+function replaceVisibleFieldByName(source, fieldName, replacement, label) {
+  const bodyStart = source.indexOf('<body');
+  const marker = source.indexOf('name="' + fieldName + '"', bodyStart);
+  if (bodyStart < 0 || marker < 0) throw new Error('Could not find visible ' + label);
+  const start = source.lastIndexOf('<div class="field', marker);
+  const close = source.indexOf('</div>', marker);
+  if (start < bodyStart || close < 0) throw new Error('Could not identify the visible ' + label + ' wrapper');
+  return source.slice(0, start) + replacement + source.slice(close + '</div>'.length);
+}
+
 function replaceFirstBodyMarkup(source, needle, replacement, label) {
   const bodyStart = source.indexOf('<body');
   const index = source.indexOf(needle, bodyStart);
@@ -224,15 +235,9 @@ html = replaceFirstBodyMarkup(
   'Loading the Oxford team…',
   'faculty loading state'
 );
-html = replaceFirstBodyMarkup(
+html = replaceVisibleFieldByName(
   html,
-  'Gallery photos will appear here when uploaded by the academy.',
-  'Loading academy photos…',
-  'gallery loading state'
-);
-html = replaceFirstBodyMarkup(
-  html,
-  '<div class="field"><label for="guardianName" data-en="Parent / guardian">Parent / guardian</label><input id="guardianName" name="guardian_name" maxlength="100" placeholder="Parent or guardian" /></div>',
+  'guardian_name',
   '<div class="field"><label for="enquiryType">What do you need help with? *</label><select id="enquiryType" name="enquiry_type" required><option value="">Choose an enquiry type</option><option value="Japanese Language Classes (N5–N1)">Japanese Language Classes (N5–N1)</option><option value="Korean Language Classes">Korean Language Classes</option><option value="Japanese Language Test Preparation (JLPT, NAT, J-CERT, JLCT, JFT-Basic)">Japanese Language Test Preparation</option><option value="SSW Preparation Class">SSW Preparation Class</option><option value="Study in Japan / Student Visa Guidance">Study in Japan / Student Visa Guidance</option><option value="Working Visa Language Preparation">Working Visa Language Preparation</option><option value="Documentation and Application Support">Documentation and Application Support</option><option value="Other Enquiry or Issue">Other Enquiry or Issue</option></select></div>',
   'public enquiry type selector'
 );
