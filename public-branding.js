@@ -67,10 +67,16 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       style.id = 'oa-live-branding-sizing';
       document.head.appendChild(style);
     }
+    // Use selectors at least as specific as the presentation theme's fixed sizes.
+    // Only the logo box changes; heading typography is intentionally untouched.
+    const logoSelectors = 'body.oa-lions-full .brand-mark,body .page-mark';
     const sizing =
-      '.brand-mark,.page-mark{width:' + desktop + 'px!important;height:' + desktop + 'px!important;flex:0 0 ' + desktop + 'px!important}' +
-      '.brand-name{font-size:16px!important;line-height:1.12!important}' +
-      '@media(max-width:760px){.brand-mark,.page-mark{width:' + mobile + 'px!important;height:' + mobile + 'px!important;flex-basis:' + mobile + 'px!important}.brand-name{font-size:clamp(12px,3.3vw,14px)!important;line-height:1.16!important}}';
+      logoSelectors + '{width:' + desktop + 'px!important;height:' + desktop + 'px!important;flex:0 0 ' + desktop + 'px!important}' +
+      'body.oa-lions-full .navbar{min-height:' + Math.max(88, desktop + 32) + 'px!important}' +
+      '@media(max-width:760px){' +
+        'body.oa-lions-full .brand-mark,body .page-mark{width:' + mobile + 'px!important;height:' + mobile + 'px!important;flex-basis:' + mobile + 'px!important}' +
+        'body.oa-lions-full .navbar{min-height:' + Math.max(70, mobile + 24) + 'px!important}' +
+      '}';
     if (style.textContent !== sizing) style.textContent = sizing;
     // Keep route-specific titles from the static page metadata; branding only updates visible brand text.
   }
