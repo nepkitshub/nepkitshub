@@ -69,9 +69,22 @@ const visibleMarkup = homepage.slice(bodyIndex, scriptIndex > -1 ? scriptIndex :
 assert.ok(visibleMarkup.includes('A place to learn, grow & lead.'), 'The existing Oxford homepage headline must remain unchanged.');
 assert.ok(visibleMarkup.includes('Building knowledge, nurturing character and inspiring every learner to discover their potential.'), 'The existing Oxford hero description must remain unchanged.');
 assert.ok(visibleMarkup.includes('id="admissionForm"'), 'Homepage enquiry form is missing.');
+assert.ok(visibleMarkup.includes('name="enquiry_type"'), 'Existing Oxford enquiry type field must remain available.');
 assert.ok(!visibleMarkup.includes('name="guardian_name"'), 'Legacy parent/guardian field is still in visible homepage markup.');
 assert.ok(!visibleMarkup.includes('images.unsplash.com'), 'A generic Unsplash URL is still present in visible homepage markup.');
-assert.ok(visibleMarkup.includes('id="admissionForm"'), 'Homepage enquiry form is missing.');
+assert.ok(visibleMarkup.includes('data-en="Academics"'), 'The existing Academics navigation label must remain unchanged.');
+assert.ok(visibleMarkup.includes('data-en="Our Team"'), 'The existing Our Team navigation label must remain unchanged.');
+assert.ok(visibleMarkup.includes('data-en="Notices"'), 'The existing Notices navigation label must remain unchanged.');
+assert.ok(visibleMarkup.includes('data-en="Gallery"'), 'The existing Gallery navigation label must remain unchanged.');
+assert.ok(!visibleMarkup.slice(0, 3000).includes('\\\\n'), 'Raw newline escape text must not appear at the top of the homepage.');
+
+const homepageOverrides = fs.readFileSync(path.join(root, 'homepage-overrides.js'), 'utf8');
+const lionsTheme = fs.readFileSync(path.join(root, 'lions-full-theme.js'), 'utf8');
+assert.equal((homepageOverrides.match(/from\\('oa_programs'\\)/g) || []).length, 0, 'Homepage programme queries must not be duplicated.');
+assert.equal((lionsTheme.match(/from\\('oa_programs'\\)/g) || []).length, 1, 'Exactly one published-programme query should remain.');
+assert.ok(!/Your Japan Journey Starts With the Right Guidance|Build skills\\. Explore opportunities|Student Visa & Study in Japan/.test(lionsTheme), 'The visual layer must not inject replacement marketing copy.');
+assert.ok(lionsTheme.includes('is_published: false'), 'Learner reviews must remain pending until admin approval.');
+assert.ok(lionsTheme.includes('oa-lions-office-grid'), 'Admin-managed branch contact cards must remain connected.');
 
 const admin = read('admin/index.html');
 assert.ok(admin.includes('class="admin-route"'), 'Admin route protection styles are not attached.');
