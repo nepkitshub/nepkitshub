@@ -993,7 +993,7 @@ function applyProfessionalLayer(folder) {
     const uxBlock = '<script id="oa-professional-ux">\n' + professionalUxSource + '\n</script>';
     const brandingBlock = '<script type="module" id="oa-public-branding">\n' + publicBrandingSource + '\n</script>';
     page = page.replace('</head>', themeBlock + '</head>');
-    const redesignBlock = '<style id="oa-complete-site-redesign">\\n' + oxfordSiteRedesignCss + '\\n</style>';
+    const redesignBlock = '<style id="oa-complete-site-redesign">\n' + oxfordSiteRedesignCss + '\n</style>';
     page = page.replace('</body>', brandingBlock + uxBlock + redesignBlock + '</body>');
     fs.writeFileSync(filePath, page);
     professionalPagesUpdated += 1;
