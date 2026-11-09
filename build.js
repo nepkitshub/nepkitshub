@@ -9,6 +9,7 @@ if (parts.length !== 6) throw new Error('Expected 6 site parts; found ' + parts.
 const encoded = parts.map((name) => fs.readFileSync(path.join(partsDir, name), 'utf8').trim()).join('');
 let html = zlib.gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8');
 html = html.replace(/url\((['"]?)https:\/\/images\.unsplash\.com\/[^'")]+\1\)/gi, 'none');
+html = html.replace(/<img\b(?=[^>]*\bsrc=["']https:\/\/images\.unsplash\.com\/)[^>]*>/gi, '<img alt="Academy photograph" loading="lazy" hidden />');
 html = html.replace('<title>Oxford Academy | Kushma, Parbat</title>', '<title>Oxford Academic Instruction Pvt. Ltd. | Kushma, Parbat</title>');
 html = html.replace('content="Oxford Academy, Kushma, Parbat — learning, character and confidence."', 'content="Oxford Academic Instruction Pvt. Ltd. | Education, learning and student development in Kushma, Parbat."');
 function replaceExactly(source, needle, replacement, label) { const first = source.indexOf(needle); if (first === -1) throw new Error('Could not find ' + label); if (source.indexOf(needle, first + needle.length) !== -1) throw new Error('Found ' + label + ' more than once'); return source.slice(0, first) + replacement + source.slice(first + needle.length); }
@@ -241,24 +242,7 @@ html = replaceVisibleFieldByName(
   '<div class="field"><label for="enquiryType">What do you need help with? *</label><select id="enquiryType" name="enquiry_type" required><option value="">Choose an enquiry type</option><option value="Japanese Language Classes (N5–N1)">Japanese Language Classes (N5–N1)</option><option value="Korean Language Classes">Korean Language Classes</option><option value="Japanese Language Test Preparation (JLPT, NAT, J-CERT, JLCT, JFT-Basic)">Japanese Language Test Preparation</option><option value="SSW Preparation Class">SSW Preparation Class</option><option value="Study in Japan / Student Visa Guidance">Study in Japan / Student Visa Guidance</option><option value="Working Visa Language Preparation">Working Visa Language Preparation</option><option value="Documentation and Application Support">Documentation and Application Support</option><option value="Other Enquiry or Issue">Other Enquiry or Issue</option></select></div>',
   'public enquiry type selector'
 );
-html = replaceFirstBodyMarkup(
-  html,
-  '<div class="about-photo"><img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&amp;fit=crop&amp;w=1100&amp;q=85" alt="A classroom learning environment" loading="lazy" /></div>',
-  '<div class="about-photo"><img alt="Oxford Academy learning photograph" loading="lazy" hidden /></div>',
-  'generic about stock photo'
-);
-html = replaceFirstBodyMarkup(
-  html,
-  "Add the academy's official email in the admin panel",
-  'Contact information is loading…',
-  'public contact email placeholder'
-);
-html = replaceFirstBodyMarkup(
-  html,
-  "Add the academy's contact number in the admin panel",
-  'Contact information is loading…',
-  'public contact phone placeholder'
-);
+
 
 const admissionGradePattern = /<div class="field full"><label for="grade"[^>]*>[\s\S]*?<\/div>/;
 const admissionBranchField = '<div class="field full"><label for="admissionBranch">Preferred branch *</label><select id="admissionBranch" name="branch_name" required><option value="">Choose a branch</option></select><small style="display:block;margin-top:5px;color:#718096;font-size:11px">Choose the academy branch you want to contact.</small></div>';
