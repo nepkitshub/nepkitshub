@@ -1467,3 +1467,54 @@ body.oa-lions-full .oa-class-level { padding:15px; }
 
 /* Keep the homepage focused: N5–N1 details are now on the Japanese Language page. */
 body.oa-lions-full #oa-lions-class-types { display:none !important; }
+
+
+/* Laptop/desktop inner-page header: page label left, academy identity centred,
+   Back to homepage right. Contact Oxford is removed only at laptop widths.
+   Tablet and phone headers keep their current two-row layout. */
+@media (min-width:961px) {
+  body:not(.oa-lions-full) .page-top-inner.oa-section-header {
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) !important;
+    grid-template-rows:auto !important;
+    grid-template-areas:"section brand home" !important;
+    align-items:center !important;
+    column-gap:clamp(16px,2.2vw,30px) !important;
+    row-gap:0 !important;
+  }
+  body:not(.oa-lions-full) .oa-section-header .page-brand {
+    grid-area:brand !important;
+    grid-column:2 !important;
+    grid-row:1 !important;
+    justify-self:center !important;
+    width:max-content !important;
+    max-width:100% !important;
+    margin:0 auto !important;
+  }
+  body:not(.oa-lions-full) .oa-section-header .oa-section-header-label,
+  body:not(.oa-lions-full) .oa-section-header .oa-calendar-header-label {
+    grid-area:section !important;
+    grid-column:1 !important;
+    grid-row:1 !important;
+    justify-self:start !important;
+    align-self:center !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    white-space:nowrap !important;
+  }
+  body:not(.oa-lions-full) .oa-section-header .oa-header-actions {
+    display:contents !important;
+  }
+  body:not(.oa-lions-full) .oa-section-header .oa-header-actions .oa-contact-action {
+    display:none !important;
+  }
+  body:not(.oa-lions-full) .oa-section-header .oa-header-actions .oa-back-action {
+    grid-area:home !important;
+    grid-column:3 !important;
+    grid-row:1 !important;
+    justify-self:end !important;
+    align-self:center !important;
+    margin:0 !important;
+    white-space:nowrap !important;
+  }
+}
