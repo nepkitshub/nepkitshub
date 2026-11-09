@@ -254,10 +254,13 @@ const newAdmissionHandler = `async function loadAdmissionBranches(){
       msg.textContent='';
       const {error}=await db.rpc('oa_submit_admission',{
         p_student_name:studentName,
-        p_guardian_name:String(f.get('guardian_name')||'').trim()||null,
+        p_guardian_name:null,
         p_phone:phone,
         p_email:String(f.get('email')||'').trim()||null,
-        p_message:String(f.get('message')||'').trim()||null,
+        p_message:[
+          String(f.get('enquiry_type')||'').trim() ? 'Enquiry type: ' + String(f.get('enquiry_type')).trim() : '',
+          String(f.get('message')||'').trim()
+        ].filter(Boolean).join('\\n\\n') || null,
         p_branch_name:branchName
       });
       btn.disabled=false;
@@ -267,7 +270,7 @@ const newAdmissionHandler = `async function loadAdmissionBranches(){
         console.error('Admission enquiry submission failed:',error);
       }else{
         form.reset();
-        msg.textContent='Thank you. Your admission enquiry has been sent successfully.';
+        msg.textContent='Thank you. Your enquiry has been sent successfully.';
       }
     });`;
 html = replaceExactly(html, oldAdmissionHandler, newAdmissionHandler, 'validated admission enquiry submission handler');
@@ -562,10 +565,10 @@ const servicePageData = {
   },
   'japanese-classes': {
     title:'Japanese Language Classes',
-    kicker:'N5 · N4 · N3',
-    summary:'Build Japanese language skills from foundational learning through intermediate-level preparation.',
-    overview:'Japanese language learning can support further study, everyday communication and work-related preparation. Oxford can help you ask about the current class levels, teaching schedule and learning plan.',
-    includes:['N5 foundational Japanese','N4 elementary Japanese','N3 intermediate Japanese','Grammar, vocabulary, reading and listening practice','Speaking and practical communication'],
+    kicker:'N5 · N4 · N3 · N2 · N1',
+    summary:'Build Japanese language skills across all five JLPT levels, from beginner foundations to advanced communication.',
+    overview:'Explore Japanese language learning from N5 beginner foundations through N1 advanced proficiency. Oxford can help you ask about the current class levels, teaching schedule and learning plan.',
+    includes:['N5 beginner Japanese','N4 elementary Japanese','N3 intermediate Japanese','N2 upper-intermediate Japanese','N1 advanced Japanese','Grammar, vocabulary, reading, listening and speaking practice'],
     steps:['Discuss your previous learning experience','Identify an appropriate level','Ask about the current class schedule','Start learning and prepare for your next level or test'],
     note:'Class schedules, level availability and course duration should be confirmed with the academy before enrolment.'
   },
@@ -605,8 +608,18 @@ const servicePageStyles = `
   .oa-service-bottom h2{margin:0 0 4px;color:#173f69;font:700 22px/1.2 'Playfair Display',Georgia,serif}
   .oa-service-bottom p{margin:0;color:#6c7f91;font-size:11px}
   .oa-service-bottom a{display:inline-flex;flex:0 0 auto;padding:12px 17px;border-radius:6px;background:#185da0;color:#fff;font-size:11px;font-weight:900}
+  .oa-japanese-levels{margin:22px 0 8px;padding:18px;border:1px solid #e1eaf2;border-radius:13px;background:#f6f9fc}
+  .oa-japanese-levels-heading>span{color:#9a712f;font-size:9px;font-weight:900;letter-spacing:.13em}
+  .oa-japanese-levels-heading h3{margin:6px 0;color:#173f69;font:700 23px/1.2 'Playfair Display',Georgia,serif}
+  .oa-japanese-levels-heading p{margin:0 0 14px;color:#718194;font-size:11px;line-height:1.7}
+  .oa-japanese-level-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+  .oa-japanese-level-grid article{min-width:0;padding:12px 10px;border:1px solid #e2eaf1;border-radius:10px;background:#fff}
+  .oa-japanese-level-grid article>b{display:grid;place-items:center;width:34px;height:34px;margin-bottom:8px;border-radius:9px;background:#123e69;color:#ffd18c;font-size:13px}
+  .oa-japanese-level-grid article>strong{display:block;color:#173f69;font-size:10px;line-height:1.3}
+  .oa-japanese-level-grid article>p{margin:6px 0 0;color:#718194;font-size:9px;line-height:1.6}
+  @media(max-width:560px){.oa-japanese-level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.oa-japanese-levels{padding:14px}.oa-japanese-levels-heading h3{font-size:20px}}
   @media(max-width:760px){.oa-service-hero{padding:32px 22px}.oa-service-columns{grid-template-columns:1fr;gap:13px}.oa-service-panel{padding:20px}.oa-service-steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.oa-service-bottom{align-items:flex-start;flex-direction:column;padding:20px}.oa-service-bottom a{width:100%;justify-content:center}}
-  @media(max-width:420px){.oa-service-steps{grid-template-columns:1fr}}
+  @media(max-width:420px){.oa-service-steps{grid-template-columns:1fr}.oa-japanese-level-grid{grid-template-columns:1fr 1fr}}
 `;
 const servicePageScript = String.raw`<script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -637,9 +650,19 @@ document.title = item.title + ' | Oxford Academic Instruction Pvt. Ltd.';
 document.getElementById('service-breadcrumb-title').textContent = item.title;
 const root = document.getElementById('service-detail');
 const image = (() => { try { const url = new URL(String(item.image || '')); return url.protocol === 'https:' ? '<img src="' + esc(url.toString()) + '" alt="' + esc(item.title) + '" style="display:block;width:100%;max-height:280px;object-fit:cover;border-radius:12px;margin-top:20px">' : ''; } catch (_) { return ''; } })();
+const japaneseLevels = key === 'japanese-classes'
+  ? '<section class="oa-japanese-levels" aria-label="Japanese language levels"><div class="oa-japanese-levels-heading"><span>JAPANESE LANGUAGE PATHWAY</span><h3>Learn from N5 to N1</h3><p>Explore the five learning levels and ask Oxford which class is currently available for your level.</p></div><div class="oa-japanese-level-grid">' +
+    '<article><b>N5</b><strong>Beginner</strong><p>Learn hiragana, katakana, essential vocabulary and simple everyday expressions.</p></article>' +
+    '<article><b>N4</b><strong>Elementary</strong><p>Build foundational grammar and understand familiar, everyday conversations and texts.</p></article>' +
+    '<article><b>N3</b><strong>Intermediate</strong><p>Develop practical communication and understand Japanese used in familiar situations.</p></article>' +
+    '<article><b>N2</b><strong>Upper intermediate</strong><p>Strengthen comprehension of more complex written and spoken Japanese.</p></article>' +
+    '<article><b>N1</b><strong>Advanced</strong><p>Develop advanced reading, listening and communication skills for complex contexts.</p></article>' +
+    '</div></section>'
+  : '';
+const aboutHeading = key === 'japanese-classes' ? 'About this language' : 'About this service';
 root.innerHTML =
   '<section class="oa-service-hero"><span class="oa-service-kicker">' + esc(item.kicker) + '</span><h1>' + esc(item.title) + '</h1><p>' + esc(item.summary) + '</p><div class="oa-service-hero-actions"><a href="/?service=' + encodeURIComponent(key) + '#admission">Enquire about this service ↗</a><a class="secondary" href="/#oa-lions-services">Explore all services</a></div>' + image + '</section>' +
-  '<div class="oa-service-columns"><section class="oa-service-panel"><h2>About this service</h2><p>' + esc(item.overview) + '</p><h2 style="margin-top:24px">What we can help with</h2><ul class="oa-service-list">' + item.includes.map((entry) => '<li>' + esc(entry) + '</li>').join('') + '</ul></section>' +
+  '<div class="oa-service-columns"><section class="oa-service-panel"><h2>' + aboutHeading + '</h2><p>' + esc(item.overview) + '</p>' + japaneseLevels + '<h2 style="margin-top:24px">What we can help with</h2><ul class="oa-service-list">' + item.includes.map((entry) => '<li>' + esc(entry) + '</li>').join('') + '</ul></section>' +
   '<aside class="oa-service-panel"><h2>How to get started</h2><ul class="oa-service-list">' + item.steps.map((entry) => '<li>' + esc(entry) + '</li>').join('') + '</ul><p style="margin-top:18px;font-size:11px">Contact either Oxford branch for current availability and details.</p></aside></div>' +
   '<section class="oa-service-panel" style="margin-top:22px"><h2>Important information</h2><p>' + esc(item.note) + '</p></section>' +
   '<section class="oa-service-bottom"><div><h2>Ready to discuss your next step?</h2><p>Send an enquiry and choose the Oxford branch you would like to contact.</p></div><a href="/?service=' + encodeURIComponent(key) + '#admission">Contact Oxford ↗</a></section>';
