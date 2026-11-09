@@ -780,3 +780,164 @@ body:not(.oa-lions-full) .oa-section-header .oa-header-actions .oa-back-action {
     font-size: 8px;
   }
 }
+
+
+/* Spacing refinement — reduce oversized gaps while keeping card content readable.
+   Applied together to desktop, laptop, tablet and phone layouts. */
+body.oa-lions-full .section {
+  padding: clamp(44px,5.4vw,68px) 0 !important;
+}
+body.oa-lions-full .section-head {
+  margin-bottom: 24px !important;
+}
+body.oa-lions-full .about-grid {
+  gap: clamp(22px,3.2vw,40px) !important;
+}
+body.oa-lions-full .footer {
+  padding: 48px 0 22px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .page-main {
+  margin: 26px auto 52px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .page-breadcrumb {
+  margin-bottom: 16px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .oa-service-columns {
+  margin-top: 18px !important;
+  gap: 18px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .oa-service-steps {
+  margin-top: 16px !important;
+  gap: 10px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .oa-service-note {
+  margin-top: 15px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .oa-service-bottom {
+  margin-top: 18px !important;
+  padding: 21px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .oa-about-section {
+  margin-top: 18px !important;
+  padding: 24px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .oa-about-offices,
+body:not(.oa-lions-full):not(.admin-route) .oa-about-team,
+body:not(.oa-lions-full):not(.admin-route) .oa-about-partners {
+  gap: 12px !important;
+  margin-top: 15px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .oa-cal-layout {
+  margin-top: 16px !important;
+  gap: 18px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .oa-cal-toolbar {
+  margin-bottom: 16px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .oa-cal-side {
+  gap: 13px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .oa-cal-source {
+  margin-top: 14px !important;
+}
+body:not(.oa-lions-full):not(.admin-route) .content-detail-body {
+  padding: clamp(20px,3.5vw,38px) !important;
+}
+body:not(.oa-lions-full):not(.admin-route) #content-list {
+  gap: 14px !important;
+}
+
+@media (max-width: 960px) {
+  body.oa-lions-full .section {
+    padding: 40px 0 !important;
+  }
+  body.oa-lions-full .section-head {
+    margin-bottom: 20px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .page-main {
+    margin: 20px auto 38px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-service-hero {
+    margin-bottom: 0 !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-service-columns {
+    margin-top: 15px !important;
+    gap: 12px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-service-bottom {
+    margin-top: 14px !important;
+    padding: 18px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-about-section {
+    margin-top: 15px !important;
+    padding: 19px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-about-offices,
+  body:not(.oa-lions-full):not(.admin-route) .oa-about-team,
+  body:not(.oa-lions-full):not(.admin-route) .oa-about-partners {
+    margin-top: 12px !important;
+    gap: 10px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-cal-layout {
+    margin-top: 13px !important;
+    gap: 12px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-cal-side {
+    gap: 11px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .content-detail-body {
+    padding: 22px !important;
+  }
+}
+@media (max-width: 560px) {
+  body.oa-lions-full .section {
+    padding: 34px 0 !important;
+  }
+  body.oa-lions-full .section-head {
+    margin-bottom: 17px !important;
+  }
+  body.oa-lions-full .trust-row {
+    margin-top: -24px;
+  }
+  body.oa-lions-full .trust-item {
+    padding: 12px 15px;
+  }
+  body.oa-lions-full .footer {
+    padding: 36px 0 18px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .page-main {
+    margin: 16px auto 30px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .page-breadcrumb {
+    margin-bottom: 13px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-service-hero {
+    padding: 23px 19px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-service-columns {
+    margin-top: 12px !important;
+    gap: 10px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-service-bottom {
+    margin-top: 12px !important;
+    padding: 16px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-about-section {
+    margin-top: 12px !important;
+    padding: 16px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-cal-layout {
+    margin-top: 11px !important;
+    gap: 10px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .oa-cal-card,
+  body:not(.oa-lions-full):not(.admin-route) .oa-cal-panel {
+    padding: 13px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) .content-detail-body {
+    padding: 18px !important;
+  }
+  body:not(.oa-lions-full):not(.admin-route) #content-list {
+    gap: 11px !important;
+  }
+}
