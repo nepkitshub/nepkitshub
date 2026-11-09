@@ -319,8 +319,6 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       }
 
 
-      const values = $('#why-choose-oxford');
-
       let services = $('#oa-lions-services');
       if (!services) {
         services = document.createElement('section');
