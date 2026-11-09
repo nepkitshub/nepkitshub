@@ -1,0 +1,694 @@
+
+/* Oxford Academic Instruction — complete visual redesign.
+   Presentation only: no copy, content records, forms, routes or data bindings are changed. */
+:root{
+  --oa-ink:#1d2d2b;
+  --oa-navy:#123b38;
+  --oa-blue:#176b66;
+  --oa-blue-strong:#10534f;
+  --oa-gold:#e9a15c;
+  --oa-muted:#6d7b76;
+  --oa-line:#e2e7df;
+  --oa-soft:#f4f3ec;
+  --oa-surface:#fffefa;
+  --oa-radius:22px;
+  --oa-shadow:0 18px 55px rgba(24,54,49,.09);
+  --oa-shadow-hover:0 26px 65px rgba(24,54,49,.14);
+}
+html{scroll-behavior:smooth;scroll-padding-top:112px;background:#f7f6f0}
+body{color:var(--oa-ink);font-family:"DM Sans",Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit;text-underline-offset:4px}
+button,input,select,textarea{font:inherit}
+:focus-visible{outline:3px solid rgba(23,107,102,.45)!important;outline-offset:3px!important}
+::selection{background:rgba(233,161,92,.32);color:#123b38}
+.oa-skip-link{background:#123b38!important;border-radius:999px!important;box-shadow:0 12px 30px rgba(18,59,56,.2)!important}
+
+/* ── Homepage: navigation ─────────────────────────────────────────────── */
+body.oa-lions-full{background:#fbfaf6!important;color:var(--oa-ink)!important;font-family:"DM Sans",Arial,sans-serif!important;line-height:1.7}
+body.oa-lions-full .container{width:min(1240px,calc(100% - 64px))!important}
+body.oa-lions-full .topbar{background:#123b38!important;color:#dce9e4!important;border-bottom:1px solid rgba(255,255,255,.08)}
+body.oa-lions-full .topbar .container{min-height:38px!important;display:flex;align-items:center;justify-content:space-between;gap:16px}
+body.oa-lions-full .top-meta{gap:10px 24px!important}
+body.oa-lions-full .top-meta span{font-size:10px!important;letter-spacing:.025em}
+body.oa-lions-full .topbar a{color:#f3b778!important;font-weight:800!important;font-size:10px!important}
+body.oa-lions-full .nav-wrap{
+  position:sticky!important;top:0!important;z-index:1001!important;
+  background:rgba(251,250,246,.94)!important;
+  border-bottom:1px solid rgba(28,66,59,.1)!important;
+  box-shadow:0 8px 28px rgba(24,54,49,.045)!important;
+  backdrop-filter:blur(18px)!important;
+}
+body.oa-lions-full .navbar{position:relative!important;min-height:88px!important;height:auto!important;padding:12px 0!important;gap:26px!important}
+body.oa-lions-full .brand{min-width:220px!important;max-width:310px!important;gap:13px!important}
+body.oa-lions-full .brand-mark{
+  width:52px!important;height:52px!important;flex:0 0 52px!important;
+  border-radius:17px!important;background:#123b38!important;color:#fff!important;
+  border:1px solid rgba(233,161,92,.55)!important;
+  box-shadow:0 8px 22px rgba(18,59,56,.16)!important;
+}
+body.oa-lions-full .brand-mark img{object-fit:contain!important;background:#fff!important;border-radius:inherit!important;padding:3px!important}
+body.oa-lions-full .brand-name{color:#173d38!important;font-family:"DM Sans",Arial,sans-serif!important;font-size:15px!important;font-weight:900!important;line-height:1.12!important;letter-spacing:-.035em!important}
+body.oa-lions-full .brand-place{display:block!important;margin-top:5px!important;color:#7c8a83!important;font-size:8px!important;letter-spacing:.17em!important;font-weight:900!important}
+body.oa-lions-full .nav-links{display:flex;align-items:center;gap:clamp(12px,1.7vw,23px)!important;color:#344c46!important;font-size:11px!important;font-weight:800!important}
+body.oa-lions-full .nav-links>a,
+body.oa-lions-full .nav-links summary{padding:9px 0!important;color:#344c46!important;transition:color .2s ease}
+body.oa-lions-full .nav-links>a:hover,
+body.oa-lions-full .nav-links summary:hover{color:#17776f!important}
+body.oa-lions-full .nav-actions{display:flex;align-items:center;gap:10px}
+body.oa-lions-full .nav-actions .btn,
+body.oa-lions-full .btn{
+  min-height:47px!important;padding:13px 22px!important;border-radius:999px!important;
+  font-size:11px!important;font-weight:900!important;letter-spacing:.01em!important;
+  box-shadow:none!important;transition:transform .2s ease,background .2s ease,box-shadow .2s ease!important;
+}
+body.oa-lions-full .btn:hover{transform:translateY(-2px)!important}
+body.oa-lions-full .btn-gold{background:#e9a15c!important;color:#1b332e!important;box-shadow:0 9px 22px rgba(233,161,92,.2)!important}
+body.oa-lions-full .btn-gold:hover{background:#f4b274!important;box-shadow:0 13px 27px rgba(233,161,92,.26)!important}
+body.oa-lions-full .btn-navy{background:#176b66!important;color:#fff!important}
+body.oa-lions-full .btn-navy:hover{background:#10534f!important}
+body.oa-lions-full .btn-outline{border:1px solid rgba(255,255,255,.65)!important;background:rgba(255,255,255,.06)!important;color:#fff!important}
+body.oa-lions-full .menu-btn{display:none;border:1px solid #dbe3db!important;background:#fffefa!important;color:#123b38!important;border-radius:14px!important;width:46px!important;height:46px!important;font-size:21px!important}
+
+/* ── Hero: image-led, larger type, stronger hierarchy ─────────────────── */
+body.oa-lions-full .hero{
+  position:relative!important;display:flex!important;align-items:center!important;
+  min-height:clamp(590px,76vh,780px)!important;overflow:hidden!important;
+  background:#123b38!important;color:#fff!important;
+}
+body.oa-lions-full .hero:before{
+  background-image:linear-gradient(90deg,rgba(10,38,35,.93) 0%,rgba(13,53,48,.82) 46%,rgba(13,53,48,.32) 100%)!important;
+  background-position:center 42%!important;background-size:cover!important;transform:scale(1.01);
+}
+body.oa-lions-full .hero:after{
+  width:min(52vw,700px)!important;height:min(52vw,700px)!important;
+  right:-210px!important;top:-270px!important;border:1px solid rgba(248,228,198,.23)!important;
+  box-shadow:0 0 0 48px rgba(248,228,198,.035),0 0 0 100px rgba(248,228,198,.025)!important;opacity:1!important;
+}
+body.oa-lions-full .hero-inner{position:relative!important;z-index:2!important;max-width:790px!important;padding:clamp(86px,10vw,138px) 0 150px!important}
+body.oa-lions-full .eyebrow{
+  display:inline-flex!important;align-items:center!important;padding:9px 15px!important;
+  border:1px solid rgba(241,194,139,.48)!important;border-radius:999px!important;
+  background:rgba(12,46,42,.42)!important;color:#f4bd82!important;
+  font-size:9px!important;font-weight:900!important;letter-spacing:.18em!important;
+}
+body.oa-lions-full .eyebrow:before{display:none!important}
+body.oa-lions-full .hero h1{
+  max-width:800px!important;margin:25px 0 19px!important;
+  color:#fff!important;font-family:"Playfair Display",Georgia,serif!important;
+  font-size:clamp(48px,6.6vw,84px)!important;line-height:1.02!important;
+  font-weight:700!important;letter-spacing:-.045em!important;text-wrap:balance!important;
+}
+body.oa-lions-full .hero p{max-width:620px!important;margin:0 0 30px!important;color:#e3eee8!important;font-size:15px!important;line-height:1.9!important}
+body.oa-lions-full .hero-buttons{display:flex!important;gap:12px!important;flex-wrap:wrap!important}
+body.oa-lions-full .hero-note{margin-top:35px!important;color:#edc79e!important;font-size:10px!important;font-weight:800!important;letter-spacing:.08em!important}
+body.oa-lions-full .hero-note .line{width:46px!important;height:2px!important;background:#e9a15c!important}
+
+/* ── Homepage: shared section rhythm and editorial typography ────────── */
+body.oa-lions-full main{background:#fbfaf6!important}
+body.oa-lions-full .section{position:relative!important;padding:clamp(76px,8vw,116px) 0!important;background:#fbfaf6!important}
+body.oa-lions-full .section.soft{background:#f1f2eb!important}
+body.oa-lions-full .section-head{max-width:760px!important;margin:0 0 38px!important}
+body.oa-lions-full .section-kicker{
+  display:inline-flex!important;align-items:center!important;gap:10px!important;
+  color:#19766e!important;font-size:9px!important;font-weight:900!important;letter-spacing:.19em!important;
+}
+body.oa-lions-full .section-kicker:before{content:"";display:inline-block;width:22px;height:2px;background:#e9a15c;border-radius:3px}
+body.oa-lions-full .section h2{
+  margin:12px 0 15px!important;color:#173d38!important;
+  font-family:"Playfair Display",Georgia,serif!important;
+  font-size:clamp(32px,4vw,51px)!important;font-weight:700!important;
+  line-height:1.12!important;letter-spacing:-.035em!important;text-wrap:balance!important;
+}
+body.oa-lions-full .section-head p{max-width:680px!important;color:#71807a!important;font-size:13px!important;line-height:1.95!important}
+body.oa-lions-full .section.soft .section-head{margin-bottom:38px!important}
+
+/* Floating trust strip */
+body.oa-lions-full .trust-row{position:relative!important;z-index:5!important;margin-top:-62px!important;background:transparent!important}
+body.oa-lions-full .trust-grid{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  padding:17px!important;border:1px solid #e5e8de!important;border-radius:25px!important;
+  background:#fffefa!important;box-shadow:0 24px 65px rgba(18,59,56,.13)!important;
+}
+body.oa-lions-full .trust-item{display:flex!important;align-items:center!important;gap:15px!important;padding:18px 22px!important;border-right:1px solid #e9ece4!important}
+body.oa-lions-full .trust-item:last-child{border-right:0!important}
+body.oa-lions-full .trust-icon{width:48px!important;height:48px!important;flex:0 0 48px!important;border-radius:16px!important;background:#e8f2ee!important;color:#176b66!important;font-size:21px!important}
+body.oa-lions-full .trust-item strong{display:block!important;color:#203c36!important;font-size:12px!important;font-weight:900!important}
+body.oa-lions-full .trust-item small{display:block!important;margin-top:4px!important;color:#7a8982!important;font-size:9px!important;line-height:1.5!important}
+
+/* About / values */
+body.oa-lions-full .about-grid{grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr)!important;gap:clamp(38px,6vw,84px)!important;align-items:center!important}
+body.oa-lions-full .about-visual{min-height:500px!important;position:relative!important}
+body.oa-lions-full .about-photo{position:absolute!important;inset:0 26px 30px 0!important;overflow:hidden!important;border-radius:34px 34px 110px 34px!important;background:#dce8df!important;box-shadow:var(--oa-shadow)!important}
+body.oa-lions-full .about-photo img{width:100%!important;height:100%!important;object-fit:cover!important}
+body.oa-lions-full .photo-badge{
+  position:absolute!important;right:0!important;bottom:0!important;max-width:270px!important;
+  padding:22px 24px!important;border-radius:20px!important;border:1px solid rgba(255,255,255,.75)!important;
+  background:#123b38!important;color:#fff!important;box-shadow:0 18px 45px rgba(18,59,56,.2)!important;
+}
+body.oa-lions-full .photo-badge strong{display:block!important;color:#fff!important;font:700 20px/1.25 "Playfair Display",Georgia,serif!important}
+body.oa-lions-full .photo-badge small{display:block!important;margin-top:8px!important;color:#d3e4dc!important;font-size:9px!important;letter-spacing:.1em!important}
+body.oa-lions-full .about-copy .section-head{margin-bottom:22px!important}
+body.oa-lions-full .about-copy .section-head h2{font-size:clamp(30px,3.6vw,44px)!important}
+body.oa-lions-full .value-list{gap:12px!important}
+body.oa-lions-full .value{
+  min-height:125px!important;padding:19px!important;border:1px solid #e1e7dd!important;
+  border-radius:18px!important;background:#fffefa!important;box-shadow:0 9px 27px rgba(18,59,56,.045)!important;
+}
+body.oa-lions-full .value b{color:#1c514b!important;font-size:12px!important;font-weight:900!important}
+body.oa-lions-full .value small{margin-top:7px!important;color:#7b8882!important;font-size:10px!important;line-height:1.6!important}
+body.oa-lions-full #why-choose-oxford .value-list{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}
+body.oa-lions-full #why-choose-oxford .value{min-height:142px!important;padding:20px!important}
+
+/* Quick access, programme and service cards */
+body.oa-lions-full .oa-quick-access{padding:52px 0 24px!important;background:#fbfaf6!important}
+body.oa-lions-full .oa-quick-access-grid{gap:14px!important}
+body.oa-lions-full .oa-quick-access-card{
+  min-height:130px!important;padding:22px!important;border:1px solid #e3e9df!important;
+  border-radius:20px!important;background:#fffefa!important;color:#173d38!important;
+  box-shadow:0 9px 30px rgba(18,59,56,.055)!important;transition:transform .22s ease,box-shadow .22s ease!important;
+}
+body.oa-lions-full .oa-quick-access-card:hover{transform:translateY(-5px)!important;box-shadow:var(--oa-shadow-hover)!important}
+body.oa-lions-full .oa-lions-service-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:17px!important}
+body.oa-lions-full .oa-lions-service-card{
+  position:relative!important;min-height:220px!important;padding:27px!important;
+  border:1px solid #e2e8df!important;border-radius:22px!important;background:#fffefa!important;
+  box-shadow:0 10px 30px rgba(18,59,56,.055)!important;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease!important;
+}
+body.oa-lions-full .oa-lions-service-card:hover{transform:translateY(-6px)!important;border-color:#b7d6ca!important;box-shadow:var(--oa-shadow-hover)!important}
+body.oa-lions-full .oa-lions-service-icon{width:50px!important;height:50px!important;border-radius:17px!important;background:#e9f2ed!important;color:#176b66!important}
+body.oa-lions-full .oa-lions-service-card h3{margin:16px 0 8px!important;color:#1c4842!important;font:700 21px/1.2 "Playfair Display",Georgia,serif!important}
+body.oa-lions-full .oa-lions-service-card p{color:#74827b!important;font-size:11px!important;line-height:1.8!important}
+body.oa-lions-full .oa-lions-service-card a{color:#176b66!important;font-weight:900!important}
+body.oa-lions-full .cards,
+body.oa-lions-full .program-cards,
+body.oa-lions-full .program-grid{gap:16px!important}
+body.oa-lions-full .oa-program-card,
+body.oa-lions-full #programCards .program-card{
+  min-width:0!important;min-height:215px!important;padding:25px!important;
+  border:1px solid #e2e8df!important;border-radius:22px!important;background:#fffefa!important;
+  box-shadow:0 10px 30px rgba(18,59,56,.055)!important;transition:transform .22s ease,box-shadow .22s ease!important;
+}
+body.oa-lions-full .oa-program-card:hover,
+body.oa-lions-full #programCards .program-card:hover{transform:translateY(-5px)!important;box-shadow:var(--oa-shadow-hover)!important}
+body.oa-lions-full .oa-program-card h3,
+body.oa-lions-full #programCards .program-card h3{color:#1c4842!important;font:700 22px/1.2 "Playfair Display",Georgia,serif!important}
+body.oa-lions-full .oa-program-card p,
+body.oa-lions-full #programCards .program-card p{color:#74827b!important;font-size:11px!important;line-height:1.85!important}
+body.oa-lions-full .oa-program-card .program-icon,
+body.oa-lions-full #programCards .program-icon{width:47px!important;height:47px!important;border-radius:16px!important;background:#e9f2ed!important;color:#176b66!important}
+body.oa-lions-full .oa-lions-class-banner{overflow:hidden!important;border-radius:28px!important;background:#123b38!important;box-shadow:0 24px 55px rgba(18,59,56,.13)!important}
+body.oa-lions-full .oa-lions-class-banner-copy{padding:clamp(30px,5vw,58px)!important}
+body.oa-lions-full .oa-lions-class-banner h2{color:#fff!important}
+body.oa-lions-full .oa-lions-class-type-grid article,
+body.oa-lions-full .oa-class-level,
+body.oa-lions-full .oa-lions-support-grid article{
+  border:1px solid #e2e8df!important;border-radius:18px!important;background:#fffefa!important;
+  box-shadow:0 8px 26px rgba(18,59,56,.045)!important;
+}
+body.oa-lions-full .oa-class-level-grid{gap:12px!important}
+body.oa-lions-full .oa-class-level{padding:18px!important}
+body.oa-lions-full .oa-class-level strong{color:#176b66!important}
+body.oa-lions-full .oa-lions-support-grid{gap:14px!important}
+body.oa-lions-full .oa-lions-support-grid article{padding:23px!important}
+body.oa-lions-full .oa-lions-support-grid article>span{background:#e9f2ed!important;color:#176b66!important}
+body.oa-lions-full .oa-lions-disclaimer{border-left-color:#e9a15c!important;background:#f2f3ec!important;color:#6d7b76!important}
+
+/* Staff, notices, reviews and gallery */
+body.oa-lions-full .oa-staff-card,
+body.oa-lions-full .oa-post-card,
+body.oa-lions-full .oa-testimonial-card{
+  overflow:hidden!important;border:1px solid #e2e8df!important;border-radius:22px!important;
+  background:#fffefa!important;box-shadow:0 10px 30px rgba(18,59,56,.055)!important;
+  transition:transform .22s ease,box-shadow .22s ease!important;
+}
+body.oa-lions-full .oa-staff-card:hover,
+body.oa-lions-full .oa-post-card:hover,
+body.oa-lions-full .oa-testimonial-card:hover{transform:translateY(-5px)!important;box-shadow:var(--oa-shadow-hover)!important}
+body.oa-lions-full .oa-staff-photo{width:154px!important;height:154px!important;border:6px solid #f0f1e9!important;box-shadow:0 10px 26px rgba(18,59,56,.1)!important}
+body.oa-lions-full .oa-staff-details{padding:20px!important}
+body.oa-lions-full .oa-staff-details h3{color:#1b4943!important;font:700 21px/1.2 "Playfair Display",Georgia,serif!important}
+body.oa-lions-full .oa-staff-role{color:#17776f!important}
+body.oa-lions-full .oa-post-cover{aspect-ratio:16/10!important;background:#e9f0e9!important}
+body.oa-lions-full .oa-post-content{padding:23px!important}
+body.oa-lions-full .oa-post-category{background:#e8f2ed!important;color:#176b66!important;border-radius:999px!important}
+body.oa-lions-full .oa-post-content h3{color:#1b4943!important;font:700 22px/1.22 "Playfair Display",Georgia,serif!important}
+body.oa-lions-full .oa-post-content p{color:#74827b!important;font-size:11px!important;line-height:1.85!important}
+body.oa-lions-full .oa-post-read{color:#176b66!important}
+body.oa-lions-full .oa-testimonial-card{padding:26px!important}
+body.oa-lions-full .oa-testimonial-card p{color:#556a61!important;font:italic 15px/1.85 "Playfair Display",Georgia,serif!important}
+body.oa-lions-full .oa-testimonial-grid{gap:16px!important}
+body.oa-lions-full .oa-gallery-card{border-radius:19px!important;box-shadow:0 10px 28px rgba(18,59,56,.09)!important}
+body.oa-lions-full .oa-gallery-card img{transition:transform .45s cubic-bezier(.2,.7,.2,1)!important}
+body.oa-lions-full .oa-gallery-card:hover img{transform:scale(1.06)!important}
+body.oa-lions-full .oa-gallery-card span{background:linear-gradient(transparent,rgba(12,44,40,.86))!important}
+
+/* Offices / admission / footer */
+body.oa-lions-full .oa-lions-offices{background:#f1f2eb!important}
+body.oa-lions-full .oa-lions-office-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px!important}
+body.oa-lions-full .oa-lions-office-card{
+  padding:28px!important;border:1px solid #e0e7dd!important;border-radius:24px!important;
+  background:#fffefa!important;box-shadow:0 10px 30px rgba(18,59,56,.06)!important;
+}
+body.oa-lions-full .oa-lions-office-card h3{color:#1b4943!important;font:700 24px/1.2 "Playfair Display",Georgia,serif!important}
+body.oa-lions-full .oa-office-tag{border-radius:999px!important;background:#e9f2ed!important;color:#176b66!important}
+body.oa-lions-full .oa-office-line{color:#738079!important;font-size:11px!important}
+body.oa-lions-full .oa-office-line b{color:#254940!important}
+body.oa-lions-full .oa-office-actions a{border-radius:999px!important;background:#e9f2ed!important;color:#176b66!important;padding:10px 14px!important}
+body.oa-lions-full .oa-office-actions a.primary{background:#176b66!important;color:#fff!important}
+body.oa-lions-full #admission{
+  background:radial-gradient(circle at 80% 10%,rgba(233,161,92,.19),transparent 30%),linear-gradient(135deg,#123b38 0%,#174e48 100%)!important;
+}
+body.oa-lions-full #admission .admission-copy h2{color:#fff!important;font-family:"Playfair Display",Georgia,serif!important;font-size:clamp(34px,4.2vw,52px)!important}
+body.oa-lions-full #admission .admission-copy p{color:#d8e8df!important}
+body.oa-lions-full #admission .admission-panel{
+  border:1px solid rgba(255,255,255,.72)!important;border-radius:26px!important;
+  background:#fffefa!important;box-shadow:0 28px 70px rgba(5,30,25,.23)!important;padding:clamp(22px,3vw,34px)!important;
+}
+body.oa-lions-full #admission .admission-panel h3{color:#173d38!important;font:700 29px/1.2 "Playfair Display",Georgia,serif!important}
+body.oa-lions-full #admission .admission-panel>p{color:#74827b!important}
+body.oa-lions-full #admission .field label{color:#425b52!important;font-size:10px!important;font-weight:900!important}
+body.oa-lions-full #admission .field input,
+body.oa-lions-full #admission .field select,
+body.oa-lions-full #admission .field textarea{
+  min-height:49px!important;padding:12px 14px!important;border:1px solid #dfe6dc!important;
+  border-radius:13px!important;background:#fff!important;color:#203b34!important;font-size:12px!important;
+}
+body.oa-lions-full #admission .field textarea{min-height:120px!important}
+body.oa-lions-full #admission .field input:focus,
+body.oa-lions-full #admission .field select:focus,
+body.oa-lions-full #admission .field textarea:focus{outline:3px solid rgba(23,107,102,.13)!important;border-color:#176b66!important}
+body.oa-lions-full .footer{background:#102f2d!important;padding:76px 0 25px!important}
+body.oa-lions-full .footer-grid{gap:34px!important}
+body.oa-lions-full .footer h4{color:#f0b477!important;letter-spacing:.1em!important}
+body.oa-lions-full .footer p,
+body.oa-lions-full .footer-links a{color:#cadbd2!important}
+body.oa-lions-full .copyright{border-top:1px solid rgba(255,255,255,.15)!important;color:#a9c0b5!important}
+body.oa-lions-full .oa-footer-admin{color:#f0b477!important}
+body.oa-lions-full .oa-section-more a{display:inline-flex!important;border-radius:999px!important;background:#176b66!important;border:1px solid #176b66!important;padding:11px 18px!important;color:#fff!important}
+
+/* ── Inner pages: one branded template for notices, gallery, team, about, services ── */
+body:not(.oa-lions-full):not(.admin-route){background:#f5f4ee!important;color:#1d2d2b!important;font-family:"DM Sans",Arial,sans-serif!important}
+.page-contact-strip{background:#123b38!important;color:#dce9e4!important}
+.page-contact-strip-inner{width:min(1240px,calc(100% - 56px))!important;min-height:38px!important}
+.page-contact-strip a{color:#f3b778!important}
+.page-top{
+  position:sticky!important;top:0!important;z-index:1000!important;
+  background:rgba(251,250,246,.96)!important;color:#123b38!important;
+  padding:15px 24px!important;border-bottom:1px solid #e2e7df!important;
+  box-shadow:0 8px 25px rgba(24,54,49,.05)!important;backdrop-filter:blur(16px)!important;
+}
+.page-top-inner{width:min(1240px,100%)!important;gap:18px!important}
+.page-brand{display:flex!important;align-items:center!important;gap:13px!important;color:#123b38!important}
+.page-mark{width:50px!important;height:50px!important;border-radius:16px!important;border:0!important;background:#123b38!important;color:#fff!important;box-shadow:0 8px 22px rgba(18,59,56,.14)!important}
+.page-mark img{object-fit:contain!important;background:#fff!important;border-radius:inherit!important;padding:3px!important}
+.page-brand-name{font:900 15px/1.2 "DM Sans",Arial,sans-serif!important;color:#173d38!important;letter-spacing:-.03em!important}
+.page-brand small{margin-top:5px!important;color:#78867f!important;font-size:8px!important;letter-spacing:.16em!important}
+.page-home{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:42px!important;padding:10px 17px!important;border:1px solid #dce5da!important;border-radius:999px!important;background:#fffefa!important;color:#176b66!important;font-size:10px!important;font-weight:900!important}
+.page-main{width:min(1180px,calc(100% - 56px))!important;margin:42px auto 88px!important}
+.page-breadcrumb{margin-bottom:23px!important;color:#78867f!important;font-size:10px!important}
+.page-breadcrumb a{color:#176b66!important}
+.page-main h1{margin:0 0 34px!important;color:#173d38!important;font:700 clamp(36px,5vw,58px)/1.08 "Playfair Display",Georgia,serif!important;letter-spacing:-.04em!important}
+#content-list{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:22px!important}
+.content-card,.content-detail-card{
+  overflow:hidden!important;border:1px solid #e1e7dd!important;border-radius:23px!important;
+  background:#fffefa!important;box-shadow:0 12px 32px rgba(18,59,56,.06)!important;
+}
+.content-card{transition:transform .22s ease,box-shadow .22s ease!important}
+.content-card:hover{transform:translateY(-5px)!important;box-shadow:var(--oa-shadow-hover)!important}
+.content-cover{aspect-ratio:16/10!important;background:#e8eee6!important}
+.content-cover img,.content-detail-cover img{width:100%!important;height:100%!important;object-fit:cover!important}
+.content-card-body,.content-detail-body{padding:25px!important}
+.content-meta{display:flex!important;align-items:center!important;gap:12px!important;color:#78867f!important;font-size:9px!important}
+.content-meta span{padding:5px 10px!important;border-radius:999px!important;background:#eaf2ec!important;color:#176b66!important;font-weight:900!important}
+.content-card h2,.content-detail-card h1{color:#173d38!important;font:700 23px/1.2 "Playfair Display",Georgia,serif!important;letter-spacing:-.02em!important}
+.content-card p,.content-detail-card p,.content-full-text{color:#6d7b76!important;font-size:12px!important;line-height:1.9!important}
+.content-read-more,.content-back-link{display:inline-flex!important;margin-top:12px!important;color:#176b66!important;font-size:10px!important;font-weight:900!important}
+.content-detail-card{max-width:930px!important;margin:0 auto!important}
+.content-detail-cover{max-height:480px!important;aspect-ratio:16/9!important;overflow:hidden!important;background:#e8eee6!important}
+.content-detail-body{padding:clamp(24px,5vw,56px)!important}
+.content-detail-body h1{margin:18px 0 22px!important;font-size:clamp(36px,5vw,56px)!important}
+.content-full-text{white-space:pre-wrap!important;font-size:14px!important}
+.content-empty{padding:32px!important;border:1px dashed #c5d5ca!important;border-radius:18px!important;background:#fffefa!important;color:#6d7b76!important}
+
+/* About and service pages generated from the same content system */
+.oa-service-hero{overflow:hidden!important;padding:clamp(36px,6vw,72px)!important;border-radius:30px!important;background:radial-gradient(circle at 88% 12%,rgba(233,161,92,.2),transparent 28%),linear-gradient(135deg,#123b38,#1b5c54)!important;box-shadow:0 22px 55px rgba(18,59,56,.17)!important}
+.oa-service-hero h1{color:#fff!important;font:700 clamp(38px,5vw,60px)/1.08 "Playfair Display",Georgia,serif!important}
+.oa-service-hero p{max-width:760px!important;color:#dce9e2!important;font-size:13px!important;line-height:1.95!important}
+.oa-service-kicker{color:#f3b778!important;font-size:9px!important;letter-spacing:.18em!important}
+.oa-service-content-grid{gap:18px!important}
+.oa-service-content-grid>*,
+.oa-service-card,
+.oa-about-section,
+.oa-event-card{
+  border:1px solid #e1e7dd!important;border-radius:22px!important;
+  background:#fffefa!important;box-shadow:0 10px 30px rgba(18,59,56,.055)!important;
+}
+.oa-about-section{margin-top:26px!important;padding:clamp(22px,3vw,34px)!important}
+.oa-about-section h2{color:#173d38!important;font:700 29px/1.2 "Playfair Display",Georgia,serif!important}
+.oa-about-section>p,.oa-event-card p{color:#6d7b76!important;line-height:1.9!important}
+.oa-about-offices,.oa-about-team,.oa-about-partners{gap:16px!important}
+.oa-calendar-grid{gap:18px!important}
+.oa-event-card{padding:26px!important}
+.oa-event-card h2{color:#173d38!important;font:700 23px/1.2 "Playfair Display",Georgia,serif!important}
+
+/* ── Nepali calendar: match the same palette, controls and card language ── */
+.page-top:has(.oa-calendar-header-inner){background:#fbfaf6!important}
+.oa-calendar-header-label{border:1px solid #dce6dc!important;background:#edf4ed!important;color:#176b66!important;border-radius:999px!important}
+.oa-calendar-header-label:before{background:#e9a15c!important}
+.oa-calendar-header-inner .page-mark{background:#123b38!important}
+.oa-calendar-header-inner .page-home{background:#fffefa!important;color:#176b66!important;border:1px solid #dce5da!important}
+.oa-bs-hero{
+  overflow:hidden!important;position:relative!important;padding:clamp(28px,5vw,56px)!important;
+  border-radius:30px!important;background:radial-gradient(circle at 90% 10%,rgba(233,161,92,.2),transparent 28%),linear-gradient(135deg,#123b38,#1b5c54)!important;
+  box-shadow:0 22px 55px rgba(18,59,56,.13)!important;
+}
+.oa-bs-hero h1{color:#fff!important;font:700 clamp(38px,5vw,58px)/1.08 "Playfair Display",Georgia,serif!important}
+.oa-bs-hero p{color:#dbe9e1!important}
+.oa-bs-kicker{color:#f2b477!important;letter-spacing:.18em!important}
+.oa-bs-today{border:1px solid rgba(255,255,255,.18)!important;border-radius:20px!important;background:rgba(255,255,255,.1)!important;backdrop-filter:blur(10px)!important}
+.oa-bs-today small,.oa-bs-today span{color:#d7e7df!important}
+.oa-bs-today strong{color:#fff!important}
+.oa-cal-layout{gap:20px!important;margin-top:22px!important}
+.oa-cal-card,.oa-cal-panel{
+  border:1px solid #e1e7dd!important;border-radius:23px!important;background:#fffefa!important;
+  box-shadow:0 12px 32px rgba(18,59,56,.055)!important;
+}
+.oa-cal-card,.oa-cal-panel{padding:clamp(16px,2.4vw,27px)!important}
+.oa-cal-month-title,.oa-cal-panel h2{color:#173d38!important;font-family:"Playfair Display",Georgia,serif!important}
+.oa-cal-toolbar button,.oa-cal-toolbar select{
+  min-height:43px!important;border:1px solid #dce5da!important;border-radius:12px!important;
+  background:#f6f6ef!important;color:#244c42!important;font-weight:800!important;
+}
+.oa-cal-toolbar button:hover{background:#e9f2ed!important;border-color:#b9d6c8!important}
+.oa-cal-weekdays span{color:#78867f!important;font-weight:900!important}
+.oa-cal-day{border:1px solid #e9ede6!important;border-radius:12px!important;background:#fffefa!important;transition:background .18s,border-color .18s,transform .18s!important}
+.oa-cal-day:hover{background:#eff5ef!important;border-color:#b9d6c8!important;transform:translateY(-2px)!important}
+.oa-cal-day.is-selected{background:#176b66!important;border-color:#176b66!important;color:#fff!important}
+.oa-cal-day.is-today:not(.is-selected){box-shadow:inset 0 0 0 2px #e9a15c!important}
+.oa-cal-bs{color:inherit!important}
+.oa-cal-ad{color:#849188!important}
+.oa-cal-selected-date{color:#176b66!important}
+.oa-cal-source{color:#849188!important}
+
+/* ── Admin: the same visual brand, re-composed as a full control centre ── */
+body.admin-route{min-height:100vh!important;background:#f2f3ec!important;color:#1d2d2b!important;font-family:"DM Sans",Arial,sans-serif!important}
+body.admin-route #adminModal{
+  display:flex!important;position:relative!important;inset:auto!important;min-height:100vh!important;
+  padding:0!important;background:#f2f3ec!important;align-items:stretch!important;justify-content:stretch!important;
+}
+body.admin-route .admin-modal{
+  display:flex!important;flex-direction:column!important;width:100%!important;max-width:none!important;
+  min-height:100vh!important;max-height:none!important;margin:0!important;overflow:visible!important;
+  border:0!important;border-radius:0!important;background:#f2f3ec!important;box-shadow:none!important;
+}
+body.admin-route .admin-body{flex:1!important;padding:0!important;overflow:visible!important}
+body.admin-route .oa-app{
+  display:grid!important;grid-template-columns:265px minmax(0,1fr)!important;min-height:100vh!important;
+  background:#f5f5ef!important;color:#1d2d2b!important;font-family:"DM Sans",Arial,sans-serif!important;
+}
+body.admin-route .oa-side{
+  position:sticky!important;top:0!important;align-self:start!important;min-height:100vh!important;
+  display:flex!important;flex-direction:column!important;gap:18px!important;
+  padding:25px 17px 20px!important;background:#123b38!important;color:#fff!important;
+}
+body.admin-route .oa-brand{display:flex!important;align-items:center!important;gap:12px!important;padding:4px 6px 21px!important;border-bottom:1px solid rgba(255,255,255,.15)!important}
+body.admin-route .oa-brand b{display:block!important;color:#fff!important;font:900 15px/1.2 "DM Sans",Arial,sans-serif!important;letter-spacing:-.025em!important}
+body.admin-route .oa-brand small{display:block!important;margin-top:5px!important;color:#bdd3c8!important;font-size:8px!important;letter-spacing:.17em!important}
+body.admin-route .oa-mark{display:grid!important;place-items:center!important;width:46px!important;height:46px!important;flex:0 0 46px!important;border-radius:16px!important;background:#e9a15c!important;color:#183a33!important;font-weight:900!important}
+body.admin-route .oa-nav{display:grid!important;gap:5px!important}
+body.admin-route .oa-nav button{
+  display:flex!important;align-items:center!important;min-height:43px!important;width:100%!important;
+  padding:11px 13px!important;border:1px solid transparent!important;border-radius:12px!important;
+  background:transparent!important;color:#d8e7df!important;text-align:left!important;
+  font:700 11px/1.35 "DM Sans",Arial,sans-serif!important;transition:background .18s,color .18s,border-color .18s!important;
+}
+body.admin-route .oa-nav button:hover{background:rgba(255,255,255,.08)!important;color:#fff!important}
+body.admin-route .oa-nav button.active{background:rgba(255,255,255,.14)!important;color:#fff!important;border-color:rgba(255,255,255,.13)!important;box-shadow:inset 3px 0 #e9a15c!important}
+body.admin-route .oa-side>a{
+  display:inline-flex!important;align-items:center!important;gap:8px!important;margin-top:auto!important;
+  padding:12px 13px!important;border:1px solid rgba(255,255,255,.18)!important;border-radius:12px!important;
+  background:rgba(255,255,255,.05)!important;color:#f3b778!important;font-size:10px!important;font-weight:900!important;
+}
+body.admin-route .oa-main{min-width:0!important;padding:clamp(22px,3.2vw,46px)!important;background:#f5f5ef!important}
+body.admin-route .oa-top{
+  display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:18px!important;
+  margin:0 0 27px!important;padding:0 0 21px!important;border-bottom:1px solid #e1e7dd!important;
+  background:transparent!important;
+}
+body.admin-route .oa-top small{color:#178077!important;font-size:8px!important;font-weight:900!important;letter-spacing:.2em!important}
+body.admin-route .oa-top h1{margin:7px 0 0!important;color:#173d38!important;font:700 clamp(27px,3vw,38px)/1.1 "Playfair Display",Georgia,serif!important;letter-spacing:-.035em!important}
+body.admin-route .oa-top .oa-actions{display:flex!important;gap:8px!important;flex-wrap:wrap!important}
+body.admin-route .oa-button{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;
+  min-height:42px!important;padding:11px 17px!important;border:1px solid #176b66!important;border-radius:999px!important;
+  background:#176b66!important;color:#fff!important;font:900 10px/1.2 "DM Sans",Arial,sans-serif!important;
+  cursor:pointer!important;transition:transform .18s,background .18s,box-shadow .18s!important;
+}
+body.admin-route .oa-button:hover{transform:translateY(-2px)!important;background:#10534f!important;box-shadow:0 8px 18px rgba(23,107,102,.17)!important}
+body.admin-route .oa-button.light{border-color:#dce5da!important;background:#fffefa!important;color:#176b66!important}
+body.admin-route .oa-button.red{border-color:#efd8d0!important;background:#fff5f0!important;color:#a44b3c!important}
+body.admin-route .oa-card{
+  margin:0 0 17px!important;padding:clamp(19px,2.5vw,30px)!important;
+  border:1px solid #e1e7dd!important;border-radius:22px!important;background:#fffefa!important;
+  box-shadow:0 10px 30px rgba(18,59,56,.045)!important;
+}
+body.admin-route .oa-card h2{margin:0 0 8px!important;color:#173d38!important;font:700 23px/1.2 "Playfair Display",Georgia,serif!important}
+body.admin-route .oa-card>p{color:#718078!important;font-size:11px!important;line-height:1.85!important}
+body.admin-route .oa-stats{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:13px!important;margin-bottom:17px!important}
+body.admin-route .oa-stat{padding:19px!important;border:1px solid #e1e7dd!important;border-radius:20px!important;background:#fffefa!important;box-shadow:0 9px 26px rgba(18,59,56,.04)!important}
+body.admin-route .oa-stat strong{display:block!important;color:#176b66!important;font:700 31px/1.1 "Playfair Display",Georgia,serif!important}
+body.admin-route .oa-stat span{display:block!important;margin-top:7px!important;color:#74827b!important;font-size:9px!important;font-weight:900!important;letter-spacing:.07em!important}
+body.admin-route .oa-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important}
+body.admin-route .oa-field{display:grid!important;gap:7px!important;margin-bottom:14px!important}
+body.admin-route .oa-field label{color:#455c52!important;font-size:10px!important;font-weight:900!important}
+body.admin-route .oa-field input,
+body.admin-route .oa-field textarea,
+body.admin-route .oa-field select,
+body.admin-route .oa-admissions-tools input,
+body.admin-route .oa-admissions-tools select{
+  width:100%!important;min-width:0!important;min-height:46px!important;padding:12px 14px!important;
+  border:1px solid #dfe6dc!important;border-radius:13px!important;background:#fff!important;
+  color:#1d3730!important;font:12px "DM Sans",Arial,sans-serif!important;
+}
+body.admin-route .oa-field textarea{min-height:115px!important}
+body.admin-route .oa-upload{padding:14px!important;border:1px dashed #b9cec1!important;border-radius:16px!important;background:#f7f8f2!important}
+body.admin-route .oa-upload small{color:#74827b!important;font-size:10px!important}
+body.admin-route .oa-preview{max-width:220px!important;max-height:145px!important;padding:7px!important;border:1px solid #dce5da!important;border-radius:14px!important;background:#fff!important}
+body.admin-route .oa-check{color:#53665c!important;font-size:10px!important}
+body.admin-route .oa-record{padding:15px!important;border:1px solid #e1e7dd!important;border-radius:15px!important;background:#fffefa!important}
+body.admin-route .oa-record b{color:#1b4943!important;font-size:12px!important}
+body.admin-route .oa-record small{color:#7b8981!important;font-size:10px!important}
+body.admin-route .oa-status{border-radius:999px!important;background:#e8f2ed!important;color:#176b66!important}
+body.admin-route .oa-status.draft{background:#fff0df!important;color:#936024!important}
+body.admin-route .oa-empty{padding:28px!important;border:1px dashed #c7d5c9!important;border-radius:17px!important;background:#fbfaf6!important;color:#718078!important}
+body.admin-route .oa-admissions-tools{display:grid!important;grid-template-columns:minmax(0,1fr) 210px!important;gap:11px!important;margin-top:17px!important}
+body.admin-route .oa-enquiries-list{display:grid!important;gap:15px!important;margin-top:15px!important}
+body.admin-route .oa-enquiry-card{padding:21px!important;border:1px solid #e1e7dd!important;border-radius:21px!important;background:#fffefa!important;box-shadow:0 9px 27px rgba(18,59,56,.045)!important}
+body.admin-route .oa-enquiry-kicker{color:#17776f!important;font-size:9px!important;letter-spacing:.13em!important}
+body.admin-route .oa-enquiry-card h3{color:#173d38!important;font:700 23px/1.2 "Playfair Display",Georgia,serif!important}
+body.admin-route .oa-enquiry-contact{border-radius:13px!important;background:#f0f3ec!important}
+body.admin-route .oa-enquiry-contact>span{color:#7a8981!important}
+body.admin-route .oa-enquiry-contact a,
+body.admin-route .oa-enquiry-contact strong{color:#176b66!important}
+body.admin-route .oa-enquiry-message{border:1px solid #e3e8df!important;border-radius:14px!important;background:#f9f9f3!important}
+body.admin-route .oa-enquiry-action{border:1px solid #dce5da!important;border-radius:999px!important;color:#176b66!important;background:#fffefa!important}
+body.admin-route .oa-enquiry-action.whatsapp{border-color:#cce5d2!important;background:#edf7ef!important;color:#176b40!important}
+body.admin-route .oa-msg{background:#123b38!important;border:1px solid rgba(255,255,255,.15)!important;border-radius:15px!important;box-shadow:0 14px 38px rgba(18,59,56,.2)!important}
+
+/* Auth entry and image crop dialog */
+body.admin-route .admin-login{
+  width:min(460px,calc(100% - 30px))!important;margin:auto!important;padding:clamp(24px,4vw,42px)!important;
+  border:1px solid #e1e7dd!important;border-radius:28px!important;background:#fffefa!important;
+  box-shadow:0 28px 80px rgba(18,59,56,.14)!important;
+}
+body.admin-route .admin-login h3{color:#173d38!important;font:700 31px/1.15 "Playfair Display",Georgia,serif!important}
+body.admin-route .admin-login p{color:#75827b!important;font-size:11px!important;line-height:1.8!important}
+body.admin-route .admin-login .field label{color:#425b52!important;font-size:10px!important;font-weight:900!important}
+body.admin-route .admin-login .field input{min-height:47px!important;padding:12px 14px!important;border:1px solid #dfe6dc!important;border-radius:13px!important;background:#fff!important;color:#1d3730!important}
+body.admin-route .admin-login .btn{min-height:45px!important;border-radius:999px!important}
+body.admin-route .oa-crop-overlay{background:rgba(9,35,31,.8)!important;backdrop-filter:blur(8px)!important}
+body.admin-route .oa-crop-dialog{border:1px solid #dce5da!important;border-radius:24px!important;background:#fffefa!important}
+body.admin-route .oa-crop-dialog h2{color:#173d38!important;font-family:"Playfair Display",Georgia,serif!important}
+body.admin-route .oa-crop-close{border-radius:12px!important;background:#edf2ea!important;color:#173d38!important}
+body.admin-route .oa-branch-picker{border-color:#e1e7dd!important;border-radius:17px!important;background:#fffefa!important}
+body.admin-route .oa-branch-picker select{border-color:#dfe6dc!important;border-radius:13px!important}
+
+/* Motion, hover and responsive composition */
+@media(hover:hover){
+  body.oa-lions-full .content-card:hover,
+  body.oa-lions-full .oa-staff-card:hover,
+  body.oa-lions-full .oa-post-card:hover{transform:translateY(-5px)}
+}
+@media(max-width:1180px){
+  body.oa-lions-full .navbar{gap:14px!important}
+  body.oa-lions-full .brand{min-width:190px!important;max-width:235px!important}
+  body.oa-lions-full .brand-name{font-size:13px!important}
+  body.oa-lions-full .nav-links{gap:12px!important;font-size:10px!important}
+  body.oa-lions-full .nav-actions .btn{padding:11px 15px!important;font-size:10px!important}
+}
+@media(max-width:1020px){
+  body.oa-lions-full .nav-wrap{position:sticky!important}
+  body.oa-lions-full .navbar{min-height:76px!important}
+  body.oa-lions-full .menu-btn{display:inline-grid!important;place-items:center!important}
+  body.oa-lions-full .nav-links{
+    display:none!important;position:absolute!important;top:calc(100% - 2px)!important;left:0!important;right:0!important;
+    z-index:1002!important;max-height:min(72dvh,620px)!important;overflow:auto!important;
+    padding:14px!important;border:1px solid #e1e7dd!important;border-radius:19px!important;
+    background:#fffefa!important;box-shadow:0 24px 55px rgba(18,59,56,.17)!important;
+    flex-direction:column!important;align-items:stretch!important;gap:3px!important;
+  }
+  body.oa-lions-full .nav-links.open{display:flex!important}
+  body.oa-lions-full .nav-links>a,
+  body.oa-lions-full .nav-links summary{display:flex!important;align-items:center!important;min-height:45px!important;padding:11px 13px!important;border-radius:11px!important;font-size:12px!important}
+  body.oa-lions-full .nav-links>a:hover,
+  body.oa-lions-full .nav-links summary:hover{background:#eef4ee!important}
+  body.oa-lions-full .nav-links details{width:100%!important}
+  body.oa-lions-full .nav-links details .oa-nav-menu{position:static!important;width:100%!important;margin:5px 0!important;box-shadow:none!important;border:1px solid #e4e9e1!important}
+  body.oa-lions-full .nav-actions .btn{display:inline-flex!important}
+  body.oa-lions-full .hero{min-height:600px!important}
+  body.oa-lions-full .about-grid{grid-template-columns:1fr 1fr!important}
+  body.oa-lions-full #why-choose-oxford .value-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body.oa-lions-full .oa-lions-service-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body.oa-lions-full .oa-lions-office-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #content-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body.admin-route .oa-app{grid-template-columns:225px minmax(0,1fr)!important}
+  body.admin-route .oa-main{padding:22px!important}
+  body.admin-route .oa-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:760px){
+  html{scroll-padding-top:88px}
+  body.oa-lions-full .container{width:calc(100% - 34px)!important}
+  body.oa-lions-full .topbar .container{min-height:34px!important;gap:8px!important}
+  body.oa-lions-full .top-meta{gap:6px 10px!important}
+  body.oa-lions-full .top-meta span{font-size:8px!important}
+  body.oa-lions-full .topbar .container>a{display:inline-flex!important;font-size:8px!important}
+  body.oa-lions-full .navbar{min-height:70px!important;padding:9px 0!important;gap:10px!important}
+  body.oa-lions-full .brand{min-width:0!important;max-width:calc(100% - 105px)!important;gap:9px!important}
+  body.oa-lions-full .brand-mark{width:43px!important;height:43px!important;flex-basis:43px!important;border-radius:14px!important}
+  body.oa-lions-full .brand-name{max-width:100%!important;font-size:12px!important;line-height:1.15!important;overflow-wrap:anywhere!important}
+  body.oa-lions-full .brand-place{font-size:7px!important;letter-spacing:.13em!important}
+  body.oa-lions-full .nav-actions{gap:7px!important;flex:0 0 auto!important}
+  body.oa-lions-full .nav-actions .btn{display:none!important}
+  body.oa-lions-full .menu-btn{width:43px!important;height:43px!important;border-radius:13px!important}
+  body.oa-lions-full .nav-links{left:0!important;right:0!important;max-width:100%!important}
+  body.oa-lions-full .hero{min-height:610px!important;min-height:68svh!important}
+  body.oa-lions-full .hero:before{background-image:linear-gradient(90deg,rgba(10,38,35,.9),rgba(13,53,48,.7))!important;background-position:58% center!important}
+  body.oa-lions-full .hero-inner{padding:86px 0 115px!important}
+  body.oa-lions-full .eyebrow{font-size:8px!important;letter-spacing:.13em!important;padding:8px 11px!important}
+  body.oa-lions-full .hero h1{font-size:clamp(42px,11vw,62px)!important;line-height:1.04!important;margin:20px 0 15px!important}
+  body.oa-lions-full .hero p{font-size:13px!important;line-height:1.8!important}
+  body.oa-lions-full .hero-buttons{display:grid!important;grid-template-columns:1fr!important;max-width:270px!important}
+  body.oa-lions-full .hero-buttons .btn{width:100%!important;justify-content:center!important}
+  body.oa-lions-full .hero-note{margin-top:24px!important;font-size:9px!important}
+  body.oa-lions-full .trust-row{margin-top:-39px!important}
+  body.oa-lions-full .trust-grid{grid-template-columns:1fr!important;padding:9px!important;border-radius:20px!important}
+  body.oa-lions-full .trust-item{padding:12px 13px!important;border-right:0!important;border-bottom:1px solid #e9ece4!important}
+  body.oa-lions-full .trust-item:last-child{border-bottom:0!important}
+  body.oa-lions-full .trust-icon{width:41px!important;height:41px!important;flex-basis:41px!important;border-radius:13px!important}
+  body.oa-lions-full .section{padding:68px 0!important}
+  body.oa-lions-full .section-head{margin-bottom:25px!important}
+  body.oa-lions-full .section h2{font-size:clamp(29px,8vw,39px)!important}
+  body.oa-lions-full .section-head p{font-size:12px!important}
+  body.oa-lions-full .about-grid{grid-template-columns:1fr!important;gap:32px!important}
+  body.oa-lions-full .about-visual{min-height:340px!important}
+  body.oa-lions-full .about-photo{inset:0 18px 22px 0!important;border-radius:24px 24px 75px 24px!important}
+  body.oa-lions-full .photo-badge{max-width:225px!important;padding:16px!important;border-radius:16px!important}
+  body.oa-lions-full .photo-badge strong{font-size:17px!important}
+  body.oa-lions-full #why-choose-oxford .value-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  body.oa-lions-full #why-choose-oxford .value{min-height:112px!important;padding:14px!important}
+  body.oa-lions-full .oa-quick-access-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  body.oa-lions-full .oa-quick-access-card{min-height:105px!important;padding:14px!important;border-radius:16px!important}
+  body.oa-lions-full .oa-lions-service-grid{grid-template-columns:1fr!important;gap:11px!important}
+  body.oa-lions-full .oa-lions-service-card{min-height:0!important;padding:21px!important;border-radius:18px!important}
+  body.oa-lions-full .oa-program-card,
+  body.oa-lions-full #programCards .program-card{min-height:0!important;padding:20px!important;border-radius:18px!important}
+  body.oa-lions-full .oa-class-level-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body.oa-lions-full .oa-lions-support-grid{grid-template-columns:1fr!important}
+  body.oa-lions-full .oa-lions-office-grid{grid-template-columns:1fr!important}
+  body.oa-lions-full .oa-lions-office-card{padding:21px!important;border-radius:19px!important}
+  body.oa-lions-full .oa-testimonial-grid{grid-template-columns:1fr!important}
+  body.oa-lions-full .oa-staff-grid,
+  body.oa-lions-full #facultyCards{grid-template-columns:1fr!important}
+  body.oa-lions-full .oa-staff-card,
+  body.oa-lions-full .oa-post-card{border-radius:18px!important}
+  body.oa-lions-full .oa-post-content{padding:18px!important}
+  body.oa-lions-full #galleryGrid.oa-public-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body.oa-lions-full #admission .admission-grid{grid-template-columns:1fr!important;gap:25px!important}
+  body.oa-lions-full #admission .admission-panel{padding:20px!important;border-radius:21px!important}
+  body.oa-lions-full #admission .form-grid{grid-template-columns:1fr!important}
+  body.oa-lions-full #admission .form-grid .field{grid-column:1/-1!important}
+  body.oa-lions-full .footer{padding:54px 0 22px!important}
+  body.oa-lions-full .footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:19px!important}
+  body.oa-lions-full .footer-grid>div:first-child{grid-column:1/-1!important}
+  body.oa-lions-full .oa-footer-connect{grid-column:1/-1!important}
+  .page-top{padding:11px 15px!important}
+  .page-top-inner{gap:9px!important}
+  .page-brand{min-width:0!important;max-width:calc(100% - 135px)!important;gap:9px!important}
+  .page-mark{width:42px!important;height:42px!important;flex:0 0 42px!important;border-radius:13px!important}
+  .page-brand-name{font-size:11px!important;overflow-wrap:anywhere!important}
+  .page-brand small{font-size:7px!important;letter-spacing:.1em!important}
+  .page-home{min-height:38px!important;padding:8px 11px!important;font-size:9px!important;white-space:nowrap!important}
+  .page-main{width:calc(100% - 30px)!important;margin:24px auto 55px!important}
+  .page-main h1{font-size:clamp(33px,9vw,43px)!important;margin-bottom:24px!important}
+  #content-list{grid-template-columns:1fr!important;gap:14px!important}
+  .content-card,.content-detail-card{border-radius:18px!important}
+  .content-card-body{padding:18px!important}
+  .content-detail-body{padding:22px!important}
+  .oa-service-hero{padding:27px 22px!important;border-radius:22px!important}
+  .oa-bs-hero{grid-template-columns:1fr!important;padding:24px 20px!important;border-radius:22px!important;gap:18px!important}
+  .oa-bs-hero h1{font-size:clamp(36px,10vw,48px)!important}
+  .oa-bs-today{padding:16px!important}
+  .oa-cal-layout{grid-template-columns:1fr!important;gap:13px!important}
+  .oa-cal-card,.oa-cal-panel{padding:14px!important;border-radius:17px!important}
+  .oa-cal-toolbar{gap:6px!important}
+  .oa-cal-day{min-height:56px!important;padding:5px 2px!important;border-radius:8px!important}
+  .oa-cal-bs{font-size:clamp(12px,3.8vw,15px)!important}
+  .oa-cal-ad{font-size:7px!important}
+  body.admin-route #adminModal{padding:0!important}
+  body.admin-route .admin-modal{min-height:100vh!important;border-radius:0!important}
+  body.admin-route .oa-app{grid-template-columns:1fr!important;min-height:100vh!important}
+  body.admin-route .oa-side{position:sticky!important;top:0!important;z-index:60!important;min-height:0!important;padding:12px 12px 10px!important;gap:10px!important}
+  body.admin-route .oa-brand{padding:1px 3px 11px!important;gap:9px!important}
+  body.admin-route .oa-mark{width:38px!important;height:38px!important;flex-basis:38px!important;border-radius:13px!important}
+  body.admin-route .oa-brand b{font-size:12px!important}
+  body.admin-route .oa-brand small{font-size:7px!important}
+  body.admin-route .oa-nav{display:flex!important;overflow-x:auto!important;overflow-y:hidden!important;gap:5px!important;max-width:100%!important;padding:1px 0 5px!important;scrollbar-width:thin!important}
+  body.admin-route .oa-nav button{flex:0 0 auto!important;width:auto!important;min-height:38px!important;padding:9px 11px!important;font-size:9px!important;white-space:nowrap!important}
+  body.admin-route .oa-side>a{display:none!important}
+  body.admin-route .oa-main{padding:17px 12px 30px!important}
+  body.admin-route .oa-top{position:relative!important;align-items:flex-start!important;flex-direction:column!important;gap:12px!important;margin-bottom:16px!important;padding-bottom:15px!important}
+  body.admin-route .oa-top h1{font-size:29px!important}
+  body.admin-route .oa-top .oa-actions{width:100%!important}
+  body.admin-route .oa-top .oa-actions>*{flex:1 1 auto!important}
+  body.admin-route .oa-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  body.admin-route .oa-stat{padding:13px!important;border-radius:15px!important}
+  body.admin-route .oa-stat strong{font-size:25px!important}
+  body.admin-route .oa-grid{grid-template-columns:1fr!important}
+  body.admin-route .oa-card{padding:17px!important;border-radius:17px!important}
+  body.admin-route .oa-admissions-tools{grid-template-columns:1fr!important}
+  body.admin-route .oa-enquiry-card{padding:16px!important;border-radius:17px!important}
+  body.admin-route .oa-enquiry-card-head{flex-direction:column!important;gap:10px!important}
+  body.admin-route .oa-enquiry-contact-grid{grid-template-columns:1fr!important;gap:8px!important}
+  body.admin-route .oa-enquiry-status-wrap{width:100%!important}
+  body.admin-route .oa-enquiry-actions{display:grid!important;grid-template-columns:1fr!important}
+  body.admin-route .oa-enquiry-action{width:100%!important}
+  body.admin-route .admin-login{width:calc(100% - 28px)!important}
+}
+@media(max-width:420px){
+  body.oa-lions-full .container{width:calc(100% - 28px)!important}
+  body.oa-lions-full .brand-name{font-size:11px!important}
+  body.oa-lions-full .hero h1{font-size:clamp(39px,10.8vw,52px)!important}
+  body.oa-lions-full .trust-item{gap:10px!important}
+  body.oa-lions-full .trust-item small{font-size:8px!important}
+  body.oa-lions-full #why-choose-oxford .value-list{grid-template-columns:1fr!important}
+  body.oa-lions-full .oa-quick-access-grid{grid-template-columns:1fr!important}
+  body.oa-lions-full #galleryGrid.oa-public-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .page-top-inner .page-brand{max-width:calc(100% - 112px)!important}
+  .page-home{padding:7px 9px!important;font-size:8px!important}
+  .oa-cal-toolbar{grid-template-columns:34px minmax(0,1fr) 34px!important}
+  .oa-cal-toolbar button,.oa-cal-toolbar select{min-height:35px!important;font-size:9px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+}
