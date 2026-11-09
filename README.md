@@ -14,6 +14,7 @@ Public website and Supabase-managed administration portal for Oxford Academic In
 ## Frontend
 
 - `professional-theme.css`: public and admin design system, responsive layouts, cards, forms, focus states, subtle animation and reduced-motion support.
+- `oxford-site-redesign.css`: complete new visual layout and colour/typography system for the homepage, inner pages, calendar and admin portal. It is presentation-only; existing page wording and Supabase content remain the source of truth.
 - `professional-ux.js`: skip navigation, accessible labels and external links, keyboard handling and grouped admin navigation.
 - `public-branding.js`: reads the saved academy name, logo and logo sizes from Supabase and applies them across the homepage, content pages and admin shell.
 - `homepage-overrides.js` and `lions-full-theme.js`: public navigation, live content sections, programme, service, branch, gallery, notice and calendar rendering.

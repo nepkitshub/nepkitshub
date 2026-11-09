@@ -33,7 +33,8 @@ for (const route of routes) {
   for (const marker of [
     'id="oa-professional-design-system"',
     'id="oa-public-branding"',
-    'id="oa-professional-ux"'
+    'id="oa-professional-ux"',
+    'id="oa-complete-site-redesign"'
   ]) {
     assert.ok(html.includes(marker), route + ' is missing shared layer marker: ' + marker);
   }
@@ -75,6 +76,10 @@ assert.ok(admin.includes('class="admin-route"'), 'Admin route protection styles 
 assert.ok(/name="robots"\s+content="noindex,nofollow"/i.test(admin), 'Admin route must be noindex.');
 
 const css = fs.readFileSync(path.join(root, 'professional-theme.css'), 'utf8');
+const redesign = fs.readFileSync(path.join(root, 'oxford-site-redesign.css'), 'utf8');
+assert.ok(redesign.includes('--oa-ink:#1d2d2b'), 'New Oxford palette is missing.');
+assert.ok(redesign.includes('body.admin-route .oa-app'), 'Admin redesign styles are missing.');
+assert.ok(redesign.includes('body.oa-lions-full .hero'), 'Homepage redesign styles are missing.');
 assert.ok(/@media\s*\([^)]*max-width\s*:\s*760px/i.test(css), 'Mobile breakpoint at 760px is missing.');
 assert.ok(/prefers-reduced-motion\s*:\s*reduce/i.test(css), 'Reduced-motion support is missing.');
 
