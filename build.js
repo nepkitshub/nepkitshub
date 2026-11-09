@@ -211,7 +211,7 @@ function replaceFirstBodyMarkup(source, needle, replacement, label) {
 
 // Use live content as the source of truth. Keep the initial HTML honest while
 // Supabase content loads, instead of flashing prototype programme/profile cards.
-const programmeCardPattern = /<div class="cards" id="programCards">[\\s\\S]*?<\\/div><\\/div><\\/section>/;
+const programmeCardPattern = /<div class="cards" id="programCards">[\s\S]*?<\/div><\/div><\/section>/;
 html = replaceRegexExactly(
   html,
   programmeCardPattern,
