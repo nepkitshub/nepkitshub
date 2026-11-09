@@ -786,3 +786,29 @@ body.oa-lions-full .hero h1{
   body.oa-lions-full .hero-buttons{grid-template-columns:1fr!important;max-width:100%!important}
   body.oa-lions-full .hero:before{height:178px!important;bottom:16px!important}
 }
+
+
+/* Keep the split hero copy anchored to the container's left edge, not centred. */
+@media(min-width:761px){
+  body.oa-lions-full .hero-inner{
+    width:min(1180px,calc(100% - 48px))!important;
+    max-width:1180px!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    padding-right:min(46%,560px)!important;
+  }
+}
+@media(max-width:1020px) and (min-width:761px){
+  body.oa-lions-full .hero-inner{
+    width:calc(100% - 56px)!important;
+    max-width:none!important;
+    padding-right:43%!important;
+  }
+}
+@media(max-width:760px){
+  body.oa-lions-full .hero-inner{
+    width:calc(100% - 30px)!important;
+    margin-inline:auto!important;
+    padding-right:0!important;
+  }
+}
