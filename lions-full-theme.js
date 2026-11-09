@@ -232,7 +232,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
             '<a href="/services/?type=career-counselling">Study & Career Counselling</a>' +
           '</div></details>' +
           '<details class="oa-nav-drop"><summary>Classes</summary><div class="oa-nav-menu">' +
-            '<a href="/services/?type=japanese-classes">Japanese Language N5–N1</a>' +
+            '<a href="/services/?type=japanese-classes">Japanese Language</a>' +
             '<a href="/services/?type=language-tests">JLPT · NAT · J-CERT · JLCT · JFT-Basic</a>' +
             '<a href="/services/?type=ssw-preparation">SSW Preparation Class</a>' +
             '<a href="/services/?type=korean-classes">Korean Language</a>' +
@@ -392,7 +392,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
       // Re-title the live course cards and keep them connected to published Supabase data.
       const academics = $('#academics');
-      sectionHead(academics, 'CLASSES & PROGRAMMES', 'Japanese and Korean language classes for your next step.', 'Explore Japanese and Korean language classes, N5–N3 learning levels, JLPT, NAT, J-CERT, JLCT and JFT-Basic preparation, plus SSW-related language preparation. Contact Oxford for current class schedules and availability.');
+      sectionHead(academics, 'CLASSES & PROGRAMMES', 'Japanese and Korean language classes for your next step.', 'Explore Japanese and Korean language classes, N5–N1 learning levels, JLPT, NAT, J-CERT, JLCT and JFT-Basic preparation, plus SSW-related language preparation. Contact Oxford for current class schedules and availability.');
       const programRoot = $('#programCards');
       if (programRoot && !$('#oa-lions-class-types')) {
         const classTypes = document.createElement('div');
@@ -698,7 +698,38 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         partnerSection = null;
       }
 
-      sectionHead($('#admission'), 'CONTACT US', 'Write us your message and we will follow up.', 'Complete the form and choose Kushma or Baglung. Sending the form does not confirm enrolment.');
+      sectionHead($('#admission'), 'ENQUIRIES', 'Tell us what you are looking for.', 'Choose the class, programme or other issue you would like help with, then select your preferred Oxford branch.');
+      const enquiryForm = $('#admissionForm');
+      if (enquiryForm) {
+        enquiryForm.querySelectorAll('.field').forEach((field) => {
+          const label = field.querySelector('label');
+          const control = field.querySelector('input,select,textarea');
+          const labelText = String(label?.textContent || '');
+          const fieldName = String(control?.getAttribute('name') || control?.id || '');
+          if (/parent|guardian/i.test(labelText) || /guardian/i.test(fieldName)) field.remove();
+        });
+        if (!enquiryForm.querySelector('[name="enquiry_type"]')) {
+          const field = document.createElement('div');
+          field.className = 'field full oa-enquiry-type-field';
+          field.innerHTML = '<label for="oa-enquiry-type">What do you need help with? *</label><select id="oa-enquiry-type" name="enquiry_type" required><option value="">Choose an enquiry type</option><option value="Japanese Language Classes (N5–N1)">Japanese Language Classes (N5–N1)</option><option value="Korean Language Classes">Korean Language Classes</option><option value="Japanese Language Test Preparation (JLPT, NAT, J-CERT, JLCT, JFT-Basic)">Japanese Language Test Preparation</option><option value="SSW Preparation Class">SSW Preparation Class</option><option value="Study in Japan / Student Visa Guidance">Study in Japan / Student Visa Guidance</option><option value="Working Visa Language Preparation">Working Visa Language Preparation</option><option value="Documentation and Application Support">Documentation and Application Support</option><option value="Other Enquiry or Issue">Other Enquiry or Issue</option></select>';
+          const branchField = $('#admissionBranch', enquiryForm)?.closest('.field');
+          const formGrid = $('.form-grid', enquiryForm);
+          if (branchField) branchField.insertAdjacentElement('beforebegin', field);
+          else if (formGrid) formGrid.prepend(field);
+          else enquiryForm.prepend(field);
+        }
+        const messageField = $('#message', enquiryForm)?.closest('.field') || $('[name="message"]', enquiryForm)?.closest('.field');
+        if (messageField) {
+          const label = $('label', messageField);
+          const messageInput = $('textarea, input', messageField);
+          if (label) label.textContent = 'Additional details (optional)';
+          if (messageInput) messageInput.placeholder = 'Tell us a little more about what you need…';
+        }
+        const formSubmit = $('#admissionSubmit', enquiryForm);
+        if (formSubmit) formSubmit.textContent = 'Send enquiry →';
+        const panelHeading = $('.admission-panel h3', enquiryForm.parentElement || document);
+        if (panelHeading && /admission/i.test(panelHeading.textContent)) panelHeading.textContent = 'Send an enquiry';
+      }
 
       // Contact options are consolidated in Contact Offices; remove the duplicate Get in Touch panel.
       const oldContactSection = $('#contact');
