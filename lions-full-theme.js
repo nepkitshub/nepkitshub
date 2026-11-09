@@ -190,7 +190,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const nav = $('#navLinks');
       if (nav) nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMobileMenu));
 
-      const about = $('#about');      const about = $('#about');
+      const about = $('#about');
       const { data: profileRows } = await db.from('oa_site_content')
         .select('content_key,value_en')
         .in('content_key', ['company_story','company_mission','company_vision','company_goals','leadership_message','services_intro','classes_intro','testimonials_intro']);
