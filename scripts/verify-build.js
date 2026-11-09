@@ -82,7 +82,13 @@ const adminManager = fs.readFileSync(path.join(root, 'admin-manager.js'), 'utf8'
 const publicBranding = fs.readFileSync(path.join(root, 'public-branding.js'), 'utf8');
 assert.equal(homepageOverrides.split("from('oa_programs')").length - 1, 0, 'Homepage programme queries must not be duplicated.');
 assert.equal(lionsTheme.split("from('oa_programs')").length - 1, 1, 'Exactly one published-programme query should remain.');
-assert.ok(!lionsTheme.includes('Your Japan Journey Starts With the Right Guidance.'), 'The visual layer must not inject replacement marketing copy.');
+assert.ok(lionsTheme.includes('Your Japan Journey Starts With the Right Guidance.'), 'The PR #22 homepage hero copy must be restored.');
+assert.ok(lionsTheme.includes('const activeBranches = errorless(branchError) ? (branches || []) : [];'), 'Published branch data must be loaded before Contact Offices and footer rendering.');
+assert.ok(lionsTheme.includes('id = \'oa-quick-access\''), 'The PR #22 quick-access section must be restored.');
+assert.ok(lionsTheme.includes('id = \'why-choose-oxford\''), 'The PR #22 Why Choose Oxford section must be restored.');
+assert.ok(lionsTheme.includes('id = \'oa-lions-class-types\''), 'The PR #22 class-level content section must be restored.');
+assert.ok(lionsTheme.includes('id = \'oa-lions-support-journey\''), 'The PR #22 support-journey section must be restored.');
+assert.ok(lionsTheme.includes('oa-footer-branch-grid'), 'The branch-specific footer content must be restored.');
 assert.ok(!lionsTheme.includes('Build skills. Explore opportunities.'), 'The visual layer must not rewrite the Oxford hero copy.');
 assert.ok(!lionsTheme.includes('Student Visa & Study in Japan'), 'The visual layer must not inject student-visa marketing copy.');
 assert.ok(lionsTheme.includes('is_published: false'), 'Learner reviews must remain pending until admin approval.');
