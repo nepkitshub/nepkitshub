@@ -19,6 +19,69 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const isAdminRoute = window.location.pathname.replace(/\/+$/, '') === '/admin';
   const bucket = 'oa-academy-media';
   const maxFileBytes = 5 * 1024 * 1024;
+  const maxSourceImageBytes = 25 * 1024 * 1024;
+
+  async function prepareUploadImage(file) {
+    if (!file) throw new Error('Choose an image first.');
+    if (file.size > maxSourceImageBytes) {
+      throw new Error('Choose an image smaller than 25 MB. Large phone photos are automatically optimized before upload.');
+    }
+
+    const extension = String(file.name || '').split('.').pop().toLowerCase();
+    const supportedMime = ['image/jpeg','image/png','image/webp'];
+    if (supportedMime.includes(String(file.type || '').toLowerCase()) && file.size <= maxFileBytes) {
+      return file;
+    }
+
+    const knownImageExtensions = ['jpg','jpeg','png','webp','heic','heif','avif','tif','tiff','gif'];
+    const hasImageMime = /^image\/(?!svg\+xml)/i.test(String(file.type || ''));
+    if (!hasImageMime && !knownImageExtensions.includes(extension)) {
+      throw new Error('This file does not look like a supported photo. Choose a JPG, PNG, WebP or a phone photo that your browser can open.');
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    try {
+      const image = await new Promise((resolve, reject) => {
+        const node = new Image();
+        node.onload = () => resolve(node);
+        node.onerror = () => reject(new Error('This phone photo could not be decoded by the browser. Export it as JPG or PNG from Photos and try again.'));
+        node.src = objectUrl;
+      });
+      const sourceWidth = Number(image.naturalWidth || image.width);
+      const sourceHeight = Number(image.naturalHeight || image.height);
+      if (!sourceWidth || !sourceHeight || sourceWidth * sourceHeight > 100000000) {
+        throw new Error('This image has invalid or unusually large dimensions. Choose a smaller photo.');
+      }
+
+      const maxSide = 2000;
+      const ratio = Math.min(1, maxSide / Math.max(sourceWidth, sourceHeight));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(sourceWidth * ratio));
+      canvas.height = Math.max(1, Math.round(sourceHeight * ratio));
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Your browser could not prepare this image. Try JPG or PNG.');
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+      const toBlob = (type, quality) => new Promise((resolve) => canvas.toBlob(resolve, type, quality));
+      let blob = await toBlob('image/webp', 0.86);
+      if (!blob || !['image/webp','image/png'].includes(blob.type)) {
+        blob = await toBlob('image/jpeg', 0.84);
+      }
+      if (!blob) throw new Error('The browser could not optimize this image. Try exporting it as JPG or PNG.');
+      if (blob.size > maxFileBytes) {
+        blob = await toBlob('image/jpeg', 0.74);
+      }
+      if (!blob || blob.size > maxFileBytes) {
+        throw new Error('This photo is still larger than 5 MB after optimization. Choose a smaller image.');
+      }
+
+      const outputExtension = blob.type === 'image/webp' ? 'webp' : (blob.type === 'image/png' ? 'png' : 'jpg');
+      const baseName = String(file.name || 'academy-photo').replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9._-]/g, '-').slice(-70) || 'academy-photo';
+      return new File([blob], baseName + '.' + outputExtension, { type: blob.type });
+    } finally {
+      URL.revokeObjectURL(objectUrl);
+    }
+  }
 
   async function applyBranding() {
     const {data,error}=await db.from('oa_site_content').select('content_key,value_en');
@@ -47,14 +110,14 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   };
 
   async function uploadImage(file, folder) {
-    if (!file) throw new Error('Choose an image first.');
+    file = await prepareUploadImage(file);
     const extension = String(file.name || '').split('.').pop().toLowerCase();
     const typeByExtension = { jpg:'image/jpeg', jpeg:'image/jpeg', png:'image/png', webp:'image/webp' };
     const contentType = ['image/jpeg','image/png','image/webp'].includes(file.type)
       ? file.type
       : (typeByExtension[extension] || '');
-    if (!contentType) throw new Error('This image format is not supported. Use JPG, PNG or WebP.');
-    if (file.size > maxFileBytes) throw new Error('Image must be 5 MB or smaller.');
+    if (!contentType) throw new Error('This image could not be prepared for upload. Use JPG, PNG or WebP.');
+    if (file.size > maxFileBytes) throw new Error('The optimized image must be 5 MB or smaller.');
     const safeName = String(file.name || 'image').replace(/[^a-zA-Z0-9._-]/g, '-').slice(-80) || 'image';
     const filePath = folder + '/' + Date.now() + '-' + Math.random().toString(36).slice(2,8) + '-' + safeName;
     const { data, error } = await db.storage.from(bucket).upload(filePath, file, {
@@ -357,7 +420,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     return "<div class='oa-field full'><label>" + esc(label) + "</label>" +
       "<input type='url' name='" + esc(name) + "' value='" + esc(url) + "' placeholder='https://…'>" +
       "<div class='oa-upload'><small>Upload JPG, PNG or WebP (maximum 5 MB), or paste an image URL above.</small>" +
-      "<input type='file' accept='image/jpeg,image/png,image/webp' data-file-for='" + esc(name) + "' data-folder='" + esc(folder) + "'></div>" +
+      "<input type='file' accept='image/*' data-file-for='" + esc(name) + "' data-folder='" + esc(folder) + "'></div>" +
       "<img class='oa-preview " + (url ? '' : 'hide') + "' data-preview='" + esc(name) + "' src='" + esc(url) + "' alt='Image preview'></div>";
   }
 
@@ -369,7 +432,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         const target = root.querySelector('[name="' + input.dataset.fileFor + '"]');
         const preview = root.querySelector('[data-preview="' + input.dataset.fileFor + '"]');
         const note = input.closest('.oa-upload')?.querySelector('small');
-        if (note) note.textContent = 'Uploading image…';
+        if (note) note.textContent = 'Preparing and uploading image…';
         input.disabled = true;
         try {
           const url = await uploadImage(file, input.dataset.folder || 'content');
@@ -378,7 +441,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
             preview.src = url;
             preview.classList.remove('hide');
           }
-          if (note) note.textContent = 'Uploaded. Save the form to apply it.';
+          if (note) note.textContent = 'Image uploaded successfully. Save this form to apply the new photo.';
         } catch (error) {
           if (note) note.textContent = error.message || 'Upload failed.';
         } finally {
@@ -430,19 +493,21 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   async function renderBranding() {
     const view=$('#oa-view');view.innerHTML="<div class='oa-card'>Loading branding settings…</div>";
     let map;try{map=await getContentMap();}catch(error){view.innerHTML="<div class='oa-card'>"+esc(error.message)+"</div>";return;}
-    const brand=map.brand_name||{},desktop=Math.max(40,Math.min(160,Number(map.logo_size_desktop?.value_en||48))),mobile=Math.max(34,Math.min(60,Number(map.logo_size_mobile?.value_en||42)));
+    const brand=map.brand_name||{},desktop=Math.max(40,Math.min(128,Number(map.logo_size_desktop?.value_en||48))),mobile=Math.max(34,Math.min(84,Number(map.logo_size_mobile?.value_en||42)));
     view.innerHTML="<div class='oa-card'><h2>Academy name, logo & sizing</h2><p>Upload your logo, crop it in the popup, and choose its size on desktop and mobile.</p><form id='oa-brand-form'><div class='oa-grid'>"+
       "<div class='oa-field'><label>Academy name</label><input name='brand_en' required value='"+esc(brand.value_en||'Oxford Academy')+"'></div>"+
 
       logoUploadField(map.logo_url?.value_en||'')+imageField('hero_image_url','Homepage hero background',map.hero_image_url?.value_en||'','branding')+
-      "<div class='oa-field full'><label>Desktop logo size (company text stays the same): <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='128' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
-      "<div class='oa-field full'><label>Mobile logo size (company text stays the same): <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='84' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
+      "<div class='oa-field full'><label>Desktop logo size (company name remains independent): <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='128' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
+      "<div class='oa-field full'><label>Mobile logo size (company name remains independent): <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='84' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
       "</div><div class='oa-actions'><button class='oa-button' type='submit'>Save branding</button></div></form></div>";
     const form=$('#oa-brand-form');bindUploads(form.querySelector('[name=hero_image_url]').closest('.oa-field').parentElement);
     const fileInput=$('#oa-logo-file');
     fileInput.addEventListener('change', () => {
       const file = fileInput.files && fileInput.files[0];
       if (!file) return;
+      // Clear immediately so selecting the same file again after closing/cancelling still fires change.
+      fileInput.value = '';
       openLogoCropper(file, async (cropped) => {
         const note = fileInput.closest('.oa-upload').querySelector('small');
         const saveButton = form.querySelector('button[type="submit"]');
