@@ -950,7 +950,7 @@ fs.writeFileSync(notFoundDir, notFoundHtml);
 const professionalThemeCss = fs.readFileSync(path.join(__dirname, 'professional-theme.css'), 'utf8');
 const professionalUxSource = fs.readFileSync(path.join(__dirname, 'professional-ux.js'), 'utf8');
 const publicBrandingSource = fs.readFileSync(path.join(__dirname, 'public-branding.js'), 'utf8');
-const oxfordSiteRedesignCss = fs.readFileSync(path.join(__dirname, 'oxford-site-redesign.css'), 'utf8');
+// Keep the PR #22 blue-and-white visual system; do not inject the later green override layer.
 let professionalPagesUpdated = 0;
 function applyProfessionalLayer(folder) {
   for (const entry of fs.readdirSync(folder, { withFileTypes: true })) {
@@ -993,8 +993,8 @@ function applyProfessionalLayer(folder) {
     const uxBlock = '<script id="oa-professional-ux">\n' + professionalUxSource + '\n</script>';
     const brandingBlock = '<script type="module" id="oa-public-branding">\n' + publicBrandingSource + '\n</script>';
     page = page.replace('</head>', themeBlock + '</head>');
-    const redesignBlock = '<style id="oa-complete-site-redesign">\n' + oxfordSiteRedesignCss + '\n</style>';
-    page = page.replace('</body>', brandingBlock + uxBlock + redesignBlock + '</body>');
+    // Retain the Oxford blue/white theme from PR #22 while keeping live branding and UX scripts.
+    page = page.replace('</body>', brandingBlock + uxBlock + '</body>');
     fs.writeFileSync(filePath, page);
     professionalPagesUpdated += 1;
   }
