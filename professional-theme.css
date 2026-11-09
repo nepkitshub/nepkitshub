@@ -1341,3 +1341,11 @@ body.oa-lions-full .oa-class-level { padding:15px; }
   body:not(.oa-lions-full) .oa-cal-bs { font-size:13px; }
   body:not(.oa-lions-full) .oa-cal-ad { font-size:6px; }
 }
+
+
+/* The Facebook follow action remains available in the compact mobile contact strip. */
+@media (max-width:760px) {
+  body.oa-lions-full .topbar .container > a {
+    display:inline-flex !important;
+  }
+}
