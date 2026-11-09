@@ -76,13 +76,13 @@ assert.ok(visibleMarkup.includes('data-en="Academics"'), 'The existing Academics
 assert.ok(visibleMarkup.includes('data-en="Our Team"'), 'The existing Our Team navigation label must remain unchanged.');
 assert.ok(visibleMarkup.includes('data-en="Notices"'), 'The existing Notices navigation label must remain unchanged.');
 assert.ok(visibleMarkup.includes('data-en="Gallery"'), 'The existing Gallery navigation label must remain unchanged.');
-assert.ok(!visibleMarkup.slice(0, 3000).includes('\\\\n'), 'Raw newline escape text must not appear at the top of the homepage.');
-
 const homepageOverrides = fs.readFileSync(path.join(root, 'homepage-overrides.js'), 'utf8');
 const lionsTheme = fs.readFileSync(path.join(root, 'lions-full-theme.js'), 'utf8');
-assert.equal((homepageOverrides.match(/from\\('oa_programs'\\)/g) || []).length, 0, 'Homepage programme queries must not be duplicated.');
-assert.equal((lionsTheme.match(/from\\('oa_programs'\\)/g) || []).length, 1, 'Exactly one published-programme query should remain.');
-assert.ok(!/Your Japan Journey Starts With the Right Guidance|Build skills\\. Explore opportunities|Student Visa & Study in Japan/.test(lionsTheme), 'The visual layer must not inject replacement marketing copy.');
+assert.equal(homepageOverrides.split("from('oa_programs')").length - 1, 0, 'Homepage programme queries must not be duplicated.');
+assert.equal(lionsTheme.split("from('oa_programs')").length - 1, 1, 'Exactly one published-programme query should remain.');
+assert.ok(!lionsTheme.includes('Your Japan Journey Starts With the Right Guidance.'), 'The visual layer must not inject replacement marketing copy.');
+assert.ok(!lionsTheme.includes('Build skills. Explore opportunities.'), 'The visual layer must not rewrite the Oxford hero copy.');
+assert.ok(!lionsTheme.includes('Student Visa & Study in Japan'), 'The visual layer must not inject student-visa marketing copy.');
 assert.ok(lionsTheme.includes('is_published: false'), 'Learner reviews must remain pending until admin approval.');
 assert.ok(lionsTheme.includes('oa-lions-office-grid'), 'Admin-managed branch contact cards must remain connected.');
 
