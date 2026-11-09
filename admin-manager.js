@@ -31,8 +31,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       if(!logo){node.textContent='OA';return;}
       const image=document.createElement('img');image.src=logo;image.alt=nameEn+' logo';image.style.cssText='width:100%;height:100%;object-fit:contain;padding:3px;border-radius:inherit';node.replaceChildren(image);node.style.background='#fff';node.style.overflow='hidden';
     });
-    const desktop=Math.max(40,Math.min(160,Number(map.logo_size_desktop?.value_en||48)));
-    const mobile=Math.max(34,Math.min(60,Number(map.logo_size_mobile?.value_en||42)));
+    const desktop=Math.max(40,Math.min(128,Number(map.logo_size_desktop?.value_en||58)));
+    const mobile=Math.max(34,Math.min(84,Number(map.logo_size_mobile?.value_en||50)));
     let style=$('#oa-public-logo-sizing');if(!style){style=document.createElement('style');style.id='oa-public-logo-sizing';document.head.appendChild(style);}
     style.textContent='.brand-mark{width:'+desktop+'px!important;height:'+desktop+'px!important;flex:0 0 '+desktop+'px!important}.nav-wrap .navbar{height:auto!important;min-height:'+Math.max(82,desktop+28)+'px;padding-top:8px;padding-bottom:8px}@media(max-width:760px){.brand-mark{width:'+mobile+'px!important;height:'+mobile+'px!important;flex-basis:'+mobile+'px!important}.nav-wrap .navbar{min-height:'+Math.max(70,mobile+24)+'px}}';
     document.title=nameEn+' | Kushma, Parbat';
@@ -48,19 +48,24 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
   async function uploadImage(file, folder) {
     if (!file) throw new Error('Choose an image first.');
-    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-      throw new Error('Use a JPG, PNG or WebP image.');
-    }
+    const extension = String(file.name || '').split('.').pop().toLowerCase();
+    const typeByExtension = { jpg:'image/jpeg', jpeg:'image/jpeg', png:'image/png', webp:'image/webp' };
+    const contentType = ['image/jpeg','image/png','image/webp'].includes(file.type)
+      ? file.type
+      : (typeByExtension[extension] || '');
+    if (!contentType) throw new Error('This image format is not supported. Use JPG, PNG or WebP.');
     if (file.size > maxFileBytes) throw new Error('Image must be 5 MB or smaller.');
-    const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '-').slice(-80) || 'image';
-    const filePath = folder + '/' + Date.now() + '-' + filename;
+    const safeName = String(file.name || 'image').replace(/[^a-zA-Z0-9._-]/g, '-').slice(-80) || 'image';
+    const filePath = folder + '/' + Date.now() + '-' + Math.random().toString(36).slice(2,8) + '-' + safeName;
     const { data, error } = await db.storage.from(bucket).upload(filePath, file, {
       cacheControl: '3600',
       upsert: false,
-      contentType: file.type
+      contentType
     });
     if (error) throw error;
-    return safeUrl(db.storage.from(bucket).getPublicUrl(data.path).data.publicUrl);
+    const publicUrl = safeUrl(db.storage.from(bucket).getPublicUrl(data.path).data.publicUrl);
+    if (!publicUrl) throw new Error('The image uploaded, but its public URL could not be verified.');
+    return publicUrl;
   }
 
   const contentKeys = [
@@ -378,6 +383,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           if (note) note.textContent = error.message || 'Upload failed.';
         } finally {
           input.disabled = false;
+          input.value = '';
         }
       });
     });
@@ -397,7 +403,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const objectUrl=URL.createObjectURL(file),image=new Image();
     image.onload=()=>{
       const overlay=document.createElement('div');overlay.className='oa-crop-overlay';
-      overlay.innerHTML="<section class='oa-crop-dialog' role='dialog' aria-modal='true'><header><div><h2>Crop academy logo</h2><p>Drag to position the image and use zoom to adjust the square crop.</p></div><button type='button' class='oa-crop-close'>×</button></header><div class='oa-crop-stage' id='oa-crop-stage'><img id='oa-crop-image' alt='Logo crop'></div><label class='oa-crop-zoom'>Zoom <input id='oa-crop-zoom' type='range' min='100' max='300' value='100'><span id='oa-crop-zoom-label'>100%</span></label><div class='oa-crop-actions'><button type='button' class='oa-button light' id='oa-crop-cancel'>Cancel</button><button type='button' class='oa-button' id='oa-crop-save'>Crop & use logo</button></div></section>";
+      overlay.innerHTML="<section class='oa-crop-dialog' role='dialog' aria-modal='true'><header><div><h2>Crop academy logo</h2><p>Drag to position the image and use zoom to adjust the square crop.</p></div><button type='button' class='oa-crop-close'>×</button></header><div class='oa-crop-stage' id='oa-crop-stage'><img id='oa-crop-image' alt='Logo crop'></div><label class='oa-crop-zoom'>Zoom <input id='oa-crop-zoom' type='range' min='100' max='300' value='100'><span id='oa-crop-zoom-label'>100%</span></label><div class='oa-crop-actions'><button type='button' class='oa-button light' id='oa-crop-cancel'>Cancel</button><button type='button' class='oa-button light' id='oa-crop-original'>Use original image</button><button type='button' class='oa-button' id='oa-crop-save'>Crop & use logo</button></div></section>";
       document.body.appendChild(overlay);
       const stage=overlay.querySelector('#oa-crop-stage'),preview=overlay.querySelector('#oa-crop-image'),zoomInput=overlay.querySelector('#oa-crop-zoom'),zoomLabel=overlay.querySelector('#oa-crop-zoom-label');
       const size=320,fit=Math.max(size/image.naturalWidth,size/image.naturalHeight);let zoom=1,dx=0,dy=0,drag=null,closed=false;preview.src=objectUrl;
@@ -407,7 +413,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       stage.addEventListener('pointermove',e=>{if(!drag)return;dx=drag.dx+e.clientX-drag.x;dy=drag.dy+e.clientY-drag.y;redraw();});
       stage.addEventListener('pointerup',()=>{drag=null;});stage.addEventListener('pointercancel',()=>{drag=null;});
       function close(){if(closed)return;closed=true;URL.revokeObjectURL(objectUrl);overlay.remove();}
-      overlay.querySelector('.oa-crop-close').addEventListener('click',close);overlay.querySelector('#oa-crop-cancel').addEventListener('click',close);overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+      overlay.querySelector('.oa-crop-close').addEventListener('click',close);
+      overlay.querySelector('#oa-crop-cancel').addEventListener('click',close);
+      overlay.querySelector('#oa-crop-original').addEventListener('click',()=>{close();onDone(file);});
+      overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
       overlay.querySelector('#oa-crop-save').addEventListener('click',()=>{const output=1024,canvas=document.createElement('canvas');canvas.width=output;canvas.height=output;const ctx=canvas.getContext('2d'),scale=output/size,w=image.naturalWidth*fit*zoom*scale,h=image.naturalHeight*fit*zoom*scale;ctx.clearRect(0,0,output,output);ctx.drawImage(image,(output-w)/2+dx*scale,(output-h)/2+dy*scale,w,h);canvas.toBlob(blob=>{if(!blob){showMessage('Could not crop this image.');return;}const cropped=new File([blob],'academy-logo.png',{type:'image/png'});close();onDone(cropped);},'image/png');});
       redraw();
     };
@@ -426,8 +435,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       "<div class='oa-field'><label>Academy name</label><input name='brand_en' required value='"+esc(brand.value_en||'Oxford Academy')+"'></div>"+
 
       logoUploadField(map.logo_url?.value_en||'')+imageField('hero_image_url','Homepage hero background',map.hero_image_url?.value_en||'','branding')+
-      "<div class='oa-field full'><label>Desktop logo size: <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='160' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
-      "<div class='oa-field full'><label>Mobile logo size: <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='60' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
+      "<div class='oa-field full'><label>Desktop logo size (company text stays the same): <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='128' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
+      "<div class='oa-field full'><label>Mobile logo size (company text stays the same): <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='84' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
       "</div><div class='oa-actions'><button class='oa-button' type='submit'>Save branding</button></div></form></div>";
     const form=$('#oa-brand-form');bindUploads(form.querySelector('[name=hero_image_url]').closest('.oa-field').parentElement);
     const fileInput=$('#oa-logo-file');
