@@ -292,11 +292,24 @@ if (!isAdminRoute) {
         .order('sort_order', { ascending:true })
         .limit(4);
       if (error) throw error;
-      if (!data || !data.length) {
-        galleryRoot.innerHTML = '<div class="oa-staff-empty">Gallery photos will appear here when the academy publishes them.</div>';
+      const publishedPhotos = (data || []).filter((item) => {
+        try { return new URL(String(item.image_url || '')).protocol === 'https:'; }
+        catch (_) { return false; }
+      });
+      if (!publishedPhotos.length) {
+        galleryRoot.closest('section')?.remove();
         return;
       }
-      galleryRoot.innerHTML = data.map((item) => {
+      const aboutImage = document.querySelector('.about-photo img');
+      if (aboutImage) {
+        const firstPhoto = publishedPhotos[0];
+        aboutImage.alt = String(firstPhoto.title_en || 'Oxford Academy learning photograph');
+        aboutImage.hidden = true;
+        aboutImage.addEventListener('load', () => { aboutImage.hidden = false; }, { once:true });
+        aboutImage.addEventListener('error', () => { aboutImage.hidden = true; }, { once:true });
+        aboutImage.src = firstPhoto.image_url;
+      }
+      galleryRoot.innerHTML = publishedPhotos.map((item) => {
         const title = escapeHtml(item.title_en || 'Oxford Academy');
         const image = typeof item.image_url === 'string' && /^https:\/\//i.test(item.image_url)
           ? escapeHtml(item.image_url) : '';
