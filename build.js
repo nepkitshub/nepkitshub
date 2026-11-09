@@ -398,6 +398,12 @@ contentPageStyles += `
   .page-brand-name{font-size:15px;font-weight:900;letter-spacing:-.02em;color:#173f69}
   .page-brand small{color:#75879a!important;font-size:9px;letter-spacing:.12em}
   .page-home{display:inline-flex;align-items:center;padding:10px 15px;border-radius:6px;background:#f2a33a;color:#193047!important;font-size:11px;font-weight:900}
+  .oa-section-header{display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:18px}
+  .oa-section-header .page-brand{grid-column:1;justify-self:start;min-width:0}
+  .oa-section-header-label{grid-column:2;justify-self:center;display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border:1px solid #e0e9f1;border-radius:999px;background:#f5f8fc;color:#1d507d;font-size:10px;font-weight:900;letter-spacing:.1em;white-space:nowrap}
+  .oa-section-header-label:before{content:"";width:6px;height:6px;border-radius:50%;background:#e6a34c;box-shadow:0 0 0 4px rgba(230,163,76,.14)}
+  .oa-section-header .page-home{grid-column:3;justify-self:end;display:inline-flex;align-items:center;gap:7px;padding:11px 16px;border-radius:9px;background:#f2a33a;color:#18334e!important;font-size:11px;font-weight:900;box-shadow:0 7px 18px rgba(242,163,58,.18);transition:transform .18s,background .18s}
+  .oa-section-header .page-home:hover{transform:translateY(-1px);background:#ffc16a}
   .page-main{width:min(1180px,calc(100% - 44px));margin:36px auto 66px}
   .page-breadcrumb{color:#78899a}
   .page-breadcrumb a{color:#185da0}
@@ -421,6 +427,12 @@ contentPageStyles += `
     .page-brand-name{font-size:12px}
     .page-brand small{font-size:8px}
     .page-home{padding:9px 10px;font-size:10px;white-space:nowrap}
+    .oa-section-header{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand action" "label label";gap:9px 10px}
+    .oa-section-header .page-brand{grid-area:brand;grid-column:1;max-width:100%}
+    .oa-section-header-label{grid-area:label;grid-column:1/-1;justify-self:center;padding:6px 11px;font-size:9px}
+    .oa-section-header .page-home{grid-area:action;grid-column:2;justify-self:end;padding:9px 11px;font-size:10px}
+    .oa-section-header .page-brand-name{font-size:11px}
+    .oa-section-header .page-brand small{font-size:7px}
     .page-main{width:calc(100% - 28px);margin:25px auto 46px}
     #content-list{grid-template-columns:1fr!important;gap:13px}
     .content-card{border-radius:11px}
@@ -428,8 +440,7 @@ contentPageStyles += `
   }
 `;
 const contentPageHtml = (mode) => '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b4e"><title>Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + '</style></head><body>' +
-  '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Japanese & Korean Language · Japan Study Guidance</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
-  '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
+  '<header class="page-top"><div class="page-top-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><span class="oa-section-header-label">ACADEMY UPDATES</span><a class="page-home" href="/#admission">Contact Oxford ↗</a></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb" id="content-breadcrumb"></nav>' +
   (mode === 'detail' ? '<div id="content-detail"><div class="content-empty">Loading content…</div></div>' :
     '<h1 id="content-heading">Academy updates</h1><div id="content-list"><div class="content-empty">Loading content…</div></div>') +
@@ -589,8 +600,7 @@ root.innerHTML =
   '<section class="oa-service-bottom"><div><h2>Ready to discuss your next step?</h2><p>Send an enquiry and choose the Oxford branch you would like to contact.</p></div><a href="/?service=' + encodeURIComponent(key) + '#admission">Contact Oxford ↗</a></section>';
 </script>`;
 const servicePageHtml = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>Oxford Academic Instruction Pvt. Ltd. | Services</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + '</style></head><body>' +
-  '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Japanese & Korean Language · Japan Study Guidance</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
-  '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/#oa-lions-services">Back to services ↗</a></div></header>' +
+  '<header class="page-top"><div class="page-top-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><span class="oa-section-header-label">OXFORD SERVICES</span><a class="page-home" href="/#admission">Contact Oxford ↗</a></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb"><a href="/">Home</a><span> / </span><a href="/#oa-lions-services">Services</a><span> / </span><span id="service-breadcrumb-title">Service details</span></nav><div id="service-detail"><div class="content-empty">Loading service information…</div></div></main>' +
   '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a> <a href="/admin/">Admin access ↗</a></footer>' +
   servicePageScript + '</body></html>';
@@ -705,8 +715,7 @@ try {
 }
 </script>`;
 const aboutPageHtml = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>About Us | Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + aboutPageStyles + '</style></head><body>' +
-  '<div class="page-contact-strip"><div class="page-contact-strip-inner"><span>OXFORD ACADEMIC INSTRUCTION PVT. LTD.</span><span>Japanese & Korean Language · Japan Study Guidance</span><a href="/#admission">Send an enquiry ↗</a></div></div>' +
-  '<header class="page-top"><div class="page-top-inner"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><a class="page-home" href="/">Back to homepage ↗</a></div></header>' +
+  '<header class="page-top"><div class="page-top-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><span class="oa-section-header-label">ABOUT OXFORD</span><a class="page-home" href="/#admission">Contact Oxford ↗</a></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb"><a href="/">Home</a><span> / </span><span>About Us</span></nav><div id="oa-about-content"><div class="content-empty">Loading Oxford profile…</div></div>' +
   '<section class="oa-about-section"><h2>Our Offices</h2><p>Contact our Kushma or Baglung branch for current programme and enrolment information.</p><div id="oa-about-offices" class="oa-about-offices"><div class="content-empty">Loading branch information…</div></div></section>' +
   '<section class="oa-about-section"><h2>Meet Our Team</h2><p>Get to know the published team members who support Oxford Academic Instruction.</p><div id="oa-about-team" class="oa-about-team"><div class="content-empty">Loading team profiles…</div></div></section>' +
@@ -772,7 +781,7 @@ const calendarPageHtml = [
   '<!doctype html>',
   '<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b4e"><meta name="description" content="Oxford Academic Instruction Nepali calendar with Bikram Sambat dates, English dates, festivals, holidays and academy events."><title>Oxford Academic Instruction Pvt. Ltd. | Nepali Calendar</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + calendarPageStyles + '</style></head>',
   '<body>',
-  '<header class="page-top"><div class="page-top-inner oa-calendar-header-inner"><a class="page-brand" href="/"><span class="page-mark" id="oa-cal-logo">OA</span><span class="page-brand-name" id="oa-cal-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><span class="oa-calendar-header-label" id="oa-calendar-header-label">NEPALI CALENDAR · 2083 B.S.</span><a class="page-home" href="/#admission">Contact Oxford <span aria-hidden="true">↗</span></a></div></header>',
+  '<header class="page-top"><div class="page-top-inner oa-calendar-header-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark" id="oa-cal-logo">OA</span><span class="page-brand-name" id="oa-cal-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><span class="oa-calendar-header-label oa-section-header-label" id="oa-calendar-header-label">NEPALI CALENDAR · 2083 B.S.</span><a class="page-home" href="/#admission">Contact Oxford <span aria-hidden="true">↗</span></a></div></header>',
   '<main class="page-main"><nav class="page-breadcrumb"><a href="/">Home</a><span> / </span><span>Nepali Calendar</span></nav>',
   '<section class="oa-bs-hero"><div><span class="oa-bs-kicker">OXFORD ACADEMIC CALENDAR</span><h1 id="oa-nepali-calendar-title">Nepali Calendar</h1><p>Keep track of Bikram Sambat dates, English dates, festivals, public holidays and Oxford Academy updates in one place.</p></div><div class="oa-bs-today"><small>Today in Nepal</small><strong id="oa-cal-today-text">Loading today’s date…</strong><span id="oa-cal-today-ad"></span></div></section>',
   '<div class="oa-cal-layout"><section class="oa-cal-card" aria-label="Nepali monthly calendar"><div class="oa-cal-toolbar"><h2 class="oa-cal-month-title" id="oa-cal-month-title">Nepali calendar</h2><button id="oa-cal-prev" type="button" aria-label="Previous month">‹</button><select id="oa-cal-month" aria-label="Nepali month"></select><select id="oa-cal-year" aria-label="Bikram Sambat year"></select><button id="oa-cal-next" type="button" aria-label="Next month">›</button><button id="oa-cal-today" class="oa-cal-today-btn" type="button">Today</button></div><div class="oa-cal-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div class="oa-cal-days" id="oa-cal-days" role="grid" aria-label="Nepali dates"><div class="oa-cal-loading">Loading Nepali dates…</div></div><p class="oa-cal-status" id="oa-cal-status" role="status" aria-live="polite">Connecting to the Nepali calendar…</p></section>',
