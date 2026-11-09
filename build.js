@@ -8,6 +8,7 @@ const parts = fs.readdirSync(partsDir).filter((name) => name.startsWith('part-')
 if (parts.length !== 6) throw new Error('Expected 6 site parts; found ' + parts.length);
 const encoded = parts.map((name) => fs.readFileSync(path.join(partsDir, name), 'utf8').trim()).join('');
 let html = zlib.gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8');
+html = html.replace(/url\\((['\"]?)https:\\/\\/images\\.unsplash\\.com\\/[^'\")]+\\1\\)/gi, 'none');
 html = html.replace('<title>Oxford Academy | Kushma, Parbat</title>', '<title>Oxford Academic Instruction Pvt. Ltd. | Kushma, Parbat</title>');
 html = html.replace('content="Oxford Academy, Kushma, Parbat — learning, character and confidence."', 'content="Oxford Academic Instruction Pvt. Ltd. | Education, learning and student development in Kushma, Parbat."');
 function replaceExactly(source, needle, replacement, label) { const first = source.indexOf(needle); if (first === -1) throw new Error('Could not find ' + label); if (source.indexOf(needle, first + needle.length) !== -1) throw new Error('Found ' + label + ' more than once'); return source.slice(0, first) + replacement + source.slice(first + needle.length); }
