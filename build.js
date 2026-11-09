@@ -201,6 +201,71 @@ for (const [needle, replacement, label] of publicMarkupPatches) {
   }
 }
 
+function replaceFirstBodyMarkup(source, needle, replacement, label) {
+  const bodyStart = source.indexOf('<body');
+  const index = source.indexOf(needle, bodyStart);
+  if (bodyStart < 0 || index < 0) throw new Error('Could not find visible ' + label);
+  return source.slice(0, index) + replacement + source.slice(index + needle.length);
+}
+
+// Use live content as the source of truth. Keep the initial HTML honest while
+// Supabase content loads, instead of flashing prototype programme/profile cards.
+const programmeCardPattern = /<div class="cards" id="programCards">[\\s\\S]*?<\\/div><\\/div><\\/section>/;
+html = replaceRegexExactly(
+  html,
+  programmeCardPattern,
+  '<div class="cards" id="programCards"><div class="oa-program-empty" role="status">Loading published programmes…</div></div></div></section>',
+  'initial programme loading state'
+);
+html = replaceFirstBodyMarkup(
+  html,
+  'Faculty profiles will appear here after the academy adds them.',
+  'Loading the Oxford team…',
+  'faculty loading state'
+);
+html = replaceFirstBodyMarkup(
+  html,
+  'Gallery photos will appear here when uploaded by the academy.',
+  'Loading academy photos…',
+  'gallery loading state'
+);
+html = replaceFirstBodyMarkup(
+  html,
+  '<div class="field"><label for="guardianName" data-en="Parent / guardian">Parent / guardian</label><input id="guardianName" name="guardian_name" maxlength="100" placeholder="Parent or guardian" /></div>',
+  '<div class="field"><label for="enquiryType">What do you need help with? *</label><select id="enquiryType" name="enquiry_type" required><option value="">Choose an enquiry type</option><option value="Japanese Language Classes (N5–N1)">Japanese Language Classes (N5–N1)</option><option value="Korean Language Classes">Korean Language Classes</option><option value="Japanese Language Test Preparation (JLPT, NAT, J-CERT, JLCT, JFT-Basic)">Japanese Language Test Preparation</option><option value="SSW Preparation Class">SSW Preparation Class</option><option value="Study in Japan / Student Visa Guidance">Study in Japan / Student Visa Guidance</option><option value="Working Visa Language Preparation">Working Visa Language Preparation</option><option value="Documentation and Application Support">Documentation and Application Support</option><option value="Other Enquiry or Issue">Other Enquiry or Issue</option></select></div>',
+  'public enquiry type selector'
+);
+html = replaceFirstBodyMarkup(
+  html,
+  'data-en="Admission enquiry">Admission enquiry',
+  'data-en="Send an enquiry">Send an enquiry',
+  'public enquiry form heading'
+);
+html = replaceFirstBodyMarkup(
+  html,
+  "Let's talk about your child's learning journey.",
+  'Tell us what you are looking for.',
+  'public enquiry section heading'
+);
+html = replaceFirstBodyMarkup(
+  html,
+  '<div class="about-photo"><img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&amp;fit=crop&amp;w=1100&amp;q=85" alt="A classroom learning environment" loading="lazy" /></div>',
+  '<div class="about-photo"><img alt="Oxford Academy learning photograph" loading="lazy" hidden /></div>',
+  'generic about stock photo'
+);
+html = replaceFirstBodyMarkup(
+  html,
+  "Add the academy's official email in the admin panel",
+  'Contact information is loading…',
+  'public contact email placeholder'
+);
+html = replaceFirstBodyMarkup(
+  html,
+  "Add the academy's contact number in the admin panel",
+  'Contact information is loading…',
+  'public contact phone placeholder'
+);
+
 const admissionGradePattern = /<div class="field full"><label for="grade"[^>]*>[\s\S]*?<\/div>/;
 const admissionBranchField = '<div class="field full"><label for="admissionBranch">Preferred branch *</label><select id="admissionBranch" name="branch_name" required><option value="">Choose a branch</option></select><small style="display:block;margin-top:5px;color:#718096;font-size:11px">Choose the academy branch you want to contact.</small></div>';
 html = replaceRegexExactly(html, admissionGradePattern, admissionBranchField, 'admission branch selector field');
