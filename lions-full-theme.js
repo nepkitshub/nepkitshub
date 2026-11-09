@@ -125,6 +125,25 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     body.oa-lions-full .oa-testimonial-person b{display:block;color:#173f69;font-size:12px}
     body.oa-lions-full .oa-testimonial-person small{display:block;color:#7a8998;font-size:10px}
     body.oa-lions-full .oa-testimonial-empty{padding:24px;border:1px dashed #c7d4df;border-radius:11px;background:#fff;color:#718194;font-size:12px;line-height:1.8}
+    body.oa-lions-full .oa-testimonial-submit{max-width:820px;margin:34px auto 0;padding:clamp(20px,3vw,30px);border:1px solid #e3eaf1;border-radius:16px;background:#fff;box-shadow:0 14px 36px rgba(15,48,79,.07)}
+    body.oa-lions-full .oa-testimonial-submit-head{margin-bottom:20px}
+    body.oa-lions-full .oa-testimonial-submit-head h3{margin:5px 0 8px;color:#173f69;font:700 clamp(23px,3vw,29px)/1.2 "Playfair Display",Georgia,serif}
+    body.oa-lions-full .oa-testimonial-submit-head p{margin:0;color:#6b7c8f;font-size:12px;line-height:1.8}
+    body.oa-lions-full .oa-testimonial-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    body.oa-lions-full .oa-testimonial-field{display:grid;gap:7px;min-width:0}
+    body.oa-lions-full .oa-testimonial-field.full{grid-column:1/-1}
+    body.oa-lions-full .oa-testimonial-field label{color:#3f5870;font-size:11px;font-weight:900}
+    body.oa-lions-full .oa-testimonial-field input,body.oa-lions-full .oa-testimonial-field textarea{width:100%;min-width:0;min-height:45px;padding:11px 13px;border:1px solid #dce5ed;border-radius:9px;background:#fff;color:#1c2b3b;font:12px "DM Sans",Arial,sans-serif;outline:none}
+    body.oa-lions-full .oa-testimonial-field textarea{min-height:118px;resize:vertical;line-height:1.75}
+    body.oa-lions-full .oa-testimonial-field input:focus,body.oa-lions-full .oa-testimonial-field textarea:focus{border-color:#185da0;box-shadow:0 0 0 3px rgba(24,93,160,.11)}
+    body.oa-lions-full .oa-testimonial-consent{display:flex;align-items:flex-start;gap:9px;margin:16px 0;color:#596d80;font-size:11px;line-height:1.65}
+    body.oa-lions-full .oa-testimonial-consent input{width:16px;height:16px;flex:0 0 16px;margin-top:1px;accent-color:#185da0}
+    body.oa-lions-full .oa-testimonial-form-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    body.oa-lions-full .oa-testimonial-submit-btn{min-height:45px;padding:12px 20px;border:0;border-radius:8px;background:#185da0;color:#fff;font:900 12px "DM Sans",Arial,sans-serif;cursor:pointer}
+    body.oa-lions-full .oa-testimonial-submit-btn:disabled{opacity:.6;cursor:wait}
+    body.oa-lions-full .oa-testimonial-form-status{min-height:20px;margin:0;color:#375c7e;font-size:11px;line-height:1.6}
+    body.oa-lions-full .oa-testimonial-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+
     body.oa-lions-full .oa-class-level-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:20px}
     body.oa-lions-full .oa-class-level{padding:18px 14px;border:1px solid #e2eaf1;border-radius:11px;background:#fff;box-shadow:0 8px 20px rgba(15,48,79,.045)}
     body.oa-lions-full .oa-class-level strong{display:block;margin-bottom:7px;color:#185da0;font:800 22px/1 "DM Sans",sans-serif}
@@ -431,7 +450,17 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         testimonials.id = 'oa-lions-testimonials';
         testimonials.className = 'section oa-lions-testimonials';
         testimonials.innerHTML =
-          '<div class="container"><div class="section-head"><span class="section-kicker">STUDENT EXPERIENCES</span><h2>Hear from learners at Oxford.</h2><p id="oa-testimonials-intro"></p></div><div class="oa-testimonial-grid" id="oa-testimonial-grid"><div class="oa-testimonial-empty">Student experiences will appear here after learners give permission for Oxford to publish their feedback.</div></div></div>';
+          '<div class="container"><div class="section-head"><span class="section-kicker">STUDENT EXPERIENCES</span><h2>Hear from learners at Oxford.</h2><p id="oa-testimonials-intro"></p></div>' +
+          '<div class="oa-testimonial-grid" id="oa-testimonial-grid"><div class="oa-testimonial-empty">Student experiences will appear here after learners give permission for Oxford to publish their feedback.</div></div>' +
+          '<div class="oa-testimonial-submit"><div class="oa-testimonial-submit-head"><span class="section-kicker">SHARE YOUR EXPERIENCE</span><h3>Tell us about your learning journey.</h3><p>We welcome honest feedback from Oxford learners. Complete the form below. Your review will be checked by our team and displayed here only after it is approved.</p></div>' +
+          '<form id="oa-testimonial-form"><div class="oa-testimonial-form-grid">' +
+          '<div class="oa-testimonial-field"><label for="oa-review-name">Your name *</label><input id="oa-review-name" name="student_name" type="text" minlength="2" maxlength="100" autocomplete="name" required placeholder="Enter your full name"></div>' +
+          '<div class="oa-testimonial-field"><label for="oa-review-course">Course / programme *</label><input id="oa-review-course" name="course_name" type="text" minlength="2" maxlength="120" required placeholder="e.g. Japanese Language"></div>' +
+          '<div class="oa-testimonial-field full"><label for="oa-review-location">Your location or branch (optional)</label><input id="oa-review-location" name="location" type="text" maxlength="120" autocomplete="address-level2" placeholder="e.g. Kushma or Baglung"></div>' +
+          '<div class="oa-testimonial-field full"><label for="oa-review-message">Your review *</label><textarea id="oa-review-message" name="quote_en" minlength="15" maxlength="1200" rows="4" required placeholder="Share what you learned and how your experience at Oxford has been…"></textarea></div>' +
+          '</div><label class="oa-testimonial-consent"><input type="checkbox" name="consent" required><span>I confirm this is my own feedback and agree that Oxford may publish it on this website after reviewing and approving it.</span></label>' +
+          '<div class="oa-testimonial-honeypot" aria-hidden="true"><label>Leave this field empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>' +
+          '<div class="oa-testimonial-form-actions"><button class="oa-testimonial-submit-btn" type="submit">Submit review</button><p class="oa-testimonial-form-status" id="oa-testimonial-form-status" role="status" aria-live="polite"></p></div></form></div></div>';
       }
       const testimonialsIntro = $('#oa-testimonials-intro', testimonials); if (testimonialsIntro) testimonialsIntro.textContent = profileMap.testimonials_intro || 'Student feedback is shown only after it has been reviewed and approved for publication.';
       const testimonialGrid = $('#oa-testimonial-grid', testimonials);
@@ -453,6 +482,52 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           testimonialGrid.innerHTML = '<div class="oa-testimonial-empty">We are preparing this space for approved student experiences. Oxford will publish feedback only with the student’s permission.</div>';
           if (testimonialError) console.warn('Testimonials could not be loaded:', testimonialError.message);
         }
+      }
+
+
+      const testimonialForm = $('#oa-testimonial-form', testimonials);
+      if (testimonialForm && testimonialForm.dataset.bound !== 'true') {
+        testimonialForm.dataset.bound = 'true';
+        testimonialForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const status = $('#oa-testimonial-form-status', testimonials);
+          const button = testimonialForm.querySelector('button[type="submit"]');
+          const values = new FormData(testimonialForm);
+          if (String(values.get('website') || '').trim()) {
+            testimonialForm.reset();
+            if (status) status.textContent = 'Thank you for sharing your feedback.';
+            return;
+          }
+          const payload = {
+            student_name: String(values.get('student_name') || '').trim(),
+            course_name: String(values.get('course_name') || '').trim(),
+            location: String(values.get('location') || '').trim(),
+            quote_en: String(values.get('quote_en') || '').trim(),
+            photo_url: '',
+            is_published: false,
+            sort_order: 0
+          };
+          if (payload.student_name.length < 2 || payload.student_name.length > 100 ||
+              payload.course_name.length < 2 || payload.course_name.length > 120 ||
+              payload.quote_en.length < 15 || payload.quote_en.length > 1200 ||
+              payload.location.length > 120) {
+            if (status) status.textContent = 'Please check the form. Some answers are outside the allowed length.';
+            return;
+          }
+          if (button) button.disabled = true;
+          if (status) status.textContent = 'Submitting your review…';
+          try {
+            const { error } = await db.from('oa_testimonials').insert(payload);
+            if (error) throw error;
+            testimonialForm.reset();
+            if (status) status.textContent = 'Thank you. Your review has been submitted and will appear here after Oxford approves it.';
+          } catch (error) {
+            console.error('Oxford learner review could not be submitted:', error);
+            if (status) status.textContent = 'We could not send your review right now. Please try again in a moment.';
+          } finally {
+            if (button) button.disabled = false;
+          }
+        });
       }
 
       let calendarSection = $('#oa-lions-calendar');
