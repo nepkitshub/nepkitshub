@@ -13,7 +13,7 @@ function applySavedAcademyHeroImage() {
   if (!style) {
     style = document.createElement('style');
     style.id = styleId;
-    document.head.appendChild(style);
+    document.body.appendChild(style);
   }
   const selector = 'body.oa-lions-full .hero:before, body.oa-lions-inspired-preview .hero:before';
   const fallback = 'linear-gradient(90deg,rgba(7,27,49,.94) 0%,rgba(9,39,69,.86) 48%,rgba(9,39,69,.52) 100%)';
