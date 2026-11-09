@@ -276,7 +276,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       "<button data-section='testimonials'>☆ &nbsp; Student testimonials</button>" +
       "<button data-section='events'>▦ &nbsp; Calendar & intakes</button>" +
       "<button data-section='partners'>◇ &nbsp; Partner institutions</button>" +
-      "<button data-section='admissions'>✉ &nbsp; Admissions</button><button data-section='branches'>⌖ &nbsp; Branches & contacts</button></nav>" +
+      "<button data-section='admissions'>✉ &nbsp; Enquiries</button><button data-section='branches'>⌖ &nbsp; Branches & contacts</button></nav>" +
       "<a href='/' target='_blank' rel='noopener'>View live website ↗</a></aside>" +
       "<main class='oa-main'><div class='oa-top'><div><small>OXFORD ACADEMY / ADMIN</small><h1 id='oa-title'>Dashboard overview</h1></div>" +
       "<div class='oa-actions'><a class='oa-button light' href='/' target='_blank'>View website</a><button class='oa-button' id='oa-signout'>Sign out</button></div></div>" +
@@ -305,7 +305,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     testimonials: 'Student testimonials',
     events: 'Calendar & course intakes',
     partners: 'Partner institutions',
-    admissions: 'Admission enquiries',
+    admissions: 'Enquiries',
     branches: 'Branches & contact details'
   };
   function setTitle(name) {
@@ -646,7 +646,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   async function renderAdmissions() {
     const view = $('#oa-view');
     view.innerHTML =
-      "<div class='oa-card'><div class='oa-admissions-heading'><div><h2>Admission enquiries</h2><p>Search enquiries, review contact details and messages, and update each enquiry’s status.</p></div><button type='button' class='oa-button light' id='oa-refresh-enquiries'>Refresh ↻</button></div>" +
+      "<div class='oa-card'><div class='oa-admissions-heading'><div><h2>Enquiries</h2><p>Search enquiries, review contact details and messages, and update each enquiry’s status.</p></div><button type='button' class='oa-button light' id='oa-refresh-enquiries'>Refresh ↻</button></div>" +
       "<div id='oa-enquiries-summary' class='oa-enquiries-summary'>Loading enquiries…</div>" +
       "<div class='oa-admissions-tools'><input id='oa-enquiry-search' type='search' placeholder='Search student, parent, phone, email or message' aria-label='Search enquiries'><select id='oa-enquiry-filter' aria-label='Filter enquiries by status'><option value='all'>All enquiries</option><option value='new'>New</option><option value='contacted'>Contacted</option><option value='closed'>Closed</option></select></div>" +
       "<div id='oa-enquiries' class='oa-enquiries-list'></div></div>";
@@ -691,8 +691,12 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         const phone = String(row.phone || '').trim();
         const digits = waNumber(phone);
         const email = String(row.email || '').trim();
-        const message = String(row.message || '').trim();
-        const guardian = String(row.guardian_name || '').trim();
+        const rawMessage = String(row.message || '').trim();
+        const enquiryTypeMatch = rawMessage.match(/(?:^|\n)Enquiry type:\s*([^\n]+)/i);
+        const enquiryType = enquiryTypeMatch ? enquiryTypeMatch[1].trim() : '';
+        const message = enquiryTypeMatch
+          ? rawMessage.replace(enquiryTypeMatch[0], '').trim()
+          : rawMessage;
         const status = row.status || 'new';
         const phoneLink = phone
           ? "<a href='tel:" + esc(phone.replace(/[^\\d+]/g, '')) + "'>" + esc(phone) + "</a>"
@@ -701,18 +705,19 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           ? "<a href='mailto:" + esc(email) + "'>" + esc(email) + "</a>"
           : "<span>Not provided</span>";
         const whatsapp = digits
-          ? "<a class='oa-enquiry-action whatsapp' href='https://wa.me/" + esc(digits) + "?text=" + encodeURIComponent('Namaste, we are contacting you regarding your admission enquiry for ' + (row.student_name || 'your child') + '.') + "' target='_blank' rel='noopener noreferrer'>Message on WhatsApp ↗</a>"
+          ? "<a class='oa-enquiry-action whatsapp' href='https://wa.me/" + esc(digits) + "?text=" + encodeURIComponent('Namaste, we are contacting you regarding your enquiry from ' + (row.student_name || 'you') + '.') + "' target='_blank' rel='noopener noreferrer'>Message on WhatsApp ↗</a>"
           : '';
         const emailAction = email
-          ? "<a class='oa-enquiry-action' href='mailto:" + esc(email) + "?subject=" + encodeURIComponent('Oxford Academy admission enquiry') + "'>Send email ↗</a>"
+          ? "<a class='oa-enquiry-action' href='mailto:" + esc(email) + "?subject=" + encodeURIComponent('Oxford Academy enquiry') + "'>Send email ↗</a>"
           : '';
         return "<article class='oa-enquiry-card'>" +
-          "<div class='oa-enquiry-card-head'><div><div class='oa-enquiry-kicker'>" + esc(row.branch_name || 'Kushma Branch') + " · " + esc(dateLabel(row.created_at)) + "</div><h3>" + esc(row.student_name || 'Student name not provided') + "</h3><div class='oa-enquiry-guardian'>Parent / guardian: <strong>" + esc(guardian || 'Not provided') + "</strong></div></div>" +
+          "<div class='oa-enquiry-card-head'><div><div class='oa-enquiry-kicker'>" + esc(row.branch_name || 'Kushma Branch') + " · " + esc(dateLabel(row.created_at)) + "</div><h3>" + esc(row.student_name || 'Name not provided') + "</h3></div>" +
           "<label class='oa-enquiry-status-wrap'><span>Status</span><select class='oa-button light' data-status='" + esc(row.id) + "'><option value='new' " + (status === 'new' ? 'selected' : '') + ">New</option><option value='contacted' " + (status === 'contacted' ? 'selected' : '') + ">Contacted</option><option value='closed' " + (status === 'closed' ? 'selected' : '') + ">Closed</option></select></label></div>" +
           "<div class='oa-enquiry-contact-grid'><div class='oa-enquiry-contact'><span>PHONE NUMBER</span>" + phoneLink + "</div><div class='oa-enquiry-contact'><span>EMAIL ADDRESS</span>" + emailLink + "</div><div class='oa-enquiry-contact'><span>BRANCH</span><strong>" + esc(row.branch_name || 'Kushma Branch') + "</strong></div></div>" +
-          (row.grade ? "<div class='oa-enquiry-contact' style='margin-top:10px'><span>CLASS / GRADE (PREVIOUS ENQUIRY)</span><strong>" + esc(row.grade) + "</strong></div>" : '') +
-          "<div class='oa-enquiry-message'><strong>Message from parent / guardian</strong><p>" + (message ? esc(message) : 'No additional message was provided.') + "</p></div>" +
-          "<div class='oa-enquiry-actions'>" + (phone ? "<a class='oa-enquiry-action' href='tel:" + esc(phone.replace(/[^\\d+]/g, '')) + "'>Call parent ↗</a>" : '') + whatsapp + emailAction + "</div></article>";
+          (enquiryType ? "<div class='oa-enquiry-contact' style='margin-top:10px'><span>ENQUIRY TYPE</span><strong>" + esc(enquiryType) + "</strong></div>" : '') +
+          (row.grade ? "<div class='oa-enquiry-contact' style='margin-top:10px'><span>CLASS / GRADE (OLDER ENQUIRY)</span><strong>" + esc(row.grade) + "</strong></div>" : '') +
+          "<div class='oa-enquiry-message'><strong>Additional details from student</strong><p>" + (message ? esc(message) : 'No additional details were provided.') + "</p></div>" +
+          "<div class='oa-enquiry-actions'>" + (phone ? "<a class='oa-enquiry-action' href='tel:" + esc(phone.replace(/[^\\d+]/g, '')) + "'>Call student ↗</a>" : '') + whatsapp + emailAction + "</div></article>";
       }).join('');
 
       node.querySelectorAll('[data-status]').forEach((select) => {
