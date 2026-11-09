@@ -1528,3 +1528,79 @@ body.oa-lions-inspired-preview .hero:before {
   background-position:center 42% !important;
   background-size:cover !important;
 }
+
+
+
+/* Header refinements from the annotated desktop reference */
+/* The utility strip contains only the academy phone and email details.
+   The page location and duplicate enquiry shortcut are removed as marked. */
+body.oa-lions-full .topbar .container {
+  justify-content:flex-start !important;
+}
+body.oa-lions-full .topbar .container > a {
+  display:none !important;
+}
+body.oa-lions-full .top-meta {
+  width:100% !important;
+  justify-content:flex-start !important;
+  gap:clamp(16px,1.8vw,26px) !important;
+}
+body.oa-lions-full .top-meta > span:not(.oa-top-contact) {
+  display:none !important;
+}
+body.oa-lions-full .top-meta .oa-top-contact {
+  min-width:0 !important;
+  white-space:nowrap !important;
+}
+
+/* Balance the desktop navigation between the academy identity and the
+   primary Enquire Now action. Tablet and mobile menu behaviour is unchanged. */
+@media (min-width:1021px) {
+  body.oa-lions-full .navbar {
+    display:grid !important;
+    grid-template-columns:minmax(220px,255px) minmax(0,1fr) max-content !important;
+    align-items:center !important;
+    gap:clamp(12px,1.2vw,18px) !important;
+  }
+  body.oa-lions-full .nav-wrap .brand {
+    min-width:0 !important;
+    max-width:100% !important;
+    width:auto !important;
+  }
+  body.oa-lions-full .nav-links {
+    min-width:0 !important;
+    justify-content:center !important;
+    flex-wrap:nowrap !important;
+    gap:clamp(8px,.98vw,14px) !important;
+    font-size:clamp(10px,.88vw,12px) !important;
+  }
+  body.oa-lions-full .nav-links > a,
+  body.oa-lions-full .nav-links summary {
+    white-space:nowrap !important;
+  }
+  body.oa-lions-full .nav-actions {
+    min-width:max-content !important;
+    justify-self:end !important;
+    gap:8px !important;
+  }
+  body.oa-lions-full .nav-actions .btn {
+    white-space:nowrap !important;
+  }
+}
+@media (min-width:1021px) and (max-width:1180px) {
+  body.oa-lions-full .navbar {
+    grid-template-columns:minmax(190px,220px) minmax(0,1fr) max-content !important;
+    gap:10px !important;
+  }
+  body.oa-lions-full .brand-name {
+    font-size:13px !important;
+  }
+  body.oa-lions-full .nav-links {
+    gap:7px !important;
+    font-size:10px !important;
+  }
+  body.oa-lions-full .nav-actions .btn {
+    padding-inline:11px !important;
+    font-size:10px !important;
+  }
+}
