@@ -247,7 +247,8 @@ if (!isAdminRoute) {
         .limit(2);
       if (error) throw error;
       if (!data || !data.length) {
-        staffRoot.innerHTML = '<div class="oa-staff-empty">Our teachers and staff profiles will appear here as the academy publishes them.</div>';
+        staffRoot.closest('section')?.remove();
+        document.querySelectorAll('#navLinks a[href="#team"]').forEach((link) => link.remove());
         return;
       }
       staffRoot.innerHTML = data.map((member) => {
