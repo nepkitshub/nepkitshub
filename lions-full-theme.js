@@ -568,9 +568,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
       const oldCalendarPreview = $('#oa-lions-calendar');
       if (oldCalendarPreview) oldCalendarPreview.remove();
-      document.querySelectorAll('.oa-lions-calendar, #calendar').forEach((node) => {
-        if (node.id === 'oa-lions-calendar' || node.classList.contains('oa-lions-calendar')) node.remove();
-      });
+      const legacyCalendarSection = $('#calendar');
+      if (legacyCalendarSection) legacyCalendarSection.remove();
+      document.querySelectorAll('.oa-lions-calendar').forEach((node) => node.remove());
 
       // Turn the existing notices area into the updates section instead of inventing student testimonials.
       sectionHead($('#team'), 'OUR PEOPLE', 'Meet the Oxford team.', 'Get to know the people who support the academy and its learning programmes.');
