@@ -78,6 +78,8 @@ assert.ok(visibleMarkup.includes('data-en="Notices"'), 'The existing Notices nav
 assert.ok(visibleMarkup.includes('data-en="Gallery"'), 'The existing Gallery navigation label must remain unchanged.');
 const homepageOverrides = fs.readFileSync(path.join(root, 'homepage-overrides.js'), 'utf8');
 const lionsTheme = fs.readFileSync(path.join(root, 'lions-full-theme.js'), 'utf8');
+const adminManager = fs.readFileSync(path.join(root, 'admin-manager.js'), 'utf8');
+const publicBranding = fs.readFileSync(path.join(root, 'public-branding.js'), 'utf8');
 assert.equal(homepageOverrides.split("from('oa_programs')").length - 1, 0, 'Homepage programme queries must not be duplicated.');
 assert.equal(lionsTheme.split("from('oa_programs')").length - 1, 1, 'Exactly one published-programme query should remain.');
 assert.ok(!lionsTheme.includes('Your Japan Journey Starts With the Right Guidance.'), 'The visual layer must not inject replacement marketing copy.');
@@ -85,6 +87,12 @@ assert.ok(!lionsTheme.includes('Build skills. Explore opportunities.'), 'The vis
 assert.ok(!lionsTheme.includes('Student Visa & Study in Japan'), 'The visual layer must not inject student-visa marketing copy.');
 assert.ok(lionsTheme.includes('is_published: false'), 'Learner reviews must remain pending until admin approval.');
 assert.ok(lionsTheme.includes('oa-lions-office-grid'), 'Admin-managed branch contact cards must remain connected.');
+assert.ok(adminManager.includes('async function prepareUploadImage(file)'), 'Admin photo uploads must normalize supported phone photos.');
+assert.ok(adminManager.includes("accept='image/*'"), 'Admin profile photos must accept phone image types.');
+assert.ok(adminManager.includes('fileInput.value = \'\';'), 'Logo picker must reset before opening the cropper.');
+assert.ok(adminManager.includes('company name remains independent'), 'Logo sizing controls must not imply company-name scaling.');
+assert.ok(publicBranding.includes('body.oa-lions-full .brand-mark,body .page-mark'), 'Saved logo dimensions must override theme fixed dimensions.');
+assert.ok(!publicBranding.includes("'.brand-name{font-size:"), 'Logo sizing must not set company-name font size.');
 
 const admin = read('admin/index.html');
 assert.ok(admin.includes('class="admin-route"'), 'Admin route protection styles are not attached.');
