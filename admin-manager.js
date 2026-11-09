@@ -168,7 +168,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       table: 'oa_testimonials',
       noun: 'student experience',
       publishDefault: false,
-      description: 'Only publish a student experience after the wording has been reviewed and the student has given permission to share their feedback and photo.',
+      description: 'New learner submissions arrive as Pending approval. Review the wording and confirm the student has agreed to publication. Select Publish to show an approved review in the public Hear from learners section. Unapproved submissions stay hidden.',
 
       fields: [
         ['student_name', 'Student name', true],
@@ -600,11 +600,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     list.innerHTML = rows.length ? rows.map((row) => {
       const status = row.is_published
         ? "<span class='oa-status'>Published</span>"
-        : "<span class='oa-status draft'>Draft</span>";
+        : "<span class='oa-status draft'>" + (name === 'testimonials' ? 'Pending approval' : 'Draft') + "</span>";
       return "<div class='oa-record'><div><b>" + esc(config.label(row) || 'Untitled') + "</b><small>" +
         esc(config.sub(row) || '') + "</small>" + status + "</div><div class='oa-actions'>" +
         "<button class='oa-button light' data-edit='" + esc(row.id) + "'>Edit</button>" +
-        "<button class='oa-button light' data-publish='" + esc(row.id) + "'>" + (row.is_published ? 'Unpublish' : 'Publish') + "</button>" +
+        "<button class='oa-button light' data-publish='" + esc(row.id) + "'>" + (row.is_published ? 'Unpublish' : (name === 'testimonials' ? 'Approve & publish' : 'Publish')) + "</button>" +
         "<button class='oa-button red' data-delete='" + esc(row.id) + "'>Delete</button></div></div>";
     }).join('') : "<div class='oa-empty'>No entries yet. Use the form above to add the first one.</div>";
 
@@ -618,7 +618,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         const { error } = await db.from(config.table).update({ is_published: !row.is_published }).eq('id', row.id);
         if (error) showMessage(error.message);
         else {
-          showMessage(row.is_published ? 'Item unpublished.' : 'Item published.');
+          showMessage(row.is_published ? (name === 'testimonials' ? 'Review unpublished.' : 'Item unpublished.') : (name === 'testimonials' ? 'Review approved and published.' : 'Item published.'));
           await openSection(name);
         }
         return;
