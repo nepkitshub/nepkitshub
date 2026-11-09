@@ -269,7 +269,6 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
       const programRoot = $('#programCards');
       if (programRoot) {
-        const { data: programs      if (programRoot) {
         const { data: programs, error: programError } = await db.from('oa_programs')
           .select('id,title_en,description_en,is_published,sort_order')
           .eq('is_published', true).order('sort_order', { ascending:true });
