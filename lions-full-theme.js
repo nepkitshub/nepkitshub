@@ -211,6 +211,16 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           (phone ? '<span class="oa-top-contact"><span aria-hidden="true">☎</span><a href="tel:' + esc(phone.replace(/[^\d+]/g, '')) + '">' + esc(phone) + '</a></span>' : '') +
           (email ? '<span class="oa-top-contact"><span aria-hidden="true">✉</span><a href="mailto:' + esc(email) + '">' + esc(email) + '</a></span>' : '');
       }
+      // Restore the PR #22 right-side Facebook link in the utility bar.
+      const topFollow = $('.topbar .container > a');
+      if (topFollow) {
+        const facebookUrl = safeHttps(primaryBranch.facebook_url || '') || 'https://www.facebook.com/';
+        topFollow.href = facebookUrl;
+        topFollow.textContent = 'Follow us on Facebook ↗';
+        topFollow.target = '_blank';
+        topFollow.rel = 'noopener noreferrer';
+        topFollow.setAttribute('aria-label', 'Follow Oxford Academic Instruction on Facebook');
+      }
 
       const nav = $('#navLinks');
       if (nav) nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMobileMenu));
@@ -693,7 +703,16 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const oldContactSection = $('#contact');
       if (oldContactSection) oldContactSection.remove();
 
-      // The homepage keeps the main learning journey; full calendar and intakes live on /calendar/.
+      // Remove the legacy mission banner that appeared above the hero after
+      // the section-order restoration. The PR #22 language-class callout remains below.
+      const legacyMissionBanner = $('.split-banner');
+      if (legacyMissionBanner) {
+        const legacyMissionSection = legacyMissionBanner.closest('section');
+        if (legacyMissionSection) legacyMissionSection.remove();
+        else legacyMissionBanner.remove();
+      }
+
+      // The homepage keeps the complete PR #22 learning journey; full calendar and intakes live on /calendar/.
       const main = $('main');
       const hero = $('#home');
       const trust = $('.trust-row');
@@ -702,7 +721,6 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const notices = $('#notices');
       const admission = $('#admission');
       if (main && hero) {
-        const missionSection = $('.split-banner')?.closest('section');
         const academics = $('#academics');
         const ordered = [hero, trust, quickAccess, about, companyProfile, values, services, callout, academics, supportJourney, testimonials, team, notices, gallery, offices, partnerSection, admission].filter(Boolean);
         ordered.forEach((node) => main.appendChild(node));
