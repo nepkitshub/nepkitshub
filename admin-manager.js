@@ -420,11 +420,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       overlay.querySelector('#oa-crop-save').addEventListener('click',()=>{const output=1024,canvas=document.createElement('canvas');canvas.width=output;canvas.height=output;const ctx=canvas.getContext('2d'),scale=output/size,w=image.naturalWidth*fit*zoom*scale,h=image.naturalHeight*fit*zoom*scale;ctx.clearRect(0,0,output,output);ctx.drawImage(image,(output-w)/2+dx*scale,(output-h)/2+dy*scale,w,h);canvas.toBlob(blob=>{if(!blob){showMessage('Could not crop this image.');return;}const cropped=new File([blob],'academy-logo.png',{type:'image/png'});close();onDone(cropped);},'image/png');});
       redraw();
     };
-    image.onerror=()=>{URL.revokeObjectURL(objectUrl);showMessage('Could not open this image. Choose another JPG or PNG.');};image.src=objectUrl;
+    image.onerror=()=>{URL.revokeObjectURL(objectUrl);showMessage('The image preview could not be opened. Trying the original image upload…');onDone(file);};image.src=objectUrl;
   }
   function logoUploadField(value){
     const url=safeUrl(value||'');
-    return "<div class='oa-field full'><label>Academy logo</label><input type='url' name='logo_url' value='"+esc(url)+"' placeholder='https://…'><div class='oa-upload'><small>Choose an image to open the crop popup. Drag and zoom, then save the cropped PNG.</small><input type='file' id='oa-logo-file' accept='image/png,image/jpeg,image/webp'></div><img class='oa-preview "+(url?'':'hide')+"' id='oa-logo-preview' src='"+esc(url)+"' alt='Logo preview'></div>";
+    return "<div class='oa-field full'><label>Academy logo</label><input type='url' name='logo_url' value='"+esc(url)+"' placeholder='https://…'><div class='oa-upload'><small>Choose a new image to replace the logo. Crop and zoom it, or upload the original image without cropping.</small><input type='file' id='oa-logo-file' accept='image/png,image/jpeg,image/webp'></div><img class='oa-preview "+(url?'':'hide')+"' id='oa-logo-preview' src='"+esc(url)+"' alt='Logo preview'></div>";
   }
 
   async function renderBranding() {
