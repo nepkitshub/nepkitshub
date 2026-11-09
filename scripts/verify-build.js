@@ -29,12 +29,12 @@ let htmlCount = 0;
 let scriptCount = 0;
 for (const route of routes) {
   const html = read(route);
+  assert.ok(!html.includes('id="oa-complete-site-redesign"'), route + ' must not load the rejected green redesign layer.');
   htmlCount += 1;
   for (const marker of [
     'id="oa-professional-design-system"',
     'id="oa-public-branding"',
-    'id="oa-professional-ux"',
-    'id="oa-complete-site-redesign"'
+    'id="oa-professional-ux"'
   ]) {
     assert.ok(html.includes(marker), route + ' is missing shared layer marker: ' + marker);
   }
@@ -99,14 +99,10 @@ assert.ok(admin.includes('class="admin-route"'), 'Admin route protection styles 
 assert.ok(/name="robots"\s+content="noindex,nofollow"/i.test(admin), 'Admin route must be noindex.');
 
 const css = fs.readFileSync(path.join(root, 'professional-theme.css'), 'utf8');
-const redesign = fs.readFileSync(path.join(root, 'oxford-site-redesign.css'), 'utf8');
-assert.ok(redesign.includes('--oa-ink:#1d2d2b'), 'New Oxford palette is missing.');
-assert.ok(redesign.includes('body.admin-route .oa-app'), 'Admin redesign styles are missing.');
-assert.ok(redesign.includes('body.oa-lions-full .hero'), 'Homepage redesign styles are missing.');
+assert.ok(css.includes('--oa-navy: #102b4e'), 'PR #22 navy-and-white palette is missing.');
+assert.ok(css.includes('grid-template-areas:"section brand home"'), 'PR #22 laptop inner-page header layout is missing.');
 assert.ok(/@media\s*\([^)]*max-width\s*:\s*760px/i.test(css), 'Mobile breakpoint at 760px is missing.');
 assert.ok(/prefers-reduced-motion\s*:\s*reduce/i.test(css), 'Reduced-motion support is missing.');
-assert.ok(/hero:before[\s\S]*?width:min\(44%,560px\)/.test(redesign), 'Desktop split hero image layout is missing.');
-assert.ok(redesign.includes('body.oa-lions-full .hero-inner'), 'Split hero copy layout is missing.');
 
 for (const file of ['robots.txt', 'sitemap.xml']) {
   read(file);
