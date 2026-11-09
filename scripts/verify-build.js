@@ -101,6 +101,9 @@ assert.ok(/name="robots"\s+content="noindex,nofollow"/i.test(admin), 'Admin rout
 const css = fs.readFileSync(path.join(root, 'professional-theme.css'), 'utf8');
 assert.ok(css.includes('--oa-navy: #102b4e'), 'PR #22 navy-and-white palette is missing.');
 assert.ok(css.includes('grid-template-areas:"section brand home"'), 'PR #22 laptop inner-page header layout is missing.');
+assert.ok(css.includes('.top-meta > span:not(.oa-top-contact)'), 'Annotated utility bar must hide location while retaining phone and email.');
+assert.ok(css.includes('.topbar .container > a {\n  display:none !important;'), 'Annotated utility bar must remove the duplicate top enquiry link.');
+assert.ok(css.includes('grid-template-columns:minmax(220px,255px) minmax(0,1fr) max-content'), 'Desktop navigation must use a balanced three-column layout.');
 assert.ok(/@media\s*\([^)]*max-width\s*:\s*760px/i.test(css), 'Mobile breakpoint at 760px is missing.');
 assert.ok(/prefers-reduced-motion\s*:\s*reduce/i.test(css), 'Reduced-motion support is missing.');
 
