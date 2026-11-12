@@ -100,6 +100,15 @@ assert.ok(adminManager.includes('company name remains independent'), 'Logo sizin
 assert.ok(publicBranding.includes('body.oa-lions-full .brand-mark,body .page-mark'), 'Saved logo dimensions must override theme fixed dimensions.');
 assert.ok(!publicBranding.includes("'.brand-name{font-size:"), 'Logo sizing must not set company-name font size.');
 
+const calendarPage = read('calendar/index.html');
+assert.ok(calendarPage.includes('id="oa-cal-month-nav"'), 'Digital calendar month navigation is missing.');
+assert.ok(calendarPage.includes('आइत'), 'Bilingual Nepali weekday labels are missing.');
+assert.ok(calendarPage.includes('2083 BS'), 'Calendar must be scoped to 2083 BS.');
+assert.ok(calendarPage.includes('Festivals &amp; holidays this month') || calendarPage.includes('Festivals & holidays this month'), 'Monthly festival list is missing.');
+const calendarSource = fs.readFileSync(path.join(root, 'calendar-page.js'), 'utf8');
+assert.ok(calendarSource.includes("yearSelect.innerHTML = '<option value=" + "'2083'" + ">2083 BS</option>'"), 'Calendar year selector must stay on 2083 BS.');
+assert.ok(calendarSource.includes('const calendarItems ='), 'Nepali festival and holiday records must come from the date feed.');
+
 const admin = read('admin/index.html');
 assert.ok(admin.includes('class="admin-route"'), 'Admin route protection styles are not attached.');
 assert.ok(/name="robots"\s+content="noindex,nofollow"/i.test(admin), 'Admin route must be noindex.');
