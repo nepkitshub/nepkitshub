@@ -106,7 +106,7 @@ assert.ok(calendarPage.includes('आइत'), 'Bilingual Nepali weekday labels a
 assert.ok(calendarPage.includes('2083 BS'), 'Calendar must be scoped to 2083 BS.');
 assert.ok(calendarPage.includes('Festivals &amp; holidays this month') || calendarPage.includes('Festivals & holidays this month'), 'Monthly festival list is missing.');
 const calendarSource = fs.readFileSync(path.join(root, 'calendar-page.js'), 'utf8');
-assert.ok(calendarSource.includes("yearSelect.innerHTML = '<option value=\\\"2083\\\">2083 BS</option>'"), 'Calendar year selector must stay on 2083 BS.');
+assert.ok(calendarSource.includes(`yearSelect.innerHTML = '<option value="2083">2083 BS</option>'`), 'Calendar year selector must stay on 2083 BS.');
 assert.ok(calendarSource.includes('const calendarItems ='), 'Nepali festival and holiday records must come from the date feed.');
 
 const admin = read('admin/index.html');
