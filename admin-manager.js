@@ -256,31 +256,162 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       '@media(max-width:560px){.oa-top{align-items:flex-start;flex-direction:column}.oa-top h1{font-size:25px}.oa-grid{grid-template-columns:1fr}.oa-field.full{grid-column:1}.oa-record{align-items:flex-start;flex-direction:column}.oa-stats{gap:7px}.oa-stat{padding:12px}.oa-stat strong{font-size:22px}}'
     ].join('');
     document.head.appendChild(style);
+
+    const dashboardStyle = document.createElement('style');
+    dashboardStyle.id = 'oa-admin-dashboard-reference';
+    dashboardStyle.textContent = [
+      'body.admin-route .admin-body{padding:0!important;background:#f3f6fa!important}',
+      'body.admin-route .oa-admin-shell{min-height:calc(100vh - 56px);background:#f4f7fb;color:#17283d}',
+      'body.admin-route .oa-admin-header{height:74px;position:sticky;top:0;z-index:80;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:10px clamp(16px,2.5vw,34px);background:#fff;border-bottom:1px solid #e5ebf1;box-shadow:0 4px 18px rgba(16,43,78,.035)}',
+      'body.admin-route .oa-admin-header-brand{display:flex;align-items:center;gap:11px;min-width:0;color:#17283d;text-decoration:none}',
+      'body.admin-route .oa-admin-header-mark{width:42px!important;height:42px!important;flex:0 0 42px!important;border-radius:13px!important;background:#e8f1fa!important;color:#185da0!important;border:1px solid #dce8f3;display:grid;place-items:center;overflow:hidden}',
+      'body.admin-route .oa-admin-header-mark img{width:100%;height:100%;object-fit:contain;padding:3px;border-radius:inherit}',
+      'body.admin-route .oa-admin-brand-copy{display:grid;gap:3px;min-width:0}',
+      'body.admin-route .oa-admin-brand-copy .brand-name{display:block;color:#153a61;font:800 14px/1.2 "DM Sans",Arial,sans-serif;letter-spacing:-.02em;white-space:nowrap}',
+      'body.admin-route .oa-admin-brand-copy .brand-place{color:#8291a1;font-size:8px;font-weight:800;letter-spacing:.15em}',
+      'body.admin-route .oa-admin-header-actions{display:flex;align-items:center;gap:12px}',
+      'body.admin-route .oa-admin-header-actions .oa-button{min-height:39px;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 13px;border-radius:10px;text-decoration:none}',
+      'body.admin-route .oa-admin-account{display:flex;align-items:center;gap:8px;padding:0 8px;color:#344a60}',
+      'body.admin-route .oa-admin-account>span:last-child{display:grid;gap:2px}',
+      'body.admin-route .oa-admin-account b{font-size:11px;font-weight:800}',
+      'body.admin-route .oa-admin-account small{color:#8492a1;font-size:9px}',
+      'body.admin-route .oa-admin-avatar{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#eaf2fb;color:#185da0;font-size:11px;font-weight:900}',
+      'body.admin-route .oa-app{display:grid;grid-template-columns:238px minmax(0,1fr);min-height:calc(100vh - 130px);background:#f4f7fb}',
+      'body.admin-route .oa-side{position:relative;top:auto;z-index:2;min-width:0;padding:20px 13px 16px;display:flex;flex-direction:column;gap:12px;background:#fff;color:#344a60;border-right:1px solid #e5ebf1}',
+      'body.admin-route .oa-side-heading{display:grid;gap:4px;padding:4px 10px 9px}',
+      'body.admin-route .oa-side-heading span{color:#91a0ae;font-size:8px;font-weight:900;letter-spacing:.17em}',
+      'body.admin-route .oa-side-heading b{color:#1d3d5f;font-size:14px;font-weight:900}',
+      'body.admin-route .oa-nav{display:grid;gap:4px;overflow:visible;padding:0}',
+      'body.admin-route .oa-nav-group{display:grid;gap:4px;margin-bottom:9px}',
+      'body.admin-route .oa-nav-label{padding:10px 10px 4px;color:#9aa7b4;font-size:8px;font-weight:900;letter-spacing:.14em}',
+      'body.admin-route .oa-nav button{width:100%;min-height:41px;display:flex;align-items:center;gap:11px;padding:9px 10px;border:1px solid transparent;border-radius:10px;background:transparent;color:#526579;text-align:left;font-size:11px;font-weight:750;white-space:normal;transition:background .18s ease,color .18s ease,border-color .18s ease}',
+      'body.admin-route .oa-nav button:hover{background:#f4f8fc;color:#185da0}',
+      'body.admin-route .oa-nav button.active{background:#eaf3fc;border-color:#dceafa;color:#145998;box-shadow:none}',
+      'body.admin-route .oa-nav-icon{width:24px;height:24px;flex:0 0 24px;display:grid;place-items:center;border-radius:8px;background:#f1f5f9;color:#617b95;font-size:14px;font-weight:900}',
+      'body.admin-route .oa-nav button.active .oa-nav-icon{background:#d6e9fb;color:#155c9f}',
+      'body.admin-route .oa-side-foot{display:flex;align-items:center;gap:8px;margin-top:auto;padding:14px 9px 2px;border-top:1px solid #edf1f5;color:#8291a1;font-size:9px;font-weight:700}',
+      'body.admin-route .oa-side-status-dot{width:7px;height:7px;border-radius:50%;background:#38a777;box-shadow:0 0 0 4px #e5f5ed}',
+      'body.admin-route .oa-main{min-width:0;padding:clamp(19px,2.5vw,32px);background:#f4f7fb}',
+      'body.admin-route .oa-top{position:static;display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 20px;padding:0 0 16px;background:transparent;border-bottom:1px solid #e5ebf1}',
+      'body.admin-route .oa-top small{color:#8292a3;font-size:9px;font-weight:900;letter-spacing:.15em}',
+      'body.admin-route .oa-top h1{margin:5px 0 0;color:#173b60;font:800 clamp(23px,2.3vw,29px)/1.2 "DM Sans",Arial,sans-serif;letter-spacing:-.035em}',
+      'body.admin-route .oa-top-meta{color:#8291a1;font-size:10px;font-weight:700}',
+      'body.admin-route .oa-dashboard-welcome{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px;padding:22px 24px;border:1px solid #dce9f6;border-radius:17px;background:linear-gradient(110deg,#eaf4ff 0%,#fff 78%);box-shadow:0 8px 25px rgba(16,43,78,.035)}',
+      'body.admin-route .oa-dashboard-eyebrow{display:block;margin-bottom:7px;color:#6d8baa;font-size:8px;font-weight:900;letter-spacing:.16em}',
+      'body.admin-route .oa-dashboard-welcome h2{margin:0 0 7px;color:#173d65;font:800 clamp(18px,2vw,23px)/1.25 "DM Sans",Arial,sans-serif;letter-spacing:-.025em}',
+      'body.admin-route .oa-dashboard-welcome p{max-width:760px;margin:0;color:#697d91;font-size:11px;line-height:1.8}',
+      'body.admin-route .oa-dashboard-primary-link{flex:0 0 auto;min-height:40px;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border-radius:10px;text-decoration:none}',
+      'body.admin-route .oa-dashboard-section{margin-bottom:18px}',
+      'body.admin-route .oa-dashboard-section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:11px}',
+      'body.admin-route .oa-dashboard-section-heading h2{margin:0;color:#1c3d5e;font:800 17px/1.25 "DM Sans",Arial,sans-serif;letter-spacing:-.02em}',
+      'body.admin-route .oa-dashboard-section-heading .oa-dashboard-eyebrow{margin-bottom:3px}',
+      'body.admin-route .oa-dashboard-section-heading .oa-button{min-height:35px}',
+      'body.admin-route .oa-dashboard-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}',
+      'body.admin-route .oa-dashboard-metric{min-width:0;padding:15px 16px;border:1px solid #e3eaf1;border-radius:14px;background:#fff;box-shadow:0 6px 19px rgba(16,43,78,.035)}',
+      'body.admin-route .oa-dashboard-metric-top{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#7b8998;font-size:10px;font-weight:800}',
+      'body.admin-route .oa-dashboard-metric-top i{width:29px;height:29px;display:grid;place-items:center;border-radius:9px;background:#edf4fb;color:#2869a5;font-size:13px;font-style:normal;font-weight:900}',
+      'body.admin-route .oa-dashboard-metric strong{display:block;margin:10px 0 4px;color:#102b4e;font:800 28px/1 "DM Sans",Arial,sans-serif;letter-spacing:-.04em}',
+      'body.admin-route .oa-dashboard-metric small{display:block;color:#92a0ae;font-size:9px;line-height:1.45}',
+      'body.admin-route .oa-dashboard-metric.tone-amber .oa-dashboard-metric-top i{background:#fff5e5;color:#bb8124}',
+      'body.admin-route .oa-dashboard-metric.tone-green .oa-dashboard-metric-top i{background:#eaf7f0;color:#2f9466}',
+      'body.admin-route .oa-dashboard-metric.tone-slate .oa-dashboard-metric-top i{background:#eef1f5;color:#718196}',
+      'body.admin-route .oa-dashboard-analytics{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(270px,1fr);gap:14px;margin-bottom:15px}',
+      'body.admin-route .oa-dashboard-panel{min-width:0;margin-bottom:15px;padding:18px 19px;border:1px solid #e3eaf1;border-radius:15px;background:#fff;box-shadow:0 6px 20px rgba(16,43,78,.035)}',
+      'body.admin-route .oa-dashboard-analytics .oa-dashboard-panel{margin-bottom:0}',
+      'body.admin-route .oa-dashboard-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}',
+      'body.admin-route .oa-dashboard-panel-head h2{margin:0;color:#1b3b5d;font:800 15px/1.3 "DM Sans",Arial,sans-serif;letter-spacing:-.02em}',
+      'body.admin-route .oa-dashboard-panel-head .oa-dashboard-eyebrow{margin-bottom:4px}',
+      'body.admin-route .oa-dashboard-panel-note{color:#8c9aaa;font-size:9px;font-weight:700}',
+      'body.admin-route .oa-dashboard-chart{height:185px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));align-items:end;gap:clamp(6px,1vw,13px);padding:11px 5px 0;border-bottom:1px solid #e8edf2;background:repeating-linear-gradient(to bottom,transparent 0,transparent 44px,#f0f3f7 45px)}',
+      'body.admin-route .oa-chart-column{height:100%;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px}',
+      'body.admin-route .oa-chart-column>b{color:#7d8d9e;font-size:9px;font-weight:800}',
+      'body.admin-route .oa-chart-bar-track{width:min(100%,27px);height:100%;display:flex;align-items:flex-end;justify-content:center}',
+      'body.admin-route .oa-chart-bar-track i{display:block;width:100%;min-height:3px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#4a8bd0,#2165aa);box-shadow:0 4px 10px rgba(35,102,167,.14)}',
+      'body.admin-route .oa-chart-column>small{margin-bottom:-20px;padding-top:3px;color:#7d8d9e;font-size:9px;font-weight:700}',
+      'body.admin-route .oa-chart-caption{margin:28px 0 0;color:#9aa6b3;font-size:9px;line-height:1.5}',
+      'body.admin-route .oa-branch-stat{margin:12px 0 16px}',
+      'body.admin-route .oa-branch-stat-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:7px;color:#52677d;font-size:11px;font-weight:750}',
+      'body.admin-route .oa-branch-stat-head b{color:#193d63;font-weight:900}',
+      'body.admin-route .oa-branch-stat-track{height:8px;overflow:hidden;border-radius:20px;background:#edf2f7}',
+      'body.admin-route .oa-branch-stat-track i{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,#286db1,#79aee1)}',
+      'body.admin-route .oa-dashboard-empty,.oa-dashboard-loading{padding:23px 14px;border:1px dashed #d9e3eb;border-radius:11px;background:#fbfcfe;color:#8a98a6;font-size:11px;text-align:center;line-height:1.7}',
+      'body.admin-route .oa-dashboard-table-wrap{max-width:100%;overflow-x:auto;border:1px solid #edf1f5;border-radius:11px}',
+      'body.admin-route .oa-dashboard-table{width:100%;min-width:760px;border-collapse:collapse;background:#fff}',
+      'body.admin-route .oa-dashboard-table th{padding:11px 12px;background:#f8fafc;color:#8493a2;text-align:left;font-size:8px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}',
+      'body.admin-route .oa-dashboard-table td{padding:11px 12px;border-top:1px solid #eef2f6;color:#586d82;font-size:10px;white-space:nowrap}',
+      'body.admin-route .oa-dashboard-table tr:hover td{background:#fbfdff}',
+      'body.admin-route .oa-dashboard-table td strong{color:#244565;font-size:11px;font-weight:800}',
+      'body.admin-route .oa-dashboard-table a{color:#2366a7;text-decoration:none;font-weight:750}',
+      'body.admin-route .oa-table-index,.oa-table-muted{color:#9ba8b5!important}',
+      'body.admin-route .oa-dashboard-status{min-width:108px;min-height:30px;padding:5px 25px 5px 9px;border:1px solid #dce6ef;border-radius:8px;background:#f5f9fc;color:#34536f;font-size:9px;font-weight:800}',
+      'body.admin-route .oa-dashboard-status.status-new{border-color:#f2dfbc;background:#fff8eb;color:#9a6a1b}',
+      'body.admin-route .oa-dashboard-status.status-contacted{border-color:#cfe5d9;background:#f0faf4;color:#26764b}',
+      'body.admin-route .oa-dashboard-status.status-closed{border-color:#dce3eb;background:#f4f6f8;color:#66788a}',
+      'body.admin-route .oa-dashboard-content-counts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}',
+      'body.admin-route .oa-dashboard-content-count{min-width:0;padding:12px 13px;border:1px solid #e8edf2;border-radius:11px;background:#fafcfe}',
+      'body.admin-route .oa-dashboard-content-count strong{display:block;margin-bottom:5px;color:#1b4269;font:800 19px/1 "DM Sans",Arial,sans-serif}',
+      'body.admin-route .oa-dashboard-content-count span{color:#8291a1;font-size:9px;font-weight:750}',
+      'body.admin-route .oa-dashboard-quick-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}',
+      'body.admin-route .oa-dashboard-quick-action{min-width:0;display:flex;align-items:center;gap:10px;padding:13px 12px;border:1px solid #e5ebf1;border-radius:12px;background:#fff;color:#294762;text-align:left;cursor:pointer;transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease}',
+      'body.admin-route .oa-dashboard-quick-action:hover{transform:translateY(-2px);border-color:#cbddeb;box-shadow:0 8px 20px rgba(16,43,78,.06)}',
+      'body.admin-route .oa-quick-icon{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:10px;background:#edf4fb;color:#276da9;font-size:14px;font-weight:900}',
+      'body.admin-route .oa-dashboard-quick-action>span:nth-child(2){display:grid;gap:3px;min-width:0}',
+      'body.admin-route .oa-dashboard-quick-action b{color:#294762;font-size:10px;font-weight:850}',
+      'body.admin-route .oa-dashboard-quick-action small{color:#91a0ae;font-size:8px;line-height:1.4}',
+      'body.admin-route .oa-quick-arrow{margin-left:auto;color:#91a8bd;font-size:15px}',
+      'body.admin-route .oa-dashboard-loading{border:0;background:transparent}',
+      '@media(max-width:1120px){body.admin-route .oa-app{grid-template-columns:215px minmax(0,1fr)}body.admin-route .oa-dashboard-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}body.admin-route .oa-dashboard-quick-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}',
+      '@media(max-width:900px){body.admin-route .oa-admin-header{height:auto;min-height:68px;padding:9px 14px}body.admin-route .oa-app{grid-template-columns:minmax(0,1fr);min-height:calc(100vh - 100px)}body.admin-route .oa-side{position:sticky;top:68px;padding:9px 12px;gap:7px;border-right:0;border-bottom:1px solid #e5ebf1}body.admin-route .oa-side-heading,body.admin-route .oa-side-foot{display:none}body.admin-route .oa-nav{display:flex;gap:5px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding:0 0 3px}body.admin-route .oa-nav-group{display:flex;gap:5px;flex:0 0 auto;margin:0}body.admin-route .oa-nav-label{display:none}body.admin-route .oa-nav button{width:auto;min-height:37px;flex:0 0 auto;white-space:nowrap;padding:7px 10px;font-size:10px}body.admin-route .oa-nav-icon{width:21px;height:21px;flex-basis:21px;font-size:12px}body.admin-route .oa-main{padding:19px 17px 30px}body.admin-route .oa-dashboard-analytics{grid-template-columns:1fr}}',
+      '@media(max-width:600px){body.admin-route .oa-admin-header{align-items:center;gap:8px;padding:9px 11px}body.admin-route .oa-admin-header-mark{width:36px!important;height:36px!important;flex-basis:36px!important}body.admin-route .oa-admin-brand-copy .brand-name{font-size:11px;white-space:normal;max-width:210px}body.admin-route .oa-admin-brand-copy .brand-place{font-size:7px}body.admin-route .oa-admin-header-actions{gap:6px}body.admin-route .oa-admin-account{display:none}body.admin-route .oa-admin-header-actions .oa-live-site-link{display:none}body.admin-route .oa-admin-header-actions .oa-button{min-height:34px;padding:7px 10px;font-size:9px}body.admin-route .oa-main{padding:15px 11px 26px}body.admin-route .oa-top{align-items:flex-start;flex-direction:column;gap:7px;margin-bottom:14px}body.admin-route .oa-top h1{font-size:22px}body.admin-route .oa-dashboard-welcome{align-items:flex-start;flex-direction:column;padding:17px 16px;gap:13px}body.admin-route .oa-dashboard-welcome p{font-size:10px}body.admin-route .oa-dashboard-section-heading{align-items:flex-start}body.admin-route .oa-dashboard-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body.admin-route .oa-dashboard-metric{padding:12px}body.admin-route .oa-dashboard-metric strong{font-size:24px}body.admin-route .oa-dashboard-metric-top{font-size:9px}body.admin-route .oa-dashboard-panel{padding:14px 12px}body.admin-route .oa-dashboard-panel-head{align-items:flex-start}body.admin-route .oa-dashboard-chart{height:160px;gap:4px;padding-inline:0}body.admin-route .oa-chart-column>b{font-size:8px}body.admin-route .oa-chart-column>small{font-size:8px}body.admin-route .oa-dashboard-content-counts{grid-template-columns:repeat(2,minmax(0,1fr))}body.admin-route .oa-dashboard-quick-actions{grid-template-columns:1fr}body.admin-route .oa-dashboard-quick-action{padding:11px}body.admin-route .oa-dashboard-section-heading .oa-button{font-size:9px;padding:8px}body.admin-route .oa-dashboard-primary-link{width:100%;justify-content:center}body.admin-route .oa-dashboard-panel-head .oa-button{font-size:9px}}',
+      '@media(max-width:380px){body.admin-route .oa-admin-brand-copy .brand-name{max-width:170px;font-size:10px}body.admin-route .oa-admin-header-actions .oa-button{padding:6px 8px}body.admin-route .oa-dashboard-metric strong{font-size:21px}}',
+      '@media(prefers-reduced-motion:reduce){body.admin-route .oa-dashboard-quick-action{transition:none}body.admin-route .oa-dashboard-quick-action:hover{transform:none}}'
+    ].join('');
+    document.head.appendChild(dashboardStyle);
   }
 
   function renderShell() {
     const body = $('#adminBody');
     if (!body) return;
     body.innerHTML =
-      "<div class='oa-app'><aside class='oa-side'>" +
-      "<div class='oa-brand'><div class='oa-mark'>OA</div><div><b>Oxford Academy</b><small>WEBSITE MANAGER</small></div></div>" +
-      "<nav class='oa-nav' id='oa-nav'>" +
-      "<button class='active' data-section='overview'>⌂ &nbsp; Dashboard</button>" +
-      "<button data-section='branding'>✦ &nbsp; Branding & logo</button>" +
-      "<button data-section='homepage'>▤ &nbsp; Homepage content</button>" +
-      "<button data-section='notices'>✎ &nbsp; Posts & notices</button>" +
-      "<button data-section='programs'>▦ &nbsp; Programmes</button>" +
-      "<button data-section='faculty'>♙ &nbsp; Teachers & staff</button>" +
-      "<button data-section='gallery'>▧ &nbsp; Photo gallery</button>" +
-      "<button data-section='services'>◎ &nbsp; Services & visa guidance</button>" +
-      "<button data-section='testimonials'>☆ &nbsp; Student testimonials</button>" +
-      "<button data-section='events'>▦ &nbsp; Calendar & intakes</button>" +
-      "<button data-section='partners'>◇ &nbsp; Partner institutions</button>" +
-      "<button data-section='admissions'>✉ &nbsp; Enquiries</button><button data-section='branches'>⌖ &nbsp; Branches & contacts</button></nav>" +
-      "<a href='/' target='_blank' rel='noopener'>View live website ↗</a></aside>" +
-      "<main class='oa-main'><div class='oa-top'><div><small>OXFORD ACADEMY / ADMIN</small><h1 id='oa-title'>Dashboard overview</h1></div>" +
-      "<div class='oa-actions'><a class='oa-button light' href='/' target='_blank'>View website</a><button class='oa-button' id='oa-signout'>Sign out</button></div></div>" +
-      "<div id='oa-view'></div></main></div><div class='oa-msg' id='oa-manager-message'></div>";
+      "<div class='oa-admin-shell'>" +
+        "<header class='oa-admin-header'>" +
+          "<a class='oa-admin-header-brand' href='/' target='_blank' rel='noopener'>" +
+            "<span class='brand-mark oa-admin-header-mark'>OA</span>" +
+            "<span class='oa-admin-brand-copy'><b class='brand-name'>Oxford Academic Instruction Pvt. Ltd.</b><small class='brand-place'>KUSHMA · BAGLUNG, NEPAL</small></span>" +
+          "</a>" +
+          "<div class='oa-admin-header-actions'>" +
+            "<a class='oa-button light oa-live-site-link' href='/' target='_blank' rel='noopener'>View live website <span aria-hidden='true'>↗</span></a>" +
+            "<div class='oa-admin-account'><span class='oa-admin-avatar' aria-hidden='true'>OA</span><span><b>Administrator</b><small>Admin account</small></span></div>" +
+            "<button class='oa-button light' id='oa-signout' type='button'>Sign out</button>" +
+          "</div>" +
+        "</header>" +
+        "<div class='oa-app'>" +
+          "<aside class='oa-side'>" +
+            "<div class='oa-side-heading'><span>WORKSPACE</span><b>Management</b></div>" +
+            "<nav class='oa-nav' id='oa-nav' aria-label='Admin sections'>" +
+              "<button class='active' data-section='overview' type='button'><span class='oa-nav-icon' aria-hidden='true'>▦</span><span>Dashboard</span></button>" +
+              "<button data-section='branding' type='button'><span class='oa-nav-icon' aria-hidden='true'>✦</span><span>Branding & logo</span></button>" +
+              "<button data-section='homepage' type='button'><span class='oa-nav-icon' aria-hidden='true'>⌂</span><span>Homepage content</span></button>" +
+              "<button data-section='notices' type='button'><span class='oa-nav-icon' aria-hidden='true'>▤</span><span>Posts & notices</span></button>" +
+              "<button data-section='programs' type='button'><span class='oa-nav-icon' aria-hidden='true'>▥</span><span>Programmes</span></button>" +
+              "<button data-section='faculty' type='button'><span class='oa-nav-icon' aria-hidden='true'>♙</span><span>Teachers & staff</span></button>" +
+              "<button data-section='gallery' type='button'><span class='oa-nav-icon' aria-hidden='true'>▧</span><span>Photo gallery</span></button>" +
+              "<button data-section='services' type='button'><span class='oa-nav-icon' aria-hidden='true'>◎</span><span>Services & Japan guidance</span></button>" +
+              "<button data-section='testimonials' type='button'><span class='oa-nav-icon' aria-hidden='true'>☆</span><span>Student testimonials</span></button>" +
+              "<button data-section='events' type='button'><span class='oa-nav-icon' aria-hidden='true'>◷</span><span>Calendar & intakes</span></button>" +
+              "<button data-section='partners' type='button'><span class='oa-nav-icon' aria-hidden='true'>◇</span><span>Partner institutions</span></button>" +
+              "<button data-section='admissions' type='button'><span class='oa-nav-icon' aria-hidden='true'>✉</span><span>Enquiries</span></button>" +
+              "<button data-section='branches' type='button'><span class='oa-nav-icon' aria-hidden='true'>⌖</span><span>Branches & contacts</span></button>" +
+            "</nav>" +
+            "<div class='oa-side-foot'><span class='oa-side-status-dot'></span><span>Secure admin workspace</span></div>" +
+          "</aside>" +
+          "<main class='oa-main'>" +
+            "<div class='oa-top'><div><small>OXFORD ACADEMY / ADMIN</small><h1 id='oa-title'>Dashboard overview</h1></div><div class='oa-top-meta' id='oa-admin-date'></div></div>" +
+            "<div id='oa-view'></div>" +
+          "</main>" +
+        "</div>" +
+      "</div>" +
+      "<div class='oa-msg' id='oa-manager-message' role='status' aria-live='polite'></div>";
     $('#oa-nav').addEventListener('click', (event) => {
       const button = event.target.closest('[data-section]');
       if (button) openSection(button.dataset.section);
@@ -288,6 +419,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     $('#oa-signout').addEventListener('click', async () => {
       await db.auth.signOut();
       window.location.assign('/');
+    });
+    const dateNode = $('#oa-admin-date');
+    if (dateNode) dateNode.textContent = new Date().toLocaleDateString('en', {
+      weekday:'long', day:'numeric', month:'long', year:'numeric'
     });
     openSection('overview');
     applyBranding();
@@ -327,24 +462,239 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   async function renderOverview() {
     const view = $('#oa-view');
     view.innerHTML =
-      "<div class='oa-card'><h2>Welcome to Oxford Academic Instruction</h2><p>Manage the full public website: brand and About content, Japan services, language programmes, student testimonials, staff, notices, gallery, branch contacts and admission enquiries.</p></div>" +
-      "<div class='oa-stats' id='oa-stats'></div><div class='oa-card'><h2>Quick actions</h2><div class='oa-actions'>" +
-      "<button class='oa-button' data-go='branding'>Change logo</button><button class='oa-button' data-go='notices'>Create a post</button>" +
-      "<button class='oa-button light' data-go='gallery'>Upload photos</button><button class='oa-button light' data-go='homepage'>Edit homepage</button></div></div>";
-    const tables = [['oa_services','Services'],['oa_programs','Classes / programmes'],['oa_events','Calendar items'],['oa_testimonials','Testimonials'],['oa_partners','Partners'],['oa_notices','Posts'],['oa_faculty','Staff'],['oa_gallery','Gallery photos'],['oa_admissions','Enquiries']];
-    const counts = await Promise.all(tables.map(async (item) => {
-      const { count, error } = await db.from(item[0]).select('id', { count: 'exact', head: true });
-      return [item[1], error ? '—' : (count || 0)];
-    }));
-    $('#oa-stats').innerHTML = counts.map((item) =>
-      "<div class='oa-stat'><strong>" + esc(item[1]) + "</strong><span>" + esc(item[0]) + "</span></div>"
+      "<section class='oa-dashboard-welcome'>" +
+        "<div><span class='oa-dashboard-eyebrow'>YOUR ACADEMY AT A GLANCE</span>" +
+          "<h2>Welcome to Oxford Academic Instruction</h2>" +
+          "<p>Manage the full public website: brand and About content, Japan services, language programmes, student testimonials, staff, notices, gallery, branch contacts and admission enquiries.</p></div>" +
+        "<a class='oa-button oa-dashboard-primary-link' href='/' target='_blank' rel='noopener'>View live website <span aria-hidden='true'>↗</span></a>" +
+      "</section>" +
+      "<section class='oa-dashboard-section'>" +
+        "<div class='oa-dashboard-section-heading'><div><span class='oa-dashboard-eyebrow'>ADMISSIONS</span><h2>Enquiry statistics</h2></div>" +
+          "<button class='oa-button light' type='button' id='oa-refresh-dashboard'>Refresh data ↻</button></div>" +
+        "<div class='oa-dashboard-metrics' id='oa-dashboard-metrics'><div class='oa-dashboard-loading'>Loading enquiry statistics…</div></div>" +
+      "</section>" +
+      "<div class='oa-dashboard-analytics'>" +
+        "<section class='oa-dashboard-panel'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>LAST 7 DAYS</span><h2>Enquiry activity</h2></div><span class='oa-dashboard-panel-note'>New submissions by day</span></div>" +
+          "<div id='oa-enquiry-trend' class='oa-enquiry-trend'><div class='oa-dashboard-loading'>Loading activity…</div></div></section>" +
+        "<section class='oa-dashboard-panel'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>BRANCH OVERVIEW</span><h2>Enquiries by branch</h2></div></div>" +
+          "<div id='oa-enquiry-branches' class='oa-enquiry-branches'><div class='oa-dashboard-loading'>Loading branch totals…</div></div></section>" +
+      "</div>" +
+      "<section class='oa-dashboard-panel oa-dashboard-recent'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>LATEST SUBMISSIONS</span><h2>Recent enquiries</h2></div>" +
+        "<button class='oa-button light' type='button' id='oa-view-all-enquiries'>View all enquiries <span aria-hidden='true'>→</span></button></div>" +
+        "<div class='oa-dashboard-table-wrap' id='oa-recent-enquiries'><div class='oa-dashboard-loading'>Loading recent enquiries…</div></div></section>" +
+      "<section class='oa-dashboard-panel oa-dashboard-content-overview'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>WEBSITE MANAGEMENT</span><h2>Content at a glance</h2></div></div>" +
+        "<div class='oa-dashboard-content-counts' id='oa-dashboard-content-counts'><div class='oa-dashboard-loading'>Loading content totals…</div></div></section>" +
+      "<section class='oa-dashboard-panel oa-dashboard-quick'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>SHORTCUTS</span><h2>Quick actions</h2></div></div>" +
+        "<div class='oa-dashboard-quick-actions'>" +
+          "<button class='oa-dashboard-quick-action' type='button' data-go='branding'><span class='oa-quick-icon'>✦</span><span><b>Change logo</b><small>Update academy branding</small></span><span class='oa-quick-arrow'>→</span></button>" +
+          "<button class='oa-dashboard-quick-action' type='button' data-go='notices'><span class='oa-quick-icon'>▤</span><span><b>Create a post</b><small>Publish an academy update</small></span><span class='oa-quick-arrow'>→</span></button>" +
+          "<button class='oa-dashboard-quick-action' type='button' data-go='gallery'><span class='oa-quick-icon'>▧</span><span><b>Upload photos</b><small>Update the photo gallery</small></span><span class='oa-quick-arrow'>→</span></button>" +
+          "<button class='oa-dashboard-quick-action' type='button' data-go='homepage'><span class='oa-quick-icon'>⌂</span><span><b>Edit homepage</b><small>Manage public website text</small></span><span class='oa-quick-arrow'>→</span></button>" +
+        "</div></section>";
+
+    const numberFormat = new Intl.NumberFormat('en-US');
+    const metricDefinitions = [
+      { label:'Total enquiries', status:null, icon:'✉', hint:'All submissions received', tone:'blue' },
+      { label:'New enquiries', status:'new', icon:'◷', hint:'Awaiting first follow-up', tone:'amber' },
+      { label:'Contacted', status:'contacted', icon:'✓', hint:'Follow-up has been made', tone:'green' },
+      { label:'Closed', status:'closed', icon:'✓', hint:'Marked as closed', tone:'slate' }
+    ];
+
+    const getCount = async (status) => {
+      let query = db.from('oa_admissions').select('id', { count:'exact', head:true });
+      if (status) query = query.eq('status', status);
+      const result = await query;
+      return { count:typeof result.count === 'number' ? result.count : null, error:result.error || null };
+    };
+
+    const start = new Date();
+    start.setDate(start.getDate() - 6);
+    start.setHours(0,0,0,0);
+    const end = new Date();
+    end.setDate(end.getDate() + 1);
+    end.setHours(0,0,0,0);
+    const dateKey = (date) => [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2,'0'),
+      String(date.getDate()).padStart(2,'0')
+    ].join('-');
+    const days = [];
+    for (let offset = 0; offset < 7; offset += 1) {
+      const date = new Date(start);
+      date.setDate(start.getDate() + offset);
+      days.push({ key:dateKey(date), label:date.toLocaleDateString('en',{weekday:'short'}), count:0 });
+    }
+
+    const contentTables = [
+      ['oa_services','Services'],
+      ['oa_programs','Classes / programmes'],
+      ['oa_events','Calendar items'],
+      ['oa_testimonials','Testimonials'],
+      ['oa_partners','Partners'],
+      ['oa_notices','Posts'],
+      ['oa_faculty','Staff'],
+      ['oa_gallery','Gallery photos']
+    ];
+
+    const trendPromise = db.from('oa_admissions')
+      .select('created_at')
+      .gte('created_at', start.toISOString())
+      .lt('created_at', end.toISOString())
+      .order('created_at', { ascending:true });
+
+    const recentPromise = db.from('oa_admissions')
+      .select('id,student_name,phone,branch_name,status,created_at')
+      .order('created_at', { ascending:false })
+      .limit(7);
+
+    const branchPromise = (async () => {
+      const { data, error } = await db.from('oa_branches')
+        .select('branch_name')
+        .order('sort_order', { ascending:true });
+      if (error) return { data:null, error };
+      const names = Array.from(new Set((data || [])
+        .map((row) => String(row.branch_name || '').trim())
+        .filter(Boolean)));
+      const counts = await Promise.all(names.map(async (name) => {
+        const result = await db.from('oa_admissions')
+          .select('id', { count:'exact', head:true })
+          .eq('branch_name', name);
+        return { name, count:typeof result.count === 'number' ? result.count : null, error:result.error || null };
+      }));
+      return { data:counts, error:counts.find((item) => item.error)?.error || null };
+    })();
+
+    const [metricResults, trendResult, recentResult, branchResult, contentResults] = await Promise.all([
+      Promise.all(metricDefinitions.map((item) => getCount(item.status))),
+      trendPromise,
+      recentPromise,
+      branchPromise,
+      Promise.all(contentTables.map(async (item) => {
+        const result = await db.from(item[0]).select('id', { count:'exact', head:true });
+        return { label:item[1], count:typeof result.count === 'number' ? result.count : null, error:result.error || null };
+      }))
+    ]);
+
+    const metricsRoot = $('#oa-dashboard-metrics');
+    metricsRoot.innerHTML = metricDefinitions.map((item, index) => {
+      const result = metricResults[index];
+      const value = result.error || result.count === null ? '—' : numberFormat.format(result.count);
+      return "<article class='oa-dashboard-metric tone-" + esc(item.tone) + "'>" +
+        "<div class='oa-dashboard-metric-top'><span>" + esc(item.label) + "</span><i aria-hidden='true'>" + esc(item.icon) + "</i></div>" +
+        "<strong>" + esc(value) + "</strong><small>" + esc(result.error ? 'Could not load this count' : item.hint) + "</small></article>";
+    }).join('');
+
+    const trendRoot = $('#oa-enquiry-trend');
+    if (trendResult.error) {
+      trendRoot.innerHTML = "<div class='oa-dashboard-empty'>Activity data could not be loaded.</div>";
+    } else {
+      (trendResult.data || []).forEach((row) => {
+        const date = row.created_at ? new Date(row.created_at) : null;
+        if (!date || Number.isNaN(date.getTime())) return;
+        const key = dateKey(date);
+        const day = days.find((item) => item.key === key);
+        if (day) day.count += 1;
+      });
+      const max = Math.max(1, ...days.map((day) => day.count));
+      trendRoot.innerHTML =
+        "<div class='oa-dashboard-chart' role='img' aria-label='Daily enquiry submissions over the last seven days'>" +
+        days.map((day) => {
+          const height = day.count ? Math.max(7, Math.round(day.count / max * 100)) : 3;
+          return "<div class='oa-chart-column' title='" + esc(day.label + ': ' + day.count + ' enquiries') + "'>" +
+            "<b>" + numberFormat.format(day.count) + "</b><span class='oa-chart-bar-track'><i style='height:" + height + "%'></i></span><small>" + esc(day.label) + "</small></div>";
+        }).join('') + "</div><p class='oa-chart-caption'>Based on enquiry submission dates recorded by the website.</p>";
+    }
+
+    const branchesRoot = $('#oa-enquiry-branches');
+    if (branchResult.error || !branchResult.data) {
+      branchesRoot.innerHTML = "<div class='oa-dashboard-empty'>Branch totals could not be loaded.</div>";
+    } else if (!branchResult.data.length) {
+      branchesRoot.innerHTML = "<div class='oa-dashboard-empty'>No branch records are available.</div>";
+    } else {
+      const maxBranch = Math.max(1, ...branchResult.data.map((item) => item.count || 0));
+      branchesRoot.innerHTML = branchResult.data.map((item) => {
+        const width = item.count === null ? 0 : Math.round(item.count / maxBranch * 100);
+        return "<div class='oa-branch-stat'><div class='oa-branch-stat-head'><span>" + esc(item.name) + "</span><b>" + (item.count === null ? '—' : numberFormat.format(item.count)) + "</b></div>" +
+          "<div class='oa-branch-stat-track'><i style='width:" + width + "%'></i></div></div>";
+      }).join('');
+    }
+
+    const recentRoot = $('#oa-recent-enquiries');
+    const dateLabel = (value) => {
+      const date = value ? new Date(value) : null;
+      return date && !Number.isNaN(date.getTime())
+        ? date.toLocaleDateString('en', { day:'2-digit', month:'short', year:'numeric' })
+        : '—';
+    };
+    if (recentResult.error) {
+      recentRoot.innerHTML = "<div class='oa-dashboard-empty'>Recent enquiries could not be loaded.</div>";
+    } else if (!(recentResult.data || []).length) {
+      recentRoot.innerHTML = "<div class='oa-dashboard-empty'>No enquiries have been received yet. New submissions will appear here.</div>";
+    } else {
+      const rows = recentResult.data || [];
+      const statusOptions = (status) => {
+        const current = status || 'new';
+        return [
+          ['new','New'],
+          ['contacted','Contacted'],
+          ['closed','Closed']
+        ].map((option) => "<option value='" + option[0] + "' " + (current === option[0] ? 'selected' : '') + ">" + option[1] + "</option>").join('');
+      };
+      recentRoot.innerHTML =
+        "<table class='oa-dashboard-table'><thead><tr><th>#</th><th>Student</th><th>Contact</th><th>Branch</th><th>Received</th><th>Status</th></tr></thead><tbody>" +
+        rows.map((row, index) => {
+          const phone = String(row.phone || '').trim();
+          const tel = phone.replace(/[^\d+]/g,'');
+          const contact = phone
+            ? "<a href='tel:" + esc(tel) + "'>" + esc(phone) + "</a>"
+            : "<span class='oa-table-muted'>Not provided</span>";
+          const status = row.status || 'new';
+          return "<tr><td class='oa-table-index'>" + String(index + 1).padStart(2,'0') + "</td>" +
+            "<td><strong>" + esc(row.student_name || 'Name not provided') + "</strong></td>" +
+            "<td>" + contact + "</td><td>" + esc(row.branch_name || '—') + "</td>" +
+            "<td>" + esc(dateLabel(row.created_at)) + "</td>" +
+            "<td><select class='oa-dashboard-status status-" + esc(status) + "' aria-label='Update enquiry status for " + esc(row.student_name || 'student') + "' data-dashboard-status='" + esc(row.id) + "'>" + statusOptions(status) + "</select></td></tr>";
+        }).join('') + "</tbody></table>";
+
+      recentRoot.querySelectorAll('[data-dashboard-status]').forEach((select) => {
+        select.addEventListener('change', async () => {
+          const row = rows.find((item) => String(item.id) === select.dataset.dashboardStatus);
+          if (!row) return;
+          const previous = row.status || 'new';
+          select.disabled = true;
+          const nextStatus = select.value;
+          const { error } = await db.from('oa_admissions')
+            .update({ status:nextStatus }).eq('id', row.id);
+          if (error) {
+            select.value = previous;
+            select.disabled = false;
+            showMessage(error.message);
+            return;
+          }
+          row.status = nextStatus;
+          showMessage('Enquiry status updated.');
+          await renderOverview();
+        });
+      });
+    }
+
+    const contentRoot = $('#oa-dashboard-content-counts');
+    contentRoot.innerHTML = contentResults.map((item) =>
+      "<div class='oa-dashboard-content-count'><strong>" +
+      (item.error || item.count === null ? '—' : numberFormat.format(item.count)) +
+      "</strong><span>" + esc(item.label) + "</span></div>"
     ).join('');
+
     view.querySelectorAll('[data-go]').forEach((button) => {
       button.addEventListener('click', () => openSection(button.dataset.go));
     });
+    const refresh = $('#oa-refresh-dashboard');
+    if (refresh) refresh.addEventListener('click', () => renderOverview());
+    const viewAll = $('#oa-view-all-enquiries');
+    if (viewAll) viewAll.addEventListener('click', () => openSection('admissions'));
   }
 
-  async function getContentMap() {
+  const getContentMap = {
     const { data, error } = await db.from('oa_site_content').select('*').order('content_key');
     if (error) throw error;
     const map = {};
