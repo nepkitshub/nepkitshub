@@ -297,6 +297,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
             '<a href="#notices">Notices</a><a href="/calendar/">Calendar</a>' +
             '<a href="#team">Our Team</a><a href="#gallery">Gallery</a>' +
             '<a href="#oa-lions-testimonials">Learner Reviews</a><a href="#oa-lions-offices">Contact Us</a>' +
+            '<a href="#admission">Admission Enquiry</a>' +
           '</div></details>';
         nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMobileMenu));
       }
@@ -312,6 +313,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       setText('#heroNote', 'Japanese Courses · JLPT, NAT-TEST & JFT-Basic · Japan Study & SSW Guidance');
       setAnchor('.hero-buttons a:first-child', 'Explore Courses ↓', '/courses/');
       setAnchor('.hero-buttons a:last-child', 'Admission Enquiry ↗', '#admission');
+      setAnchor('.nav-actions .btn', 'Admission Enquiry ↗', '#admission');
       setText('#aboutBadge', 'Learn with purpose. Move forward with confidence.');
       setText('#aboutTitle', 'Language learning and guidance for informed next steps.');
       setText('#aboutText', 'OXFORD ACADEMIC INSTRUCTION PVT.LTD. provides Japanese and Korean language learning, Japanese examination preparation, Japan study counselling, SSW and work-pathway preparation, and application documentation guidance. Learners can contact the Kushma or Baglung branch to discuss current programmes, course availability and the next steps relevant to their goals.');
