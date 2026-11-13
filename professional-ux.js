@@ -150,6 +150,21 @@
     observer.observe(document.documentElement, { childList: true, subtree: true });
   }
 
+
+  // Keep the final design layer after page-specific styles injected by the
+  // homepage modules. This changes CSS order only; it does not alter behaviour.
+  function settleFinalDesignLayer() {
+    var layer = document.getElementById('oa-professional-design-system');
+    if (layer && document.head && layer.parentNode === document.head) {
+      document.head.appendChild(layer);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', settleFinalDesignLayer, { once: true });
+  } else {
+    settleFinalDesignLayer();
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', observeApp, { once: true });
   } else {
