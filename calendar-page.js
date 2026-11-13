@@ -53,7 +53,6 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const statusRoot = $('#oa-cal-status');
   const monthTitle = $('#oa-cal-month-title');
   const todayButton = $('#oa-cal-today');
-  const monthNav = $('#oa-cal-month-nav');
   const previousButton = $('#oa-cal-prev');
   const nextButton = $('#oa-cal-next');
 
@@ -122,24 +121,16 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   }
 
   function populateSelectors() {
-    // Oxford's digital calendar edition is fixed to Bikram Sambat 2083.
-    yearSelect.innerHTML = '<option value="2083">2083 BS</option>';
+    yearSelect.innerHTML = '';
+    for (let year = 2000; year <= 2090; year += 1) {
+      const option = document.createElement('option');
+      option.value = String(year);
+      option.textContent = String(year) + ' BS';
+      yearSelect.appendChild(option);
+    }
     monthSelect.innerHTML = monthNames.map((name, index) =>
       '<option value="' + (index + 1) + '">' + name + '</option>'
     ).join('');
-
-    if (monthNav) {
-      monthNav.innerHTML = monthNames.map((name, index) =>
-        '<button type="button" class="oa-cal-month-chip" data-month="' + (index + 1) + '">' +
-          '<small>' + toNepali(index + 1) + '</small><span>' + esc(name) + '</span>' +
-        '</button>'
-      ).join('');
-      monthNav.addEventListener('click', (event) => {
-        const button = event.target.closest('[data-month]');
-        if (!button) return;
-        showMonth(2083, Number(button.dataset.month));
-      });
-    }
   }
 
   async function loadOxfordEvents() {
@@ -221,62 +212,19 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
   function renderUpcomingEvents() {
     if (!eventsRoot) return;
-
-    // Festival and public-holiday information comes from the same BS data feed
-    // as the date grid; academy events come from published Oxford records.
-    const calendarItems = (monthData && Array.isArray(monthData.days) ? monthData.days : [])
-      .flatMap((day) => {
-        const source = Array.isArray(day.events) ? day.events : [];
-        const named = source.map((event) => ({
-          title: eventLabel(event) || 'Festival or observance',
-          category: event && event.holiday ? 'Public holiday' : 'Festival',
-          date: day.ad,
-          source: 'calendar'
-        }));
-        if (day.holiday && Number(day.weekday) !== 6 &&
-            !named.some((item) => item.category === 'Public holiday')) {
-          named.push({
-            title: 'Public holiday',
-            category: 'Public holiday',
-            date: day.ad,
-            source: 'calendar'
-          });
-        }
-        return named;
-      });
-
-    const academyItems = oxfordEvents.map((event) => ({
-      title: event.title_en || 'Oxford Academy event',
-      category: event.category || 'Oxford event',
-      description: event.summary_en || '',
-      date: event.event_date,
-      endDate: event.end_date,
-      time: event.time_label || '',
-      location: event.location || '',
-      source: 'oxford'
-    }));
-
-    const items = calendarItems.concat(academyItems)
-      .filter((item) => item.title && item.date)
-      .sort((a, b) => String(a.date).localeCompare(String(b.date)))
-      .slice(0, 10);
-
-    if (!items.length) {
-      eventsRoot.innerHTML =
-        '<div class="oa-cal-upcoming-empty">No festivals or Oxford activities are listed for this month. Published dates will appear here automatically.</div>';
+    if (!oxfordEvents.length) {
+      eventsRoot.innerHTML = '<div class="oa-cal-upcoming-empty">No Oxford events have been published for this month yet. New dates added by the academy team will appear here.</div>';
       return;
     }
-
-    eventsRoot.innerHTML = items.map((item) => {
-      const range = item.endDate && item.endDate !== item.date ? ' – ' + formatAd(item.endDate) : '';
-      const sourceLabel = item.source === 'oxford' ? 'Oxford update' : item.category;
+    eventsRoot.innerHTML = oxfordEvents.map((event) => {
+      const date = formatAd(event.event_date);
+      const range = event.end_date && event.end_date !== event.event_date ? ' – ' + formatAd(event.end_date) : '';
       return '<article class="oa-cal-upcoming-item">' +
-        '<span class="oa-cal-upcoming-category">' + esc(sourceLabel) + '</span>' +
-        '<time>' + esc(formatAd(item.date) + range) + '</time>' +
-        '<b>' + esc(item.title) + '</b>' +
-        (item.description ? '<p>' + esc(item.description) + '</p>' : '') +
-        ((item.time || item.location) ?
-          '<small>' + esc([item.time, item.location].filter(Boolean).join(' · ')) + '</small>' : '') +
+        '<span>' + esc(event.category || 'Academy update') + '</span>' +
+        '<time>' + esc(date + range) + '</time>' +
+        '<b>' + esc(event.title_en || 'Oxford Academy update') + '</b>' +
+        (event.summary_en ? '<p>' + esc(event.summary_en) + '</p>' : '') +
+        ((event.time_label || event.location) ? '<small>' + esc([event.time_label, event.location].filter(Boolean).join(' · ')) + '</small>' : '') +
       '</article>';
     }).join('');
   }
@@ -289,20 +237,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const days = monthData.days;
     const title = monthNames[currentMonth - 1] + ' ' + currentYear;
     if (monthTitle) monthTitle.textContent = title + ' BS';
-    yearSelect.value = '2083';
+    yearSelect.value = String(currentYear);
     monthSelect.value = String(currentMonth);
-    if (monthNav) {
-      monthNav.querySelectorAll('[data-month]').forEach((button) => {
-        const active = Number(button.dataset.month) === currentMonth;
-        button.classList.toggle('is-active', active);
-        if (active) button.setAttribute('aria-current', 'page');
-        else button.removeAttribute('aria-current');
-      });
-      const activeChip = monthNav.querySelector('.is-active');
-      if (activeChip && typeof activeChip.scrollIntoView === 'function') {
-        activeChip.scrollIntoView({ block:'nearest', inline:'nearest', behavior:'smooth' });
-      }
-    }
     const cells = [];
     const firstWeekday = Number(days[0] && days[0].weekday) || 0;
     for (let blank = 0; blank < firstWeekday; blank += 1) {
@@ -322,18 +258,15 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         isHoliday ? 'is-holiday' : '',
         names.length ? 'has-event' : ''
       ].filter(Boolean).join(' ');
-      const titleText = names.length ? names.join(', ') : (isHoliday && Number(day.weekday) !== 6 ? 'Public holiday' : '');
-      const adLabel = formatAd(day.ad).replace(/, \d{4}$/, '');
+      const titleText = names.length ? names.join(', ') : (isHoliday ? 'Holiday' : '');
       cells.push(
         '<button class="' + classes + '" type="button" role="gridcell" data-day-index="' + index + '"' +
         ' aria-pressed="' + (isSelected ? 'true' : 'false') + '"' +
         ' aria-label="' + esc((day.text && day.text.bs && day.text.bs.en) || (day.bs.day + ' ' + title) + (titleText ? ', ' + titleText : '')) + '"' +
         (titleText ? ' title="' + esc(titleText) + '"' : '') + '>' +
-          '<span class="oa-cal-day-top"><span class="oa-cal-bs">' + esc(toNepali(day.bs.day)) + '</span>' +
-          '<span class="oa-cal-ad">' + esc(adLabel) + '</span></span>' +
-          (names.length ? '<span class="oa-cal-event-name">' + esc(names[0]) + '</span>' : '') +
-          (names.length ? '<i class="oa-cal-dot" aria-hidden="true"></i>' :
-            (isHoliday && Number(day.weekday) !== 6 ? '<i class="oa-cal-dot holiday" aria-hidden="true"></i>' : '')) +
+          '<span class="oa-cal-bs">' + esc(toNepali(day.bs.day)) + '</span>' +
+          '<span class="oa-cal-ad">' + esc(formatAd(day.ad).replace(/, \d{4}$/, '')) + '</span>' +
+          (names.length ? '<i class="oa-cal-dot" aria-hidden="true"></i>' : (isHoliday ? '<i class="oa-cal-dot holiday" aria-hidden="true"></i>' : '')) +
         '</button>'
       );
     });
@@ -346,19 +279,19 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     if (statusRoot) {
       statusRoot.textContent = monthData.provisional || days.some((day) => day.provisional)
         ? 'Projected calendar dates — confirm important dates with an official notice.'
-        : '2083 BS · Nepal time (UTC+05:45) · Saturdays, public holidays and festival dates are highlighted.';
+        : 'Dates are shown in Nepal time (UTC+05:45). Saturdays and listed public holidays are highlighted.';
     }
     renderSelectedDay(selectedDay || days[0]);
     renderUpcomingEvents();
 
-    const minReached = currentMonth <= 1;
-    const maxReached = currentMonth >= 12;
+    const minReached = currentYear <= 2000 && currentMonth <= 1;
+    const maxReached = currentYear >= 2090 && currentMonth >= 12;
     if (previousButton) previousButton.disabled = minReached;
     if (nextButton) nextButton.disabled = maxReached;
   }
 
   async function showMonth(year, month, preferredDate) {
-    currentYear = 2083;
+    currentYear = Math.min(2090, Math.max(2000, Number(year) || 2083));
     currentMonth = Math.min(12, Math.max(1, Number(month) || 1));
     monthData = null;
     if (statusRoot) statusRoot.textContent = 'Loading ' + monthNames[currentMonth - 1] + ' ' + currentYear + '…';
@@ -395,8 +328,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     let month = currentMonth + offset;
     if (month < 1) { month = 12; year -= 1; }
     if (month > 12) { month = 1; year += 1; }
-    if (year !== 2083 || month < 1 || month > 12) return;
-    showMonth(2083, month);
+    if (year < 2000 || year > 2090) return;
+    showMonth(year, month);
   }
 
   daysRoot.addEventListener('click', (event) => {
@@ -413,7 +346,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   if (todayButton) todayButton.addEventListener('click', () => {
     if (today && today.bs) showMonth(today.bs.year, today.bs.month, today.ad);
   });
-  yearSelect.addEventListener('change', () => showMonth(2083, currentMonth));
+  yearSelect.addEventListener('change', () => showMonth(Number(yearSelect.value), currentMonth));
   monthSelect.addEventListener('change', () => showMonth(currentYear, Number(monthSelect.value)));
 
   async function init() {
@@ -422,15 +355,15 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     try {
       today = await fetchJson(API + '/today.json');
       if (!today || !today.bs) throw new Error('Today is not available.');
-      currentYear = 2083;
-      currentMonth = Number(today.bs.year) === 2083 ? Number(today.bs.month) : 1;
+      currentYear = Number(today.bs.year);
+      currentMonth = Number(today.bs.month);
       const todayText = $('#oa-cal-today-text');
       if (todayText) {
         todayText.textContent = (today.text && today.text.bs && today.text.bs.en) || (monthNames[currentMonth - 1] + ' ' + currentYear + ', day ' + today.bs.day);
       }
       const todayAd = $('#oa-cal-today-ad');
       if (todayAd) todayAd.textContent = formatAd(today.ad);
-      await showMonth(currentYear, currentMonth, Number(today.bs.year) === 2083 ? today.ad : null);
+      await showMonth(currentYear, currentMonth, today.ad);
     } catch (error) {
       console.error('Oxford Nepali calendar initialisation failed:', error);
       if (statusRoot) statusRoot.textContent = 'Could not connect to the Nepali calendar service.';
