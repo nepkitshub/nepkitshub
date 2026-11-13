@@ -6,6 +6,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     'sb_publishable_lzdJkHCS88esovlNn2_kow_8mmAQgh-'
   );
   window.__oaSupabaseClient = db;
+  const BRAND_NAME = 'OXFORD ACADEMIC INSTRUCTION PVT.LTD.';
   let branding = null;
 
   const safeUrl = (value) => {
@@ -19,7 +20,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
   function applyBranding() {
     if (!branding) return;
-    const name = branding.brand_name || 'Oxford Academic Instruction Pvt. Ltd.';
+    const name = BRAND_NAME;
+    document.querySelectorAll('.brand-place,.page-brand-name small,.oa-brand small,.oa-admin-brand-copy .brand-place').forEach((node) => node.remove());
     document.querySelectorAll('.brand-name,.oa-brand b').forEach((node) => {
       if (node.textContent !== name) node.textContent = name;
     });
@@ -69,8 +71,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     }
     const sizing =
       '.brand-mark,.page-mark{width:' + desktop + 'px!important;height:' + desktop + 'px!important;flex:0 0 ' + desktop + 'px!important}' +
-      '.brand-name{font-size:16px!important;line-height:1.12!important}' +
-      '@media(max-width:760px){.brand-mark,.page-mark{width:' + mobile + 'px!important;height:' + mobile + 'px!important;flex-basis:' + mobile + 'px!important}.brand-name{font-size:clamp(12px,3.3vw,14px)!important;line-height:1.16!important}}';
+      '.brand-name,.page-brand-name{font-size:16px!important;line-height:1.18!important}' +
+      '@media(max-width:760px){.brand-mark,.page-mark{width:' + mobile + 'px!important;height:' + mobile + 'px!important;flex-basis:' + mobile + 'px!important}.brand-name,.page-brand-name{font-size:clamp(11px,3vw,13px)!important;line-height:1.2!important}}';
     if (style.textContent !== sizing) style.textContent = sizing;
     // Keep route-specific titles from the static page metadata; branding only updates visible brand text.
   }
@@ -86,7 +88,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const values = {};
     (data || []).forEach((row) => { values[row.content_key] = row.value_en; });
     branding = {
-      brand_name: String(values.brand_name || '').trim() || 'Oxford Academic Instruction Pvt. Ltd.',
+      brand_name: BRAND_NAME,
       logo_url: values.logo_url || '',
       logo_size_desktop: values.logo_size_desktop || 48,
       logo_size_mobile: values.logo_size_mobile || 42
