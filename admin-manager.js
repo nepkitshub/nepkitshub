@@ -367,6 +367,56 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       '@media(prefers-reduced-motion:reduce){body.admin-route .oa-dashboard-quick-action{transition:none}body.admin-route .oa-dashboard-quick-action:hover{transform:none}}'
     ].join('');
     document.head.appendChild(dashboardStyle);
+
+    const typographyStyle = document.createElement('style');
+    typographyStyle.id = 'oa-admin-typography-refinement';
+    typographyStyle.textContent = [
+      'body.admin-route .oa-admin-shell,body.admin-route .oa-admin-shell button,body.admin-route .oa-admin-shell input,body.admin-route .oa-admin-shell select,body.admin-route .oa-admin-shell textarea{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}',
+      'body.admin-route .oa-main{font-size:13px;line-height:1.65;color:#40566d}',
+      'body.admin-route .oa-main h1,body.admin-route .oa-main h2,body.admin-route .oa-main h3{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;letter-spacing:-.025em}',
+      'body.admin-route .oa-main h2{font-size:18px;font-weight:780;line-height:1.3;color:#183b60}',
+      'body.admin-route .oa-main h3{font-size:15px;font-weight:750;line-height:1.35;color:#244765}',
+      'body.admin-route .oa-main p{font-size:12px;line-height:1.75;color:#687d91}',
+      'body.admin-route .oa-main label{font-size:11px;font-weight:750;letter-spacing:.005em;color:#4c6176}',
+      'body.admin-route .oa-main .oa-field input,body.admin-route .oa-main .oa-field select,body.admin-route .oa-main .oa-field textarea{font-size:13px;line-height:1.55}',
+      'body.admin-route .oa-main .oa-button{font-size:11px;font-weight:800;letter-spacing:.005em}',
+      'body.admin-route .oa-admin-header-actions .oa-button{font-size:10px}',
+      'body.admin-route .oa-admin-brand-copy .brand-name{font-size:14px;font-weight:800;letter-spacing:-.025em}',
+      'body.admin-route .oa-admin-brand-copy .brand-place{font-size:8px;letter-spacing:.13em}',
+      'body.admin-route .oa-side-heading b{font-size:14px;letter-spacing:-.015em}',
+      'body.admin-route .oa-nav button{font-size:11px;font-weight:700;letter-spacing:-.005em}',
+      'body.admin-route .oa-top small{font-size:9px;letter-spacing:.16em}',
+      'body.admin-route .oa-top h1{font-size:clamp(24px,2.2vw,30px);font-weight:800;letter-spacing:-.04em}',
+      'body.admin-route .oa-dashboard-eyebrow{font-size:9px;font-weight:850;letter-spacing:.13em}',
+      'body.admin-route .oa-dashboard-welcome h2{font-size:clamp(21px,2vw,25px);font-weight:800;letter-spacing:-.035em;line-height:1.2}',
+      'body.admin-route .oa-dashboard-welcome p{max-width:680px;font-size:12px;line-height:1.75}',
+      'body.admin-route .oa-dashboard-section-heading h2{font-size:18px;font-weight:800;letter-spacing:-.03em}',
+      'body.admin-route .oa-dashboard-metric-top{font-size:11px;font-weight:750;letter-spacing:-.005em}',
+      'body.admin-route .oa-dashboard-metric strong{font-size:30px;font-weight:820;letter-spacing:-.045em;font-variant-numeric:tabular-nums}',
+      'body.admin-route .oa-dashboard-metric small{font-size:10px;line-height:1.5}',
+      'body.admin-route .oa-dashboard-panel-head h2{font-size:16px;font-weight:800;letter-spacing:-.025em}',
+      'body.admin-route .oa-dashboard-panel-note{font-size:10px;font-weight:650}',
+      'body.admin-route .oa-chart-column>b{font-size:10px;font-weight:750;font-variant-numeric:tabular-nums}',
+      'body.admin-route .oa-chart-column>small{font-size:10px;font-weight:700}',
+      'body.admin-route .oa-chart-caption{font-size:10px;line-height:1.6}',
+      'body.admin-route .oa-branch-stat-head{font-size:12px;font-weight:750}',
+      'body.admin-route .oa-dashboard-table th{font-size:9px;letter-spacing:.09em}',
+      'body.admin-route .oa-dashboard-table td{font-size:11px;line-height:1.5}',
+      'body.admin-route .oa-dashboard-table td strong{font-size:12px;font-weight:780}',
+      'body.admin-route .oa-dashboard-status{font-size:10px;font-weight:750}',
+      'body.admin-route .oa-dashboard-content-count strong{font-size:21px;font-weight:800}',
+      'body.admin-route .oa-dashboard-content-count span{font-size:10px;font-weight:700}',
+      'body.admin-route .oa-dashboard-quick-action b{font-size:11px;font-weight:800}',
+      'body.admin-route .oa-dashboard-quick-action small{font-size:9px;line-height:1.45}',
+      'body.admin-route .oa-record b{font-size:13px;font-weight:780}',
+      'body.admin-route .oa-record small{font-size:11px;line-height:1.6}',
+      'body.admin-route .oa-enquiry-card h3{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:17px;font-weight:800;letter-spacing:-.025em}',
+      'body.admin-route .oa-enquiry-contact>span,body.admin-route .oa-enquiry-message strong{font-size:10px;letter-spacing:.08em}',
+      'body.admin-route .oa-enquiry-contact a,body.admin-route .oa-enquiry-contact strong{font-size:12px;font-weight:750}',
+      'body.admin-route .oa-enquiry-message p{font-size:13px;line-height:1.75}',
+      '@media(max-width:600px){body.admin-route .oa-dashboard-welcome h2{font-size:21px}body.admin-route .oa-dashboard-metric strong{font-size:25px}body.admin-route .oa-dashboard-section-heading h2{font-size:16px}body.admin-route .oa-dashboard-panel-head h2{font-size:15px}body.admin-route .oa-top h1{font-size:22px}}'
+    ].join('');
+    document.head.appendChild(typographyStyle);
   }
 
   function renderShell() {
@@ -380,33 +430,33 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
             "<span class='oa-admin-brand-copy'><b class='brand-name'>Oxford Academic Instruction Pvt. Ltd.</b><small class='brand-place'>KUSHMA · BAGLUNG, NEPAL</small></span>" +
           "</a>" +
           "<div class='oa-admin-header-actions'>" +
-            "<a class='oa-button light oa-live-site-link' href='/' target='_blank' rel='noopener'>View live website <span aria-hidden='true'>↗</span></a>" +
+            "<a class='oa-button light oa-live-site-link' href='/' target='_blank' rel='noopener'>Open website <span aria-hidden='true'>↗</span></a>" +
             "<div class='oa-admin-account'><span class='oa-admin-avatar' aria-hidden='true'>OA</span><span><b>Administrator</b><small>Admin account</small></span></div>" +
             "<button class='oa-button light' id='oa-signout' type='button'>Sign out</button>" +
           "</div>" +
         "</header>" +
         "<div class='oa-app'>" +
           "<aside class='oa-side'>" +
-            "<div class='oa-side-heading'><span>WORKSPACE</span><b>Management</b></div>" +
+            "<div class='oa-side-heading'><span>ADMINISTRATION</span><b>Workspace</b></div>" +
             "<nav class='oa-nav' id='oa-nav' aria-label='Admin sections'>" +
-              "<button class='active' data-section='overview' type='button'><span class='oa-nav-icon' aria-hidden='true'>▦</span><span>Dashboard</span></button>" +
-              "<button data-section='branding' type='button'><span class='oa-nav-icon' aria-hidden='true'>✦</span><span>Branding & logo</span></button>" +
-              "<button data-section='homepage' type='button'><span class='oa-nav-icon' aria-hidden='true'>⌂</span><span>Homepage content</span></button>" +
+              "<button class='active' data-section='overview' type='button'><span class='oa-nav-icon' aria-hidden='true'>▦</span><span>Overview</span></button>" +
+              "<button data-section='branding' type='button'><span class='oa-nav-icon' aria-hidden='true'>✦</span><span>Brand & logo</span></button>" +
+              "<button data-section='homepage' type='button'><span class='oa-nav-icon' aria-hidden='true'>⌂</span><span>Homepage</span></button>" +
               "<button data-section='notices' type='button'><span class='oa-nav-icon' aria-hidden='true'>▤</span><span>Posts & notices</span></button>" +
               "<button data-section='programs' type='button'><span class='oa-nav-icon' aria-hidden='true'>▥</span><span>Programmes</span></button>" +
-              "<button data-section='faculty' type='button'><span class='oa-nav-icon' aria-hidden='true'>♙</span><span>Teachers & staff</span></button>" +
-              "<button data-section='gallery' type='button'><span class='oa-nav-icon' aria-hidden='true'>▧</span><span>Photo gallery</span></button>" +
+              "<button data-section='faculty' type='button'><span class='oa-nav-icon' aria-hidden='true'>♙</span><span>Team & staff</span></button>" +
+              "<button data-section='gallery' type='button'><span class='oa-nav-icon' aria-hidden='true'>▧</span><span>Gallery</span></button>" +
               "<button data-section='services' type='button'><span class='oa-nav-icon' aria-hidden='true'>◎</span><span>Services & Japan guidance</span></button>" +
-              "<button data-section='testimonials' type='button'><span class='oa-nav-icon' aria-hidden='true'>☆</span><span>Student testimonials</span></button>" +
+              "<button data-section='testimonials' type='button'><span class='oa-nav-icon' aria-hidden='true'>☆</span><span>Learner feedback</span></button>" +
               "<button data-section='events' type='button'><span class='oa-nav-icon' aria-hidden='true'>◷</span><span>Calendar & intakes</span></button>" +
-              "<button data-section='partners' type='button'><span class='oa-nav-icon' aria-hidden='true'>◇</span><span>Partner institutions</span></button>" +
+              "<button data-section='partners' type='button'><span class='oa-nav-icon' aria-hidden='true'>◇</span><span>Partners</span></button>" +
               "<button data-section='admissions' type='button'><span class='oa-nav-icon' aria-hidden='true'>✉</span><span>Enquiries</span></button>" +
               "<button data-section='branches' type='button'><span class='oa-nav-icon' aria-hidden='true'>⌖</span><span>Branches & contacts</span></button>" +
             "</nav>" +
-            "<div class='oa-side-foot'><span class='oa-side-status-dot'></span><span>Secure admin workspace</span></div>" +
+            "<div class='oa-side-foot'><span class='oa-side-status-dot'></span><span>Secure administrator workspace</span></div>" +
           "</aside>" +
           "<main class='oa-main'>" +
-            "<div class='oa-top'><div><small>OXFORD ACADEMY / ADMIN</small><h1 id='oa-title'>Dashboard overview</h1></div><div class='oa-top-meta' id='oa-admin-date'></div></div>" +
+            "<div class='oa-top'><div><small>ADMINISTRATION / OXFORD ACADEMY</small><h1 id='oa-title'>Overview</h1></div><div class='oa-top-meta' id='oa-admin-date'></div></div>" +
             "<div id='oa-view'></div>" +
           "</main>" +
         "</div>" +
@@ -429,19 +479,19 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   }
 
   const titles = {
-    overview: 'Dashboard overview',
-    branding: 'Branding & logo',
+    overview: 'Overview',
+    branding: 'Brand & logo',
     homepage: 'Homepage content',
     notices: 'Posts & notices',
     programs: 'Academic programmes',
-    faculty: 'Teachers & staff',
-    gallery: 'Photo gallery',
+    faculty: 'Team & staff',
+    gallery: 'Gallery',
     services: 'Services & Japan guidance',
-    testimonials: 'Student testimonials',
+    testimonials: 'Learner feedback',
     events: 'Calendar & course intakes',
-    partners: 'Partner institutions',
+    partners: 'Partners',
     admissions: 'Enquiries',
-    branches: 'Branches & contact details'
+    branches: 'Branches & contacts'
   };
   function setTitle(name) {
     $('#oa-title').textContent = titles[name];
@@ -463,28 +513,28 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const view = $('#oa-view');
     view.innerHTML =
       "<section class='oa-dashboard-welcome'>" +
-        "<div><span class='oa-dashboard-eyebrow'>YOUR ACADEMY AT A GLANCE</span>" +
-          "<h2>Welcome to Oxford Academic Instruction</h2>" +
-          "<p>Manage the full public website: brand and About content, Japan services, language programmes, student testimonials, staff, notices, gallery, branch contacts and admission enquiries.</p></div>" +
+        "<div><span class='oa-dashboard-eyebrow'>ACADEMY OVERVIEW</span>" +
+          "<h2>Your academy, at a glance</h2>" +
+          "<p>Review new enquiries, monitor activity across your branches, and manage the content visitors see on the Oxford Academy website.</p></div>" +
         "<a class='oa-button oa-dashboard-primary-link' href='/' target='_blank' rel='noopener'>View live website <span aria-hidden='true'>↗</span></a>" +
       "</section>" +
       "<section class='oa-dashboard-section'>" +
-        "<div class='oa-dashboard-section-heading'><div><span class='oa-dashboard-eyebrow'>ADMISSIONS</span><h2>Enquiry statistics</h2></div>" +
-          "<button class='oa-button light' type='button' id='oa-refresh-dashboard'>Refresh data ↻</button></div>" +
+        "<div class='oa-dashboard-section-heading'><div><span class='oa-dashboard-eyebrow'>ENQUIRIES</span><h2>Enquiry overview</h2></div>" +
+          "<button class='oa-button light' type='button' id='oa-refresh-dashboard'>Refresh ↻</button></div>" +
         "<div class='oa-dashboard-metrics' id='oa-dashboard-metrics'><div class='oa-dashboard-loading'>Loading enquiry statistics…</div></div>" +
       "</section>" +
       "<div class='oa-dashboard-analytics'>" +
-        "<section class='oa-dashboard-panel'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>LAST 7 DAYS</span><h2>Enquiry activity</h2></div><span class='oa-dashboard-panel-note'>New submissions by day</span></div>" +
+        "<section class='oa-dashboard-panel'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>RECENT ACTIVITY</span><h2>Enquiry activity</h2></div><span class='oa-dashboard-panel-note'>Daily submissions · Last 7 days</span></div>" +
           "<div id='oa-enquiry-trend' class='oa-enquiry-trend'><div class='oa-dashboard-loading'>Loading activity…</div></div></section>" +
-        "<section class='oa-dashboard-panel'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>BRANCH OVERVIEW</span><h2>Enquiries by branch</h2></div></div>" +
+        "<section class='oa-dashboard-panel'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>LOCATION BREAKDOWN</span><h2>Enquiries by branch</h2></div></div>" +
           "<div id='oa-enquiry-branches' class='oa-enquiry-branches'><div class='oa-dashboard-loading'>Loading branch totals…</div></div></section>" +
       "</div>" +
-      "<section class='oa-dashboard-panel oa-dashboard-recent'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>LATEST SUBMISSIONS</span><h2>Recent enquiries</h2></div>" +
-        "<button class='oa-button light' type='button' id='oa-view-all-enquiries'>View all enquiries <span aria-hidden='true'>→</span></button></div>" +
+      "<section class='oa-dashboard-panel oa-dashboard-recent'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>INBOX</span><h2>Latest enquiries</h2></div>" +
+        "<button class='oa-button light' type='button' id='oa-view-all-enquiries'>Open enquiry inbox <span aria-hidden='true'>→</span></button></div>" +
         "<div class='oa-dashboard-table-wrap' id='oa-recent-enquiries'><div class='oa-dashboard-loading'>Loading recent enquiries…</div></div></section>" +
-      "<section class='oa-dashboard-panel oa-dashboard-content-overview'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>WEBSITE MANAGEMENT</span><h2>Content at a glance</h2></div></div>" +
+      "<section class='oa-dashboard-panel oa-dashboard-content-overview'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>CONTENT LIBRARY</span><h2>Website content</h2></div></div>" +
         "<div class='oa-dashboard-content-counts' id='oa-dashboard-content-counts'><div class='oa-dashboard-loading'>Loading content totals…</div></div></section>" +
-      "<section class='oa-dashboard-panel oa-dashboard-quick'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>SHORTCUTS</span><h2>Quick actions</h2></div></div>" +
+      "<section class='oa-dashboard-panel oa-dashboard-quick'><div class='oa-dashboard-panel-head'><div><span class='oa-dashboard-eyebrow'>QUICK ACCESS</span><h2>Common tasks</h2></div></div>" +
         "<div class='oa-dashboard-quick-actions'>" +
           "<button class='oa-dashboard-quick-action' type='button' data-go='branding'><span class='oa-quick-icon'>✦</span><span><b>Change logo</b><small>Update academy branding</small></span><span class='oa-quick-arrow'>→</span></button>" +
           "<button class='oa-dashboard-quick-action' type='button' data-go='notices'><span class='oa-quick-icon'>▤</span><span><b>Create a post</b><small>Publish an academy update</small></span><span class='oa-quick-arrow'>→</span></button>" +
@@ -494,9 +544,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
     const numberFormat = new Intl.NumberFormat('en-US');
     const metricDefinitions = [
-      { label:'Total enquiries', status:null, icon:'✉', hint:'All submissions received', tone:'blue' },
-      { label:'New enquiries', status:'new', icon:'◷', hint:'Awaiting first follow-up', tone:'amber' },
-      { label:'Contacted', status:'contacted', icon:'✓', hint:'Follow-up has been made', tone:'green' },
+      { label:'Total enquiries', status:null, icon:'✉', hint:'All enquiries received', tone:'blue' }, 
+      { label:'New', status:'new', icon:'◷', hint:'Currently marked as new', tone:'amber' }, 
+      { label:'Contacted', status:'contacted', icon:'✓', hint:'Follow-up recorded', tone:'green' }, 
       { label:'Closed', status:'closed', icon:'✓', hint:'Marked as closed', tone:'slate' }
     ];
 
@@ -526,14 +576,14 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     }
 
     const contentTables = [
-      ['oa_services','Services'],
-      ['oa_programs','Classes / programmes'],
+      ['oa_services','Services'], 
+      ['oa_programs','Programmes'], 
       ['oa_events','Calendar items'],
-      ['oa_testimonials','Testimonials'],
-      ['oa_partners','Partners'],
-      ['oa_notices','Posts'],
-      ['oa_faculty','Staff'],
-      ['oa_gallery','Gallery photos']
+      ['oa_testimonials','Learner feedback'], 
+      ['oa_partners','Partners'], 
+      ['oa_notices','Posts & notices'], 
+      ['oa_faculty','Team members'], 
+      ['oa_gallery','Gallery images']
     ];
 
     const trendPromise = db.from('oa_admissions')
@@ -602,14 +652,14 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           const height = day.count ? Math.max(7, Math.round(day.count / max * 100)) : 3;
           return "<div class='oa-chart-column' title='" + esc(day.label + ': ' + day.count + ' enquiries') + "'>" +
             "<b>" + numberFormat.format(day.count) + "</b><span class='oa-chart-bar-track'><i style='height:" + height + "%'></i></span><small>" + esc(day.label) + "</small></div>";
-        }).join('') + "</div><p class='oa-chart-caption'>Based on enquiry submission dates recorded by the website.</p>";
+        }).join('') + "</div><p class='oa-chart-caption'>Daily enquiries received by Oxford Academy during the last seven days.</p>";
     }
 
     const branchesRoot = $('#oa-enquiry-branches');
     if (branchResult.error || !branchResult.data) {
       branchesRoot.innerHTML = "<div class='oa-dashboard-empty'>Branch totals could not be loaded.</div>";
     } else if (!branchResult.data.length) {
-      branchesRoot.innerHTML = "<div class='oa-dashboard-empty'>No branch records are available.</div>";
+      branchesRoot.innerHTML = "<div class='oa-dashboard-empty'>No branch records were found.</div>";
     } else {
       const maxBranch = Math.max(1, ...branchResult.data.map((item) => item.count || 0));
       branchesRoot.innerHTML = branchResult.data.map((item) => {
@@ -641,7 +691,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         ].map((option) => "<option value='" + option[0] + "' " + (current === option[0] ? 'selected' : '') + ">" + option[1] + "</option>").join('');
       };
       recentRoot.innerHTML =
-        "<table class='oa-dashboard-table'><thead><tr><th>#</th><th>Student</th><th>Contact</th><th>Branch</th><th>Received</th><th>Status</th></tr></thead><tbody>" +
+        "<table class='oa-dashboard-table'><thead><tr><th>No.</th><th>Student</th><th>Phone</th><th>Branch</th><th>Submitted</th><th>Status</th></tr></thead><tbody>" +
         rows.map((row, index) => {
           const phone = String(row.phone || '').trim();
           const tel = phone.replace(/[^\d+]/g,'');
