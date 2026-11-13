@@ -258,8 +258,10 @@ const newAdmissionHandler = `async function loadAdmissionBranches(){
         p_phone:phone,
         p_email:String(f.get('email')||'').trim()||null,
         p_message:[
-          String(f.get('enquiry_type')||'').trim() ? 'Enquiry type: ' + String(f.get('enquiry_type')).trim() : '',
-          String(f.get('message')||'').trim()
+          String(f.get('enquiry_type')||'').trim() ? 'Course / service: ' + String(f.get('enquiry_type')).trim() : '',
+          String(f.get('preferred_batch')||'').trim() ? 'Preferred batch: ' + String(f.get('preferred_batch')).trim() : '',
+          String(f.get('message')||'').trim(),
+          'Source page: ' + window.location.pathname + window.location.search
         ].filter(Boolean).join('\\n\\n') || null,
         p_branch_name:branchName
       });
