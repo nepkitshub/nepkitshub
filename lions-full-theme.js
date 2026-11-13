@@ -414,6 +414,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           '<article><b>SSW Preparation Class</b><p>Japanese language and pathway preparation for learners exploring the Specified Skilled Worker route.</p><a href="/services/?type=ssw-preparation">View SSW preparation →</a></article>' +
           '</div>';
         programRoot.insertAdjacentElement('beforebegin', classTypes);
+        classTypes.querySelectorAll('.oa-lions-class-type-grid').forEach((node) => node.remove());
       }
       if (programRoot) {
         const { data: programs, error: programError } = await db.from('oa_programs')
@@ -433,6 +434,37 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         } else {
           programRoot.innerHTML = '<div class="oa-program-empty">Programme information will be published by the academy.</div>';
         }
+      }
+
+      // Dedicated examination preparation section, with one clear page per test.
+      let examSection = $('#oa-lions-exam-preparation');
+      if (!examSection) {
+        examSection = document.createElement('section');
+        examSection.id = 'oa-lions-exam-preparation';
+        examSection.className = 'section oa-lions-exam-preparation';
+        examSection.innerHTML =
+          '<div class="container"><div class="section-head"><span class="section-kicker">EXAMINATION PREPARATION</span><h2>Prepare for your Japanese language test.</h2><p>Explore the tests and ask Oxford about the preparation options currently available for your level.</p></div>' +
+          '<div class="oa-exam-grid">' +
+            '<article><span>01</span><h3>JLPT Preparation</h3><p>Build vocabulary, grammar, reading and listening skills for your target JLPT level.</p><a href="/examination-preparation/jlpt/">Explore JLPT preparation →</a></article>' +
+            '<article><span>02</span><h3>NAT-TEST Preparation</h3><p>Practise Japanese language knowledge and comprehension for the NAT-TEST.</p><a href="/examination-preparation/nat-test/">Explore NAT-TEST preparation →</a></article>' +
+            '<article><span>03</span><h3>JFT-Basic Preparation</h3><p>Strengthen everyday Japanese communication and task-based comprehension.</p><a href="/examination-preparation/jft-basic/">Explore JFT-Basic preparation →</a></article>' +
+          '</div><p class="oa-exam-note">Test dates, venues, fees and registration requirements are set by the respective examination organisers. Contact Oxford for current preparation class availability.</p></div>';
+      }
+
+      // Describe an educational learning structure without inventing course duration or outcomes.
+      let teachingMethodology = $('#oa-teaching-methodology');
+      if (!teachingMethodology) {
+        teachingMethodology = document.createElement('section');
+        teachingMethodology.id = 'oa-teaching-methodology';
+        teachingMethodology.className = 'section oa-teaching-methodology';
+        teachingMethodology.innerHTML =
+          '<div class="container"><div class="section-head"><span class="section-kicker">LEARNING APPROACH</span><h2>Build skills step by step.</h2><p>Language learning can combine clear foundations, guided practice and regular review. The exact syllabus and class activities vary by level and course.</p></div>' +
+          '<div class="oa-method-grid">' +
+            '<article><b>01</b><h3>Build foundations</h3><p>Develop scripts, vocabulary and grammar appropriate to your learning level.</p></article>' +
+            '<article><b>02</b><h3>Practise in context</h3><p>Use guided examples and communication activities to connect language with everyday situations.</p></article>' +
+            '<article><b>03</b><h3>Strengthen understanding</h3><p>Work on reading, listening and accurate language use through practice and review.</p></article>' +
+            '<article><b>04</b><h3>Prepare for your goal</h3><p>Focus learning around your chosen level, examination or next education step.</p></article>' +
+          '</div><p class="oa-method-note">Ask the academy for the current syllabus, teaching plan, class format and assessment approach for your selected course.</p></div>';
       }
 
       // Add a student guidance journey to match the reference site's student-support section.
@@ -745,7 +777,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const notices = $('#notices');
       const admission = $('#admission');
       if (main && hero) {
-        const ordered = [hero, trust, quickAccess, about, companyProfile, values, services, callout, academics, supportJourney, testimonials, team, notices, gallery, offices, partnerSection, admission].filter(Boolean);
+        const ordered = [hero, trust, quickAccess, about, companyProfile, academics, examSection, services, callout, values, teachingMethodology, supportJourney, team, testimonials, gallery, offices, notices, partnerSection, admission].filter(Boolean);
         ordered.forEach((node) => main.appendChild(node));
       }
 
