@@ -8,8 +8,8 @@ const parts = fs.readdirSync(partsDir).filter((name) => name.startsWith('part-')
 if (parts.length !== 6) throw new Error('Expected 6 site parts; found ' + parts.length);
 const encoded = parts.map((name) => fs.readFileSync(path.join(partsDir, name), 'utf8').trim()).join('');
 let html = zlib.gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8');
-html = html.replace('<title>Oxford Academy | Kushma, Parbat</title>', '<title>Oxford Academic Instruction Pvt. Ltd. | Kushma, Parbat</title>');
-html = html.replace('content="Oxford Academy, Kushma, Parbat — learning, character and confidence."', 'content="Oxford Academic Instruction Pvt. Ltd. | Education, learning and student development in Kushma, Parbat."');
+html = html.replace('<title>Oxford Academy | Kushma, Parbat</title>', '<title>OXFORD ACADEMIC INSTRUCTION PVT.LTD. | Kushma, Parbat</title>');
+html = html.replace('content="Oxford Academy, Kushma, Parbat — learning, character and confidence."', 'content="OXFORD ACADEMIC INSTRUCTION PVT.LTD. | Education, learning and student development in Kushma, Parbat."');
 function replaceExactly(source, needle, replacement, label) { const first = source.indexOf(needle); if (first === -1) throw new Error('Could not find ' + label); if (source.indexOf(needle, first + needle.length) !== -1) throw new Error('Found ' + label + ' more than once'); return source.slice(0, first) + replacement + source.slice(first + needle.length); }
 function replaceRegexExactly(source, pattern, replacement, label) { const matches = source.match(pattern); if (!matches || matches.length !== 1) throw new Error('Expected one ' + label + '; found ' + (matches ? matches.length : 0)); return source.replace(pattern, replacement); }
 html = replaceExactly(html, 'const db = createClient(SUPABASE_URL, SUPABASE_KEY);', 'const db = window.__oaSupabaseClient || createClient(SUPABASE_URL, SUPABASE_KEY); window.__oaSupabaseClient = db;', 'shared homepage Supabase client');
@@ -487,12 +487,12 @@ contentPageStyles += `
     .oa-section-header-label{padding:6px 10px;font-size:8px;letter-spacing:.08em}
   }
 `;
-const contentPageHtml = (mode) => '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b4e"><title>Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + '</style></head><body>' +
-  '<header class="page-top"><div class="page-top-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><span class="oa-section-header-label">ACADEMY UPDATES</span><div class="oa-header-actions"><a class="page-home oa-contact-action" href="/#admission">Contact Oxford ↗</a><a class="page-home oa-back-action" href="/">Back to homepage ↗</a></div></div></header>' +
+const contentPageHtml = (mode) => '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b4e"><title>OXFORD ACADEMIC INSTRUCTION PVT.LTD.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + '</style></head><body>' +
+  '<header class="page-top"><div class="page-top-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">OXFORD ACADEMIC INSTRUCTION PVT.LTD.</span></a><span class="oa-section-header-label">ACADEMY UPDATES</span><div class="oa-header-actions"><a class="page-home oa-contact-action" href="/#admission">Contact Oxford ↗</a><a class="page-home oa-back-action" href="/">Back to homepage ↗</a></div></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb" id="content-breadcrumb"></nav>' +
   (mode === 'detail' ? '<div id="content-detail"><div class="content-empty">Loading content…</div></div>' :
     '<h1 id="content-heading">Academy updates</h1><div id="content-list"><div class="content-empty">Loading content…</div></div>') +
-  '</main><footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a></footer><script type="module">\n' + contentPageSource + '\n</script></body></html>';
+  '</main><footer class="page-content-footer">© ' + new Date().getFullYear() + ' OXFORD ACADEMIC INSTRUCTION PVT.LTD. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a></footer><script type="module">\n' + contentPageSource + '\n</script></body></html>';
 for (const [folder, mode] of [['read','detail'],['all','listing']]) {
   const target = path.join(output, folder);
   fs.mkdirSync(target, { recursive:true });
@@ -646,7 +646,7 @@ try {
     };
   }
 } catch (error) { console.warn('Oxford service detail could not be loaded:', error); }
-document.title = item.title + ' | Oxford Academic Instruction Pvt. Ltd.';
+document.title = item.title + ' | OXFORD ACADEMIC INSTRUCTION PVT.LTD.';
 document.getElementById('service-breadcrumb-title').textContent = item.title;
 const root = document.getElementById('service-detail');
 const image = (() => { try { const url = new URL(String(item.image || '')); return url.protocol === 'https:' ? '<img src="' + esc(url.toString()) + '" alt="' + esc(item.title) + '" style="display:block;width:100%;max-height:280px;object-fit:cover;border-radius:12px;margin-top:20px">' : ''; } catch (_) { return ''; } })();
@@ -667,10 +667,10 @@ root.innerHTML =
   '<section class="oa-service-panel" style="margin-top:22px"><h2>Important information</h2><p>' + esc(item.note) + '</p></section>' +
   '<section class="oa-service-bottom"><div><h2>Ready to discuss your next step?</h2><p>Send an enquiry and choose the Oxford branch you would like to contact.</p></div><a href="/?service=' + encodeURIComponent(key) + '#admission">Contact Oxford ↗</a></section>';
 </script>`;
-const servicePageHtml = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>Oxford Academic Instruction Pvt. Ltd. | Services</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + '</style></head><body>' +
-  '<header class="page-top"><div class="page-top-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><span class="oa-section-header-label">OXFORD SERVICES</span><div class="oa-header-actions"><a class="page-home oa-contact-action" href="/#admission">Contact Oxford ↗</a><a class="page-home oa-back-action" href="/">Back to homepage ↗</a></div></div></header>' +
+const servicePageHtml = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>OXFORD ACADEMIC INSTRUCTION PVT.LTD. | Services</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + '</style></head><body>' +
+  '<header class="page-top"><div class="page-top-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">OXFORD ACADEMIC INSTRUCTION PVT.LTD.</span></a><span class="oa-section-header-label">OXFORD SERVICES</span><div class="oa-header-actions"><a class="page-home oa-contact-action" href="/#admission">Contact Oxford ↗</a><a class="page-home oa-back-action" href="/">Back to homepage ↗</a></div></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb"><a href="/">Home</a><span> / </span><a href="/#oa-lions-services">Services</a><span> / </span><span id="service-breadcrumb-title">Service details</span></nav><div id="service-detail"><div class="content-empty">Loading service information…</div></div></main>' +
-  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a></footer>' +
+  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' OXFORD ACADEMIC INSTRUCTION PVT.LTD. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a></footer>' +
   servicePageScript + '</body></html>';
 const servicesDir = path.join(output, 'services');
 fs.mkdirSync(servicesDir, { recursive:true });
@@ -717,7 +717,7 @@ try {
   (data || []).forEach((row) => { values[row.content_key] = row.value_en || ''; });
 } catch (error) { console.warn('About content unavailable:', error); }
 const fallback = {
-  company_story:'Oxford Academic Instruction Pvt. Ltd. supports learners and families exploring Japanese language education and Japan-related study and work pathways.',
+  company_story:'OXFORD ACADEMIC INSTRUCTION PVT.LTD. supports learners and families exploring Japanese language education and Japan-related study and work pathways.',
   company_mission:'To provide learner-focused language education and clear practical guidance for students and families.',
   company_vision:'To be a trusted education and guidance centre connecting learners with meaningful learning opportunities and informed future pathways.',
   company_goals:'Offer structured language learning, explain study and work pathways, support careful documentation and encourage informed decisions.',
@@ -733,7 +733,7 @@ root.innerHTML =
     '<article class="oa-about-card goals"><h2>Our Goals</h2><p>' + esc(value('company_goals')) + '</p></article>' +
     '<article class="oa-about-card message"><h2>Message from Oxford</h2><p>' + esc(value('leadership_message')) + '</p></article>' +
   '</div>';
-document.title = 'About Us | Oxford Academic Instruction Pvt. Ltd.';
+document.title = 'About Us | OXFORD ACADEMIC INSTRUCTION PVT.LTD.';
 const officesRoot = document.getElementById('oa-about-offices');
 try {
   const { data: branches } = await db.from('oa_branches').select('branch_name,address,phone,email,maps_url,is_active').eq('is_active', true).order('sort_order');
@@ -782,13 +782,13 @@ try {
   partnerSection.remove();
 }
 </script>`;
-const aboutPageHtml = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>About Us | Oxford Academic Instruction Pvt. Ltd.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + aboutPageStyles + '</style></head><body>' +
-  '<header class="page-top"><div class="page-top-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><span class="oa-section-header-label">ABOUT OXFORD</span><div class="oa-header-actions"><a class="page-home oa-contact-action" href="/#admission">Contact Oxford ↗</a><a class="page-home oa-back-action" href="/">Back to homepage ↗</a></div></div></header>' +
+const aboutPageHtml = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102f52"><title>About Us | OXFORD ACADEMIC INSTRUCTION PVT.LTD.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + aboutPageStyles + '</style></head><body>' +
+  '<header class="page-top"><div class="page-top-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark">OA</span><span class="page-brand-name">OXFORD ACADEMIC INSTRUCTION PVT.LTD.</span></a><span class="oa-section-header-label">ABOUT OXFORD</span><div class="oa-header-actions"><a class="page-home oa-contact-action" href="/#admission">Contact Oxford ↗</a><a class="page-home oa-back-action" href="/">Back to homepage ↗</a></div></div></header>' +
   '<main class="page-main"><nav class="page-breadcrumb"><a href="/">Home</a><span> / </span><span>About Us</span></nav><div id="oa-about-content"><div class="content-empty">Loading Oxford profile…</div></div>' +
   '<section class="oa-about-section"><h2>Our Offices</h2><p>Contact our Kushma or Baglung branch for current programme and enrolment information.</p><div id="oa-about-offices" class="oa-about-offices"><div class="content-empty">Loading branch information…</div></div></section>' +
   '<section class="oa-about-section"><h2>Meet Our Team</h2><p>Get to know the published team members who support Oxford Academic Instruction.</p><div id="oa-about-team" class="oa-about-team"><div class="content-empty">Loading team profiles…</div></div></section>' +
   '<section class="oa-about-section" id="oa-about-partners" hidden><h2>Our Partner Institutions</h2><p>Organisations with confirmed relationships published by Oxford Academic Instruction.</p><div id="oa-about-partner-list" class="oa-about-partners"></div></section></main>' +
-  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a></footer>' +
+  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' OXFORD ACADEMIC INSTRUCTION PVT.LTD. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a></footer>' +
   aboutPageScript + '</body></html>';
 const aboutDir = path.join(output, 'about');
 fs.mkdirSync(aboutDir, { recursive:true });
@@ -854,16 +854,16 @@ const calendarPageScriptSource = fs.readFileSync(path.join(__dirname, 'calendar-
 const calendarPageScript = '<script type="module">\n' + calendarPageScriptSource + '\n</script>';
 const calendarPageHtml = [
   '<!doctype html>',
-  '<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b4e"><meta name="description" content="Oxford Academic Instruction Nepali calendar with Bikram Sambat dates, English dates, festivals, holidays and academy events."><title>Oxford Academic Instruction Pvt. Ltd. | Nepali Calendar</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + calendarPageStyles + '</style></head>',
+  '<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b4e"><meta name="description" content="Oxford Academic Instruction Nepali calendar with Bikram Sambat dates, English dates, festivals, holidays and academy events."><title>OXFORD ACADEMIC INSTRUCTION PVT.LTD. | Nepali Calendar</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + servicePageStyles + calendarPageStyles + '</style></head>',
   '<body>',
-  '<header class="page-top"><div class="page-top-inner oa-calendar-header-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark" id="oa-cal-logo">OA</span><span class="page-brand-name" id="oa-cal-brand-name">Oxford Academic Instruction Pvt. Ltd.<small>KUSHMA · BAGLUNG, NEPAL</small></span></a><span class="oa-calendar-header-label oa-section-header-label" id="oa-calendar-header-label">NEPALI CALENDAR · 2083 B.S.</span><div class="oa-header-actions"><a class="page-home oa-contact-action" href="/#admission">Contact Oxford <span aria-hidden="true">↗</span></a><a class="page-home oa-back-action" href="/">Back to homepage ↗</a></div></div></header>',
+  '<header class="page-top"><div class="page-top-inner oa-calendar-header-inner oa-section-header"><a class="page-brand" href="/"><span class="page-mark" id="oa-cal-logo">OA</span><span class="page-brand-name" id="oa-cal-brand-name">OXFORD ACADEMIC INSTRUCTION PVT.LTD.</span></a><span class="oa-calendar-header-label oa-section-header-label" id="oa-calendar-header-label">NEPALI CALENDAR · 2083 B.S.</span><div class="oa-header-actions"><a class="page-home oa-contact-action" href="/#admission">Contact Oxford <span aria-hidden="true">↗</span></a><a class="page-home oa-back-action" href="/">Back to homepage ↗</a></div></div></header>',
   '<main class="page-main"><nav class="page-breadcrumb"><a href="/">Home</a><span> / </span><span>Nepali Calendar</span></nav>',
   '<section class="oa-bs-hero"><div><span class="oa-bs-kicker">OXFORD ACADEMIC CALENDAR</span><h1 id="oa-nepali-calendar-title">Nepali Calendar</h1><p>Keep track of Bikram Sambat dates, English dates, festivals, public holidays and Oxford Academy updates in one place.</p></div><div class="oa-bs-today"><small>Today in Nepal</small><strong id="oa-cal-today-text">Loading today’s date…</strong><span id="oa-cal-today-ad"></span></div></section>',
   '<div class="oa-cal-layout"><section class="oa-cal-card" aria-label="Nepali monthly calendar"><div class="oa-cal-toolbar"><h2 class="oa-cal-month-title" id="oa-cal-month-title">Nepali calendar</h2><button id="oa-cal-prev" type="button" aria-label="Previous month">‹</button><select id="oa-cal-month" aria-label="Nepali month"></select><select id="oa-cal-year" aria-label="Bikram Sambat year"></select><button id="oa-cal-next" type="button" aria-label="Next month">›</button><button id="oa-cal-today" class="oa-cal-today-btn" type="button">Today</button></div><div class="oa-cal-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div class="oa-cal-days" id="oa-cal-days" role="grid" aria-label="Nepali dates"><div class="oa-cal-loading">Loading Nepali dates…</div></div><p class="oa-cal-status" id="oa-cal-status" role="status" aria-live="polite">Connecting to the Nepali calendar…</p></section>',
   '<aside class="oa-cal-side"><section class="oa-cal-panel" aria-label="Selected date details"><div id="oa-cal-selected"><div class="oa-cal-loading">Loading date details…</div></div><p class="oa-cal-panel-note">Calendar dates are provided for general information. Confirm important school closures and examination dates with official notices.</p></section><section class="oa-cal-panel"><h2>Oxford events this month</h2><div id="oa-cal-upcoming"><div class="oa-cal-upcoming-empty">Loading Oxford events…</div></div></section></aside></div>',
   '<div class="oa-cal-source"><span>BS calendar data by <a href="https://trisambat.com/?lang=en" target="_blank" rel="noopener noreferrer">Trisambat ↗</a>.</span><span>Calendar data is not an official government Panchanga.</span></div>',
   '</main>',
-  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a></footer>',
+  '<footer class="page-content-footer">© ' + new Date().getFullYear() + ' OXFORD ACADEMIC INSTRUCTION PVT.LTD. · Kushma & Baglung, Nepal <a href="/#admission">Contact us ↗</a></footer>',
   calendarPageScript,
   '</body></html>'
 ].join('');
@@ -874,6 +874,33 @@ fs.writeFileSync(path.join(calendarDir, 'index.html'), calendarPageHtml);
 
 
 
+
+/*
+ * Dedicated course, examination and branch landing pages.
+ * All branch contact data and course availability are read from published Supabase records.
+ */
+const pathwayPageSource = fs.readFileSync(path.join(__dirname, 'public-course-branch-pages.js'), 'utf8');
+const pathwayPageStyles = "\n:root{--oxford-navy:#14243A;--oxford-ivory:#F7F5EF;--oxford-red:#C9433B;--oxford-charcoal:#242A30;--oxford-muted:#68717d;--oxford-line:#e7e4dc}\nbody{margin:0;background:var(--oxford-ivory);color:var(--oxford-charcoal);font-family:\"DM Sans\",Arial,sans-serif}\n.page-top{background:#fff!important;border-bottom:1px solid var(--oxford-line)!important;box-shadow:0 5px 20px rgba(20,36,58,.06)!important}\n.page-mark{background:var(--oxford-navy)!important;border-color:var(--oxford-red)!important;color:#fff!important}\n.page-brand-name{max-width:430px;font-size:15px!important;line-height:1.3;font-weight:850!important;letter-spacing:-.025em;color:var(--oxford-navy)!important;white-space:normal}\n.page-brand small{display:none!important}\n.oa-section-header-label{background:var(--oxford-ivory)!important;border-color:#e8dfd5!important;color:var(--oxford-navy)!important}\n.oa-section-header-label:before{background:var(--oxford-red)!important;box-shadow:0 0 0 4px rgba(201,67,59,.12)!important}\n.oa-section-header .page-home,.page-home{background:var(--oxford-red)!important;color:#fff!important;border-color:var(--oxford-red)!important;box-shadow:0 8px 20px rgba(201,67,59,.16)!important}\n.oa-section-header .oa-back-action{background:#fff!important;color:var(--oxford-navy)!important;border-color:#d8dce0!important;box-shadow:none!important}\n.oa-pathway-main{width:min(1160px,calc(100% - 44px));margin:30px auto 54px}\n.oa-pathway-hero{position:relative;isolation:isolate;overflow:hidden;padding:clamp(30px,5vw,56px);border-radius:20px;background:var(--oxford-navy);color:#fff;box-shadow:0 18px 42px rgba(20,36,58,.12)}\n.oa-pathway-hero:before{position:absolute;z-index:-1;content:\"\";width:330px;height:330px;right:-115px;top:-150px;border:1px solid rgba(255,255,255,.18);border-radius:50%;box-shadow:0 0 0 38px rgba(255,255,255,.035),0 0 0 76px rgba(255,255,255,.025)}\n.oa-pathway-kicker,.oa-pathway-eyebrow{display:inline-flex;color:#f0b2aa;font-size:10px;font-weight:900;letter-spacing:.15em;text-transform:uppercase}\n.oa-pathway-hero h1{max-width:850px;margin:15px 0 14px;color:#fff;font:800 clamp(32px,5.5vw,56px)/1.08 \"Playfair Display\",Georgia,serif;letter-spacing:-.035em}\n.oa-pathway-hero>p{max-width:760px;margin:0;color:#e6e9ed;font-size:14px;line-height:1.9}\n.oa-pathway-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}\n.oa-pathway-actions a,.oa-pathway-primary-link{display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:11px 16px;border:1px solid var(--oxford-red);border-radius:8px;background:var(--oxford-red);color:#fff;font-size:11px;font-weight:850}\n.oa-pathway-actions a.secondary{border-color:rgba(255,255,255,.45);background:transparent;color:#fff}\n.oa-pathway-section{padding:45px 0 8px}\n.oa-pathway-section-heading{max-width:730px;margin-bottom:22px}\n.oa-pathway-section-heading>span{color:var(--oxford-red);font-size:10px;font-weight:900;letter-spacing:.14em}\n.oa-pathway-section-heading h2{margin:7px 0 9px;color:var(--oxford-navy);font:750 clamp(24px,3vw,34px)/1.2 \"Playfair Display\",Georgia,serif}\n.oa-pathway-section-heading p{margin:0;color:var(--oxford-muted);font-size:12px;line-height:1.8}\n.oa-pathway-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;align-items:stretch}\n.oa-pathway-card,.oa-pathway-panel{min-width:0;padding:23px;border:1px solid var(--oxford-line);border-radius:15px;background:#fff;box-shadow:0 8px 22px rgba(20,36,58,.045)}\n.oa-pathway-card{display:flex;flex-direction:column}\n.oa-pathway-card h2,.oa-pathway-panel h2{margin:9px 0 10px;color:var(--oxford-navy);font:750 20px/1.25 \"Playfair Display\",Georgia,serif;letter-spacing:-.02em}\n.oa-pathway-card p,.oa-pathway-panel p{margin:0;color:var(--oxford-muted);font-size:12px;line-height:1.85}\n.oa-pathway-card>a{display:inline-flex;align-self:flex-start;margin-top:auto;padding-top:17px;color:var(--oxford-red);font-size:11px;font-weight:900}\n.oa-pathway-card-secondary{border-top:3px solid var(--oxford-red)}\n.oa-pathway-level{display:grid;place-items:center;width:48px;height:48px;border-radius:12px;background:var(--oxford-navy);color:#fff;font-size:15px;font-weight:900}\n.oa-pathway-columns{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(260px,.7fr);gap:16px;margin-top:20px;align-items:start}\n.oa-pathway-panel h2{margin:7px 0 12px}\n.oa-pathway-panel h2:not(:first-of-type){margin-top:23px}\n.oa-pathway-panel ul{display:grid;gap:9px;margin:14px 0 0;padding:0;list-style:none}\n.oa-pathway-panel li{position:relative;padding-left:22px;color:#4b5561;font-size:12px;line-height:1.7}\n.oa-pathway-panel li:before{position:absolute;left:0;top:0;color:var(--oxford-red);content:\"✓\";font-weight:900}\n.oa-pathway-facts{display:grid;gap:0;margin:14px 0 18px}\n.oa-pathway-facts>div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px;padding:10px 0;border-bottom:1px solid var(--oxford-line)}\n.oa-pathway-facts dt{color:#7b838d;font-size:10px;font-weight:800}\n.oa-pathway-facts dd{margin:0;color:var(--oxford-charcoal);font-size:11px;line-height:1.55}\n.oa-pathway-note{margin-top:20px;padding:17px 19px;border:1px solid #ead7d1;border-left:4px solid var(--oxford-red);border-radius:10px;background:#fffaf7}\n.oa-pathway-note b{display:block;margin-bottom:5px;color:var(--oxford-navy);font-size:12px}\n.oa-pathway-note p{margin:0;color:#6d625f;font-size:11px;line-height:1.75}\n.oa-pathway-primary-link{width:100%}\n.oa-detail-contact{display:grid;gap:3px;margin-top:12px;padding:12px;border-radius:10px;background:var(--oxford-ivory)}\n.oa-detail-contact span{color:#7d858d;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}\n.oa-detail-contact a{color:var(--oxford-navy);font-size:12px;font-weight:800;overflow-wrap:anywhere}\n.oa-branch-card{gap:2px}\n.oa-branch-actions,.oa-branch-socials{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}\n.oa-branch-actions a,.oa-branch-socials a{display:inline-flex;padding:9px 11px;border-radius:8px;background:var(--oxford-ivory);color:var(--oxford-navy);font-size:10px;font-weight:850}\n.oa-branch-actions a:first-child{background:var(--oxford-red);color:#fff}\n.oa-pathway-unavailable{align-self:center;color:#8a8f95;font-size:10px}\n.oa-pathway-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding:18px 0;border-top:1px solid var(--oxford-line);color:#747d86;font-size:10px}\n.oa-pathway-footer a{color:var(--oxford-red);font-weight:850}\n@media(max-width:800px){.oa-pathway-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.oa-pathway-columns{grid-template-columns:1fr}.oa-pathway-main{width:calc(100% - 30px);margin:22px auto 40px}}\n@media(max-width:560px){.oa-pathway-grid{grid-template-columns:1fr}.oa-pathway-hero{padding:28px 20px;border-radius:15px}.oa-pathway-hero h1{font-size:32px}.oa-pathway-hero>p{font-size:12px}.oa-pathway-section{padding-top:32px}.oa-pathway-card,.oa-pathway-panel{padding:18px}.oa-pathway-facts>div{grid-template-columns:92px minmax(0,1fr)}.oa-pathway-footer{flex-direction:column}.page-brand-name{font-size:11px!important;max-width:230px}}\n";
+const pathwayPageHtml = (title, description) => '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#14243A"><meta name="description" content="' + title.replace(/&/g, '&amp;').replace(/"/g, '&quot;') + ' — ' + description.replace(/&/g, '&amp;').replace(/"/g, '&quot;') + '"><title>' + title + ' | OXFORD ACADEMIC INSTRUCTION PVT.LTD.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"><style>' + contentPageStyles + pathwayPageStyles + '</style></head><body><main id="oa-pathway-root" class="page-main"><div class="content-empty">Loading academy information…</div></main><script type="module">\n' + pathwayPageSource + '\n</script></body></html>';
+const pathwayRoutes = [
+  { route:'courses', title:'Japanese Language Courses', description:'Japanese N5, N4 and N3 course information.' },
+  { route:'courses/n5', title:'Japanese N5 Course', description:'Beginner Japanese language learning information.' },
+  { route:'courses/n4', title:'Japanese N4 Course', description:'Elementary Japanese language learning information.' },
+  { route:'courses/n3', title:'Japanese N3 Course', description:'Intermediate Japanese language learning information.' },
+  { route:'examination-preparation', title:'Japanese Examination Preparation', description:'JLPT, NAT-TEST and JFT-Basic preparation information.' },
+  { route:'examination-preparation/jlpt', title:'JLPT Preparation', description:'Japanese-Language Proficiency Test preparation information.' },
+  { route:'examination-preparation/nat-test', title:'NAT-TEST Preparation', description:'Japanese NAT-TEST preparation information.' },
+  { route:'examination-preparation/jft-basic', title:'JFT-Basic Preparation', description:'Japan Foundation Test for Basic Japanese preparation information.' },
+  { route:'branches', title:'Our Branches', description:'Kushma and Baglung branch contacts and locations.' },
+  { route:'branches/kushma', title:'Kushma Branch', description:'Kushma branch contact information.' },
+  { route:'branches/baglung', title:'Baglung Branch', description:'Baglung branch contact information.' }
+];
+for (const page of pathwayRoutes) {
+  const target = path.join(output, ...page.route.split('/'));
+  fs.mkdirSync(target, { recursive:true });
+  fs.writeFileSync(path.join(target, 'index.html'), pathwayPageHtml(page.title, page.description));
+}
+
 /*
  * Public launch assets: sitemap, crawler policy, and a branded not-found page.
  * The admin portal is intentionally excluded from search indexing.
@@ -882,9 +909,20 @@ const publicSiteOrigin = 'https://oxford-academy-kushma.vercel.app';
 const publicSitemapPaths = [
   '/',
   '/about/',
+  '/courses/',
+  '/courses/n5/',
+  '/courses/n4/',
+  '/courses/n3/',
+  '/examination-preparation/',
+  '/examination-preparation/jlpt/',
+  '/examination-preparation/nat-test/',
+  '/examination-preparation/jft-basic/',
+  '/services/',
+  '/branches/',
+  '/branches/kushma/',
+  '/branches/baglung/',
   '/calendar/',
-  '/all/',
-  '/services/'
+  '/all/'
 ];
 const sitemapXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
@@ -923,7 +961,7 @@ function applyProfessionalLayer(folder) {
       const titleEnd = page.indexOf('</title>', titleStart + 7);
       const rawTitle = titleStart >= 0 && titleEnd > titleStart
         ? page.slice(titleStart + 7, titleEnd)
-        : 'Oxford Academic Instruction Pvt. Ltd.';
+        : 'OXFORD ACADEMIC INSTRUCTION PVT.LTD.';
       const title = rawTitle.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       const relative = path.relative(output, filePath).split(path.sep).join('/');
       const isAdminPage = relative === 'admin/index.html';
@@ -933,7 +971,7 @@ function applyProfessionalLayer(folder) {
         canonicalPath = '/' + relative.slice(0, -'index.html'.length);
       }
       const meta = [
-        '<meta property="og:site_name" content="Oxford Academic Instruction Pvt. Ltd.">',
+        '<meta property="og:site_name" content="OXFORD ACADEMIC INSTRUCTION PVT.LTD.">',
         '<meta property="og:type" content="website">',
         '<meta property="og:title" content="' + title + '">',
         '<meta name="twitter:card" content="summary_large_image">',
