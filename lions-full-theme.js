@@ -222,45 +222,46 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       if (nav) {
         nav.innerHTML =
           '<a href="/">Home</a><a href="/about/">About Us</a>' +
-          '<details class="oa-nav-drop"><summary>Services</summary><div class="oa-nav-menu">' +
-            '<a href="#oa-lions-services">All Services</a>' +
-            '<a href="/services/?type=student-visa">Student Visa & Study in Japan</a>' +
-            '<a href="/services/?type=working-visa-language">Working Visa Language</a>' +
-            '<a href="/services/?type=ssw">Specified Skilled Worker (SSW)</a>' +
-            '<a href="/services/?type=dependent-visa">Dependent Visa Guidance</a>' +
-            '<a href="/services/?type=documentation">Documentation Support</a>' +
-            '<a href="/services/?type=career-counselling">Study & Career Counselling</a>' +
-          '</div></details>' +
-          '<details class="oa-nav-drop"><summary>Classes</summary><div class="oa-nav-menu">' +
-            '<a href="/services/?type=japanese-classes">Japanese Language</a>' +
-            '<a href="/services/?type=language-tests">JLPT · NAT · J-CERT · JLCT · JFT-Basic</a>' +
-            '<a href="/services/?type=ssw-preparation">SSW Preparation Class</a>' +
+          '<details class="oa-nav-drop"><summary>Courses</summary><div class="oa-nav-menu">' +
+            '<a href="/courses/">All Courses</a><a href="/courses/n5/">Japanese N5</a>' +
+            '<a href="/courses/n4/">Japanese N4</a><a href="/courses/n3/">Japanese N3</a>' +
             '<a href="/services/?type=korean-classes">Korean Language</a>' +
           '</div></details>' +
-          '<a href="#oa-lions-testimonials">Student Experiences</a><a href="/calendar/">Calendar</a>' +
+          '<details class="oa-nav-drop"><summary>Examination Preparation</summary><div class="oa-nav-menu">' +
+            '<a href="/examination-preparation/">All Examinations</a><a href="/examination-preparation/jlpt/">JLPT Preparation</a>' +
+            '<a href="/examination-preparation/nat-test/">NAT-TEST Preparation</a><a href="/examination-preparation/jft-basic/">JFT-Basic Preparation</a>' +
+            '<a href="/services/?type=language-tests">Other Japanese Language Tests</a>' +
+          '</div></details>' +
+          '<details class="oa-nav-drop"><summary>Japan Pathways</summary><div class="oa-nav-menu">' +
+            '<a href="/services/?type=student-visa">Japan Study Counselling</a>' +
+            '<a href="/services/?type=ssw">SSW Preparation</a>' +
+            '<a href="/services/?type=working-visa-language">Working Pathway Language</a>' +
+            '<a href="/services/?type=dependent-visa">Dependent Guidance</a>' +
+            '<a href="/services/?type=documentation">Application Documentation</a>' +
+          '</div></details>' +
+          '<a href="/branches/">Our Branches</a>' +
           '<details class="oa-nav-drop oa-nav-more"><summary>More</summary><div class="oa-nav-menu">' +
-            '<a href="#team">Our Team</a><a href="#notices">News & Notices</a>' +
-            '<a href="#gallery">Gallery</a><a href="#oa-lions-offices">Contact Offices</a>' +
-            '<a href="#admission">Enquire / Apply</a>' +
+            '<a href="#notices">Notices</a><a href="/calendar/">Calendar</a>' +
+            '<a href="#team">Our Team</a><a href="#gallery">Gallery</a>' +
+            '<a href="#oa-lions-testimonials">Learner Reviews</a><a href="#oa-lions-offices">Contact Us</a>' +
           '</div></details>';
         nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMobileMenu));
       }
 
       const brandName = $('.nav-wrap .brand-name');
-      if (brandName) brandName.textContent = 'Oxford Academic Instruction Pvt. Ltd.';
-      const brandPlace = $('.nav-wrap .brand-place');
-      if (brandPlace) brandPlace.textContent = 'Kushma · Baglung, Nepal';
+      if (brandName) brandName.textContent = 'OXFORD ACADEMIC INSTRUCTION PVT.LTD.';
+      document.querySelectorAll('.brand-place,.page-brand-name small').forEach((node) => node.remove());
 
       // Rewrite only Oxford's existing generic homepage copy. No Lions text, logos or claims are reused.
-      setText('#heroEyebrow', 'OXFORD ACADEMIC INSTRUCTION PVT. LTD. · KUSHMA & BAGLUNG');
-      setText('#heroTitle', 'Your Japan Journey Starts With the Right Guidance.');
-      setText('#heroSubtitle', 'Explore study opportunities in Japan, Japanese language classes, work and SSW preparation, dependent visa guidance and application support — with Oxford Academic Instruction by your side.');
-      setText('#heroNote', 'Study in Japan · Work in Japan · Language & Documentation Support');
-      setAnchor('.hero-buttons a:first-child', 'Explore Our Classes ↓', '#academics');
-      setAnchor('.hero-buttons a:last-child', 'Send an Enquiry ↗', '#admission');
+      setText('#heroEyebrow', 'JAPANESE LANGUAGE · EXAM PREPARATION · JAPAN COUNSELLING');
+      setText('#heroTitle', 'Learn Japanese. Prepare for your next step.');
+      setText('#heroSubtitle', 'Explore Japanese N5, N4 and N3 learning, Japanese language test preparation, Japan study counselling and SSW preparation through Oxford’s Kushma and Baglung branches.');
+      setText('#heroNote', 'Japanese Courses · JLPT, NAT-TEST & JFT-Basic · Japan Study & SSW Guidance');
+      setAnchor('.hero-buttons a:first-child', 'Explore Courses ↓', '/courses/');
+      setAnchor('.hero-buttons a:last-child', 'Admission Enquiry ↗', '#admission');
       setText('#aboutBadge', 'Learn with purpose. Move forward with confidence.');
-      setText('#aboutTitle', 'Guidance and language education for your next step in Japan.');
-      setText('#aboutText', 'Oxford Academic Instruction Pvt. Ltd. supports learners through Japanese and Korean language classes, Japan study and career counselling, student visa guidance, working and SSW preparation, dependent visa guidance and application documentation support. With branches in Kushma and Baglung, the academy helps learners understand their options and prepare for the next steps in their education or career journey.');
+      setText('#aboutTitle', 'Language learning and guidance for informed next steps.');
+      setText('#aboutText', 'OXFORD ACADEMIC INSTRUCTION PVT.LTD. provides Japanese and Korean language learning, Japanese examination preparation, Japan study counselling, SSW and work-pathway preparation, and application documentation guidance. Learners can contact the Kushma or Baglung branch to discuss current programmes, course availability and the next steps relevant to their goals.');
       const aboutCopy = $('.about-copy');
       if (aboutCopy) {
         const paragraph = $('#aboutText');
@@ -280,10 +281,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         quickAccess.setAttribute('aria-label', 'Quick access to Oxford services');
         quickAccess.innerHTML =
           '<div class="container"><div class="oa-quick-access-grid">' +
-            '<a class="oa-quick-access-card" href="/services/?type=student-visa"><span class="oa-quick-access-icon" aria-hidden="true">🎓</span><span class="oa-quick-access-copy"><b>Study in Japan</b><small>Explore study guidance and application support</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
-            '<a class="oa-quick-access-card" href="/services/?type=japanese-classes"><span class="oa-quick-access-icon" aria-hidden="true">あ</span><span class="oa-quick-access-copy"><b>Japanese Classes</b><small>Build language skills and test readiness</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
-            '<a class="oa-quick-access-card" href="/services/?type=ssw"><span class="oa-quick-access-icon" aria-hidden="true">仕事</span><span class="oa-quick-access-copy"><b>Work & SSW</b><small>Understand language and pathway preparation</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
-            '<a class="oa-quick-access-card" href="#oa-lions-offices"><span class="oa-quick-access-icon" aria-hidden="true">⌖</span><span class="oa-quick-access-copy"><b>Visit a Branch</b><small>Find Oxford in Kushma or Baglung</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
+            '<a class="oa-quick-access-card" href="/courses/"><span class="oa-quick-access-icon" aria-hidden="true">あ</span><span class="oa-quick-access-copy"><b>Japanese Courses</b><small>Explore N5, N4 and N3 course information</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
+            '<a class="oa-quick-access-card" href="/examination-preparation/"><span class="oa-quick-access-icon" aria-hidden="true">文</span><span class="oa-quick-access-copy"><b>Exam Preparation</b><small>JLPT, NAT-TEST and JFT-Basic</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
+            '<a class="oa-quick-access-card" href="/services/?type=student-visa"><span class="oa-quick-access-icon" aria-hidden="true">学</span><span class="oa-quick-access-copy"><b>Study in Japan</b><small>Explore counselling and application guidance</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
+            '<a class="oa-quick-access-card" href="/branches/"><span class="oa-quick-access-icon" aria-hidden="true">⌖</span><span class="oa-quick-access-copy"><b>Visit a Branch</b><small>Contact Kushma or Baglung</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
           '</div></div>';
       }
 
@@ -644,7 +645,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         footer.innerHTML =
           '<div class="container"><div class="oa-footer-grid">' +
             '<section class="oa-footer-explore"><span class="oa-footer-kicker">OXFORD ACADEMIC INSTRUCTION</span>' +
-              '<div class="oa-footer-brand"><span class="brand-mark">OA</span><div><b class="brand-name">Oxford Academic Instruction Pvt. Ltd.</b><small class="brand-place">Kushma · Baglung, Nepal</small></div></div>' +
+              '<div class="oa-footer-brand"><span class="brand-mark">OA</span><div><b class="brand-name">OXFORD ACADEMIC INSTRUCTION PVT.LTD.</b><small class="brand-place">Kushma · Baglung, Nepal</small></div></div>' +
               '<h3>Explore</h3><nav class="oa-footer-links" aria-label="Footer navigation">' +
                 '<a href="/about/">About Oxford</a><a href="#oa-lions-services">Services</a>' +
                 '<a href="/services/?type=japanese-classes">Japanese Language</a><a href="/services/?type=korean-classes">Korean Language</a>' +
@@ -655,7 +656,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
             '<section class="oa-footer-connect"><span class="oa-footer-kicker">CONTACT & SOCIAL</span><h3>Connect with Oxford</h3>' +
               '<div class="oa-footer-branch-grid">' + (branchFooterHtml || '<p>Contact details will be published by the academy.</p>') + '</div>' +
             '</section>' +
-          '</div><div class="oa-footer-bottom"><span>© ' + new Date().getFullYear() + ' Oxford Academic Instruction Pvt. Ltd. All rights reserved.</span>' +
+          '</div><div class="oa-footer-bottom"><span>© ' + new Date().getFullYear() + ' OXFORD ACADEMIC INSTRUCTION PVT.LTD. All rights reserved.</span>' +
             '<span>Designed by <a href="https://wa.me/9779867947202?text=Hello%20Saksham%2C%20I%20came%20from%20the%20Oxford%20Academy%20website." target="_blank" rel="noopener noreferrer"><strong>Saksham Lamsal</strong></a></span>' +
           '</div></div>';
       }
@@ -783,14 +784,14 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
       // Keep the company name consistent across the header, footer and browser title.
       document.querySelectorAll('.footer .brand-name').forEach((node) => {
-        node.textContent = 'Oxford Academic Instruction Pvt. Ltd.';
+        node.textContent = 'OXFORD ACADEMIC INSTRUCTION PVT.LTD.';
       });
       document.querySelectorAll('.footer .brand-place').forEach((node) => {
         node.textContent = 'Kushma · Baglung, Nepal';
       });
       const title = document.title || '';
-      if (!title.includes('Oxford Academic Instruction Pvt. Ltd.')) {
-        document.title = 'Oxford Academic Instruction Pvt. Ltd. | Kushma & Baglung, Nepal';
+      if (!title.includes('OXFORD ACADEMIC INSTRUCTION PVT.LTD.')) {
+        document.title = 'OXFORD ACADEMIC INSTRUCTION PVT.LTD. | Kushma & Baglung, Nepal';
       }
 
       // Re-bind the responsive navigation after replacing its links.
