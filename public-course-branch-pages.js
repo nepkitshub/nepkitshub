@@ -251,6 +251,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     }
   }
 
+  const routeLabel = path.startsWith('/courses') ? 'COURSES' : (path.startsWith('/examination-preparation') ? 'EXAMINATION PREPARATION' : 'OUR BRANCHES');
+  root.insertAdjacentHTML('beforebegin', pageHeader(routeLabel));
+  root.classList.add('oa-pathway-main');
   const render = async () => {
     if (path === '/courses') return renderCourseIndex();
     if (/^\/courses\/n[543]$/.test(path)) return renderCourseLevel(path.split('/').pop());
