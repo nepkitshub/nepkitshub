@@ -1,17 +1,17 @@
 
 /* Oxford Academy — professional design system */
 :root {
-  --oa-ink: #17283d;
-  --oa-navy: #102b4e;
-  --oa-blue: #2366a7;
-  --oa-blue-strong: #174f85;
-  --oa-gold: #e7ad59;
-  --oa-muted: #68798d;
-  --oa-line: #e3eaf1;
-  --oa-soft: #f4f7fb;
+  --oa-ink: #242A30;
+  --oa-navy: #14243A;
+  --oa-blue: #14243A;
+  --oa-blue-strong: #263d58;
+  --oa-gold: #C9433B;
+  --oa-muted: #68717d;
+  --oa-line: #e7e4dc;
+  --oa-soft: #F7F5EF;
   --oa-surface: #ffffff;
   --oa-radius: 16px;
-  --oa-shadow: 0 14px 38px rgba(16,43,78,.075);
+  --oa-shadow: 0 14px 38px rgba(20,36,58,.075);
 }
 html { scroll-behavior: smooth; scroll-padding-top: 110px; }
 body { color: var(--oa-ink); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
@@ -2193,3 +2193,16 @@ body.admin-route .admin-login {
     animation-iteration-count: 1 !important;
   }
 }
+
+
+/* Oxford brand palette: midnight navy, warm ivory, vermilion, charcoal and white. */
+body:not(.admin-route){color:#242A30}
+body:not(.admin-route) .btn-gold,body:not(.admin-route) .oa-pathway-actions a:not(.secondary){background:#C9433B!important;border-color:#C9433B!important;color:#fff!important}
+body:not(.admin-route) .btn-navy{background:#14243A!important;color:#fff!important}
+body:not(.admin-route) .section.soft,body:not(.admin-route) .page-main{background:#F7F5EF}
+body:not(.admin-route) .section-kicker,body:not(.admin-route) .content-read-more,body:not(.admin-route) .content-back-link{color:#C9433B!important}
+body:not(.admin-route) .page-top{background:#fff!important;border-color:#e7e4dc!important}
+body:not(.admin-route) .page-brand-name{color:#14243A!important}
+body:not(.admin-route) .page-mark{background:#14243A!important;border-color:#C9433B!important}
+body:not(.admin-route) .page-content-footer{background:#14243A!important}
+@media(prefers-reduced-motion:reduce){body:not(.admin-route) *{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
