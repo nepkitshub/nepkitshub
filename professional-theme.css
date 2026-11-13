@@ -1467,3 +1467,729 @@ body.oa-lions-full .oa-class-level { padding:15px; }
 
 /* Keep the homepage focused: N5–N1 details are now on the Japanese Language page. */
 body.oa-lions-full #oa-lions-class-types { display:none !important; }
+
+
+/* -------------------------------------------------------------------------
+   Oxford Academy — final visual polish
+   Presentation-only layer. Existing copy, data, links, forms and behaviour
+   remain unchanged.
+   ------------------------------------------------------------------------- */
+:root {
+  --oa-ink: #17283d;
+  --oa-navy: #102b4e;
+  --oa-blue: #2366a7;
+  --oa-blue-strong: #174f85;
+  --oa-gold: #e7ad59;
+  --oa-muted: #68798d;
+  --oa-line: #e3eaf1;
+  --oa-soft: #f4f7fb;
+  --oa-surface: #ffffff;
+  --oa-radius: 18px;
+  --oa-shadow: 0 12px 34px rgba(16,43,78,.065);
+  --oa-shadow-hover: 0 20px 44px rgba(16,43,78,.11);
+}
+html { scroll-behavior: smooth; }
+body.oa-lions-full {
+  background: #fff;
+  color: var(--oa-ink);
+  letter-spacing: -.005em;
+}
+body.oa-lions-full .container {
+  width: min(1220px, calc(100% - 56px));
+}
+
+/* Utility bar and primary navigation */
+body.oa-lions-full .topbar {
+  min-height: 38px;
+  font-size: 11px;
+  letter-spacing: .01em;
+}
+body.oa-lions-full .topbar .container {
+  min-height: 38px;
+  padding-block: 5px;
+}
+body.oa-lions-full .top-meta {
+  gap: 10px 22px;
+}
+body.oa-lions-full .nav-wrap {
+  border-bottom: 1px solid #e7edf3;
+  box-shadow: 0 5px 22px rgba(16,43,78,.045);
+  backdrop-filter: blur(18px);
+}
+body.oa-lions-full .navbar {
+  min-height: 82px;
+  padding-block: 9px;
+  gap: 18px;
+}
+body.oa-lions-full .brand {
+  min-width: 220px;
+  gap: 11px;
+}
+body.oa-lions-full .brand-mark {
+  border-radius: 14px !important;
+  box-shadow: 0 5px 15px rgba(16,43,78,.12);
+}
+body.oa-lions-full .brand-name {
+  font-size: 15px;
+  line-height: 1.2;
+  letter-spacing: -.025em;
+}
+body.oa-lions-full .nav-links {
+  gap: clamp(10px,1.35vw,19px);
+  font-size: 11px;
+  letter-spacing: .005em;
+}
+body.oa-lions-full .nav-links > a,
+body.oa-lions-full .nav-links summary {
+  padding-block: 9px;
+}
+body.oa-lions-full .nav-actions .btn,
+body.oa-lions-full .btn {
+  min-height: 44px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+body.oa-lions-full .nav-actions .btn-gold,
+body.oa-lions-full .btn-gold {
+  box-shadow: 0 6px 16px rgba(231,173,89,.18);
+}
+body.oa-lions-full .oa-nav-menu {
+  padding: 9px;
+  border: 1px solid #e6edf4;
+  border-radius: 14px;
+  box-shadow: 0 18px 44px rgba(16,43,78,.13);
+}
+body.oa-lions-full .oa-nav-menu a {
+  border-radius: 9px;
+  padding: 10px 12px;
+  transition: background .18s ease, color .18s ease;
+}
+body.oa-lions-full .oa-nav-menu a:hover {
+  background: #f1f6fb;
+}
+
+/* Hero: confident typography and clearer call-to-action hierarchy */
+body.oa-lions-full .hero {
+  min-height: clamp(520px, 68vh, 680px);
+}
+body.oa-lions-full .hero:before {
+  background-position: center 43%;
+}
+body.oa-lions-full .hero:after {
+  opacity: .38;
+}
+body.oa-lions-full .hero-inner {
+  max-width: 820px;
+  padding: clamp(66px,8vw,100px) 0 112px;
+}
+body.oa-lions-full .eyebrow {
+  padding: 8px 13px;
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(255,255,255,.09);
+  backdrop-filter: blur(8px);
+  letter-spacing: .14em;
+}
+body.oa-lions-full .hero h1 {
+  max-width: 780px;
+  margin-top: 19px;
+  font-size: clamp(40px,5.1vw,66px);
+  line-height: 1.07;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+body.oa-lions-full .hero p {
+  max-width: 590px;
+  margin-top: 18px;
+  font-size: clamp(14px,1.15vw,16px);
+  line-height: 1.85;
+  color: #e8f0f7;
+}
+body.oa-lions-full .hero-buttons {
+  gap: 11px;
+  margin-top: 25px;
+}
+body.oa-lions-full .hero-buttons .btn {
+  min-height: 48px;
+  padding-inline: 21px;
+}
+body.oa-lions-full .hero-note {
+  margin-top: 19px;
+  font-size: 11px;
+  letter-spacing: .025em;
+}
+body.oa-lions-full .trust-row {
+  position: relative;
+  z-index: 2;
+  margin-top: -31px;
+}
+body.oa-lions-full .trust-grid {
+  overflow: hidden;
+  border: 1px solid #e5ebf1;
+  border-radius: 16px;
+  box-shadow: 0 12px 34px rgba(16,43,78,.085);
+}
+body.oa-lions-full .trust-item {
+  min-width: 0;
+  padding: 21px 23px;
+}
+body.oa-lions-full .trust-icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 12px;
+}
+
+/* Consistent section rhythm and typography */
+body.oa-lions-full .section {
+  padding: clamp(58px,6.4vw,82px) 0;
+}
+body.oa-lions-full .section.soft {
+  background: #f5f8fb;
+}
+body.oa-lions-full .section-head {
+  max-width: 760px;
+  margin: 0 auto 31px;
+}
+body.oa-lions-full .section-kicker {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: var(--oa-blue);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .16em;
+}
+body.oa-lions-full .section h2 {
+  margin-top: 0;
+  font-size: clamp(27px,3.05vw,39px);
+  line-height: 1.18;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+}
+body.oa-lions-full .section-head p {
+  max-width: 680px;
+  margin: 12px auto 0;
+  color: #68798d;
+  font-size: 13px;
+  line-height: 1.85;
+}
+body.oa-lions-full .about-grid {
+  align-items: center;
+  gap: clamp(28px,4.5vw,56px);
+}
+body.oa-lions-full .about-visual {
+  min-height: 380px;
+}
+body.oa-lions-full .about-photo {
+  border: 7px solid #fff;
+  border-radius: 20px;
+  box-shadow: 0 16px 42px rgba(16,43,78,.12);
+}
+
+/* Services, programmes, values and feature cards */
+body.oa-lions-full .oa-lions-service-grid,
+body.oa-lions-full #programCards,
+body.oa-lions-full .oa-lions-support-grid,
+body.oa-lions-full .oa-testimonial-grid,
+body.oa-lions-full .oa-lions-office-grid {
+  gap: 17px;
+  align-items: stretch;
+}
+body.oa-lions-full .oa-lions-service-card,
+body.oa-lions-full .oa-program-card,
+body.oa-lions-full .oa-staff-card,
+body.oa-lions-full .oa-post-card,
+body.oa-lions-full .oa-lions-support-card,
+body.oa-lions-full .oa-lions-office-card,
+body.oa-lions-full .oa-testimonial-card {
+  min-width: 0;
+  border: 1px solid #e5ebf1;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 7px 23px rgba(16,43,78,.045);
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+body.oa-lions-full .oa-lions-service-card:hover,
+body.oa-lions-full .oa-program-card:hover,
+body.oa-lions-full .oa-staff-card:hover,
+body.oa-lions-full .oa-post-card:hover,
+body.oa-lions-full .oa-lions-support-card:hover,
+body.oa-lions-full .oa-lions-office-card:hover,
+body.oa-lions-full .oa-testimonial-card:hover {
+  transform: translateY(-3px);
+  border-color: #d3e0ec;
+  box-shadow: var(--oa-shadow-hover);
+}
+body.oa-lions-full .oa-lions-service-card {
+  min-height: 198px;
+  padding: 23px;
+}
+body.oa-lions-full .oa-lions-service-card h3,
+body.oa-lions-full .oa-program-card h3 {
+  color: #173e67;
+  font-size: 17px;
+  line-height: 1.35;
+  letter-spacing: -.02em;
+}
+body.oa-lions-full .oa-lions-service-card p,
+body.oa-lions-full .oa-program-card p {
+  color: #68798d;
+  font-size: 12px;
+  line-height: 1.8;
+}
+body.oa-lions-full .oa-lions-service-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+}
+body.oa-lions-full .oa-program-card {
+  padding: 23px;
+}
+body.oa-lions-full .oa-program-card .oa-program-enquire {
+  margin-top: auto;
+  padding-top: 15px;
+}
+body.oa-lions-full #why-choose-oxford .value {
+  border: 1px solid #e5ebf1;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 6px 19px rgba(16,43,78,.035);
+}
+
+/* Notices, academy updates, staff and gallery */
+body.oa-lions-full .oa-post-card {
+  overflow: hidden;
+  border-radius: 17px;
+}
+body.oa-lions-full .oa-post-cover {
+  aspect-ratio: 16 / 10;
+  background: #edf2f7;
+}
+body.oa-lions-full .oa-post-content {
+  padding: 19px 20px 21px;
+}
+body.oa-lions-full .oa-post-content h3 {
+  margin-bottom: 8px;
+  font-size: 20px;
+  line-height: 1.3;
+}
+body.oa-lions-full .oa-post-content p {
+  color: #68798d;
+  font-size: 12px;
+  line-height: 1.8;
+}
+body.oa-lions-full .oa-staff-card {
+  padding-bottom: 19px;
+  text-align: center;
+}
+body.oa-lions-full .oa-staff-photo {
+  width: 136px;
+  height: 136px;
+  margin-top: 22px;
+  border: 4px solid #f0f5fa;
+  box-shadow: 0 7px 20px rgba(16,43,78,.08);
+}
+body.oa-lions-full .oa-staff-details {
+  padding: 13px 18px 0;
+}
+body.oa-lions-full .oa-staff-details h3 {
+  color: #173e67;
+  font-size: 16px;
+  line-height: 1.35;
+}
+body.oa-lions-full #galleryGrid.oa-public-gallery-grid {
+  gap: 13px;
+}
+body.oa-lions-full .oa-gallery-card {
+  border: 1px solid #e4eaf0;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(16,43,78,.06);
+}
+body.oa-lions-full .oa-section-more a {
+  min-height: 42px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border-color: #d9e3ec;
+  color: #174d7c;
+  box-shadow: none;
+}
+
+/* Contact, enquiry and form surfaces */
+body.oa-lions-full #contact .contact-grid,
+body.oa-lions-full #admission .admission-grid {
+  align-items: stretch;
+  gap: clamp(18px,2.6vw,30px);
+}
+body.oa-lions-full #contact .contact-card,
+body.oa-lions-full #contact .map-panel,
+body.oa-lions-full #admission .admission-panel {
+  min-width: 0;
+  border: 1px solid #e2eaf1;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 9px 28px rgba(16,43,78,.055);
+}
+body.oa-lions-full #contact .map-panel {
+  overflow: hidden;
+}
+body.oa-lions-full #admission .admission-panel {
+  padding: clamp(21px,2.6vw,30px);
+}
+body.oa-lions-full #admission .field {
+  min-width: 0;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+body.oa-lions-full #admission .field label {
+  color: #43566b;
+  font-size: 11px;
+  font-weight: 800;
+}
+body.oa-lions-full #admission .field input,
+body.oa-lions-full #admission .field select,
+body.oa-lions-full #admission .field textarea {
+  width: 100%;
+  min-height: 47px;
+  padding: 11px 13px;
+  border: 1px solid #dce5ed;
+  border-radius: 10px;
+  background: #fff;
+  color: #17283d;
+  font-size: 13px;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+body.oa-lions-full #admission .field textarea {
+  min-height: 118px;
+  resize: vertical;
+}
+body.oa-lions-full #admission .field input:focus,
+body.oa-lions-full #admission .field select:focus,
+body.oa-lions-full #admission .field textarea:focus {
+  border-color: #6b9bc5;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(35,102,167,.11);
+}
+body.oa-lions-full #admission button[type="submit"] {
+  min-height: 48px;
+  border-radius: 10px;
+}
+
+/* Footer and inner content pages */
+body.oa-lions-full .footer {
+  padding: 53px 0 20px;
+  background: #102b4e;
+}
+body.oa-lions-full .footer-grid {
+  gap: clamp(20px,3vw,34px);
+}
+body.oa-lions-full .footer h4 {
+  margin-bottom: 14px;
+  font-size: 12px;
+  letter-spacing: .08em;
+}
+body.oa-lions-full .footer a,
+body.oa-lions-full .footer p {
+  font-size: 11px;
+  line-height: 1.8;
+}
+body:not(.oa-lions-full) .page-top {
+  background: #102b4e;
+  box-shadow: 0 5px 22px rgba(16,43,78,.08);
+}
+body:not(.oa-lions-full) .page-main {
+  width: min(1160px, calc(100% - 48px));
+}
+body:not(.oa-lions-full) .page-breadcrumb {
+  color: #78899b;
+  font-size: 11px;
+}
+body:not(.oa-lions-full) .oa-service-hero {
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(16,43,78,.075);
+}
+body:not(.oa-lions-full) .oa-service-hero h1 {
+  letter-spacing: -.04em;
+  line-height: 1.12;
+}
+body:not(.oa-lions-full) .oa-service-content-grid > *,
+body:not(.oa-lions-full) .oa-about-section,
+body:not(.oa-lions-full) .oa-event-card {
+  border: 1px solid #e5ebf1;
+  border-radius: 17px;
+  box-shadow: 0 8px 25px rgba(16,43,78,.045);
+}
+body:not(.oa-lions-full) .page-content-footer {
+  background: #102b4e;
+  color: #d8e3ed;
+}
+
+/* Admin portal: refined work area while preserving all controls and navigation */
+body.admin-route #adminModal {
+  background: #eef2f7;
+}
+body.admin-route .admin-modal {
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(15,39,66,.15);
+}
+body.admin-route .oa-app {
+  background: #f5f7fb;
+}
+body.admin-route .oa-side {
+  background: #102b4e;
+}
+body.admin-route .oa-brand {
+  padding-bottom: 19px;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+body.admin-route .oa-nav-group {
+  margin-bottom: 8px;
+}
+body.admin-route .oa-nav-label {
+  color: #91a9c0;
+  font-size: 9px;
+  letter-spacing: .14em;
+}
+body.admin-route .oa-nav button {
+  min-height: 40px;
+  border-radius: 9px;
+  transition: background .18s ease, color .18s ease;
+}
+body.admin-route .oa-nav button:hover {
+  background: rgba(255,255,255,.09);
+}
+body.admin-route .oa-nav button.active {
+  background: #fff;
+  color: #174d7c;
+  box-shadow: 0 5px 14px rgba(0,0,0,.08);
+}
+body.admin-route .oa-main {
+  background: #f5f7fb;
+}
+body.admin-route .oa-top {
+  padding-bottom: 19px;
+  background: #f5f7fb;
+  border-bottom-color: #e2e9f0;
+}
+body.admin-route .oa-card,
+body.admin-route .oa-enquiry-card,
+body.admin-route .oa-stat {
+  border: 1px solid #e3eaf1;
+  border-radius: 15px;
+  box-shadow: 0 7px 22px rgba(16,43,78,.045);
+}
+body.admin-route .oa-card {
+  padding: clamp(18px,2.2vw,25px);
+}
+body.admin-route .oa-card h2 {
+  font-size: 16px;
+}
+body.admin-route .oa-stat {
+  padding: 17px;
+}
+body.admin-route .oa-button {
+  min-height: 40px;
+  border-radius: 9px;
+}
+body.admin-route .oa-field input,
+body.admin-route .oa-field select,
+body.admin-route .oa-field textarea,
+body.admin-route .oa-admissions-tools input,
+body.admin-route .oa-admissions-tools select {
+  min-height: 43px;
+  border-radius: 9px;
+}
+body.admin-route .oa-upload {
+  border-radius: 12px;
+}
+body.admin-route .oa-enquiry-card {
+  padding: 18px;
+}
+body.admin-route .admin-login {
+  border-radius: 19px;
+  box-shadow: 0 18px 50px rgba(16,43,78,.08);
+}
+
+/* Tablet and mobile: compact but spacious, with no horizontal overflow */
+@media (max-width: 960px) {
+  body.oa-lions-full .container {
+    width: min(100% - 36px, 760px);
+  }
+  body.oa-lions-full .navbar {
+    min-height: 74px;
+  }
+  body.oa-lions-full .hero {
+    min-height: 560px;
+  }
+  body.oa-lions-full .hero-inner {
+    padding: 68px 0 105px;
+  }
+  body.oa-lions-full .section {
+    padding: 55px 0;
+  }
+  body.oa-lions-full .about-visual {
+    min-height: 300px;
+  }
+  body.oa-lions-full #contact .contact-grid,
+  body.oa-lions-full #admission .admission-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 700px) {
+  body.oa-lions-full .container {
+    width: calc(100% - 32px);
+  }
+  body.oa-lions-full .topbar .container {
+    min-height: 36px;
+    gap: 7px;
+  }
+  body.oa-lions-full .navbar {
+    min-height: 68px;
+    gap: 10px;
+  }
+  body.oa-lions-full .brand {
+    min-width: 0;
+    max-width: calc(100% - 56px);
+    gap: 9px;
+  }
+  body.oa-lions-full .brand-mark {
+    width: 42px !important;
+    height: 42px !important;
+    flex: 0 0 42px !important;
+  }
+  body.oa-lions-full .brand-name {
+    font-size: 12px;
+    line-height: 1.2;
+  }
+  body.oa-lions-full .nav-links {
+    gap: 5px;
+  }
+  body.oa-lions-full .hero {
+    min-height: 540px;
+  }
+  body.oa-lions-full .hero-inner {
+    padding: 66px 0 92px;
+  }
+  body.oa-lions-full .hero h1 {
+    max-width: 600px;
+    font-size: clamp(35px,9vw,48px);
+    line-height: 1.08;
+  }
+  body.oa-lions-full .hero p {
+    max-width: 520px;
+    font-size: 13px;
+  }
+  body.oa-lions-full .hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+  }
+  body.oa-lions-full .hero-buttons .btn {
+    min-height: 45px;
+    padding: 10px 15px;
+    font-size: 10px;
+  }
+  body.oa-lions-full .trust-row {
+    margin-top: -20px;
+  }
+  body.oa-lions-full .trust-grid {
+    grid-template-columns: 1fr;
+  }
+  body.oa-lions-full .trust-item {
+    padding: 14px 17px;
+  }
+  body.oa-lions-full .trust-item:not(:last-child) {
+    border-right: 0;
+    border-bottom: 1px solid #e8edf2;
+  }
+  body.oa-lions-full .section {
+    padding: 47px 0;
+  }
+  body.oa-lions-full .section-head {
+    margin-bottom: 23px;
+  }
+  body.oa-lions-full .section h2 {
+    font-size: clamp(25px,7vw,32px);
+  }
+  body.oa-lions-full .oa-lions-service-grid,
+  body.oa-lions-full #programCards,
+  body.oa-lions-full .oa-lions-support-grid,
+  body.oa-lions-full .oa-testimonial-grid,
+  body.oa-lions-full .oa-lions-office-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  body.oa-lions-full .oa-lions-service-card,
+  body.oa-lions-full .oa-program-card {
+    min-height: 0;
+    padding: 19px;
+  }
+  body.oa-lions-full #galleryGrid.oa-public-gallery-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 9px;
+  }
+  body.oa-lions-full #facultyCards.oa-public-staff-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 10px;
+  }
+  body.oa-lions-full .oa-staff-photo {
+    width: 106px;
+    height: 106px;
+    margin-top: 15px;
+  }
+  body.oa-lions-full .oa-staff-details {
+    padding: 10px 10px 0;
+  }
+  body.oa-lions-full .oa-staff-details h3 {
+    font-size: 13px;
+  }
+  body.oa-lions-full .oa-post-content {
+    padding: 16px;
+  }
+  body.oa-lions-full .oa-post-content h3 {
+    font-size: 17px;
+  }
+  body.oa-lions-full #admission .admission-panel {
+    padding: 18px;
+  }
+  body.oa-lions-full .footer {
+    padding: 40px 0 18px;
+  }
+  body.admin-route .admin-modal {
+    border-radius: 0;
+  }
+  body.admin-route .oa-main {
+    padding: 18px 14px 28px;
+  }
+  body.admin-route .oa-card {
+    padding: 17px;
+  }
+}
+@media (max-width: 390px) {
+  body.oa-lions-full .container {
+    width: calc(100% - 26px);
+  }
+  body.oa-lions-full .brand-name {
+    font-size: 11px;
+  }
+  body.oa-lions-full .hero h1 {
+    font-size: 34px;
+  }
+  body.oa-lions-full .hero-buttons .btn {
+    flex: 1 1 130px;
+    justify-content: center;
+  }
+  body.oa-lions-full #facultyCards.oa-public-staff-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.oa-lions-full *,
+  body.admin-route * {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
