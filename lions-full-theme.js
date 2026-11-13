@@ -173,6 +173,59 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     }
     @media(max-width:430px){body.oa-lions-full .oa-lions-service-grid{grid-template-columns:1fr}}
   `;
+  additionalStyles.textContent += String.raw`
+    :root{--oa-primary:#14243A;--oa-primary-dark:#101d31;--oa-accent:#C9433B;--oa-accent-dark:#a9342e;--oa-ink:#242A30;--oa-muted:#68717d;--oa-line:#e7e4dc;--oa-soft:#F7F5EF}
+    body.oa-lions-full{background:#fff;color:#242A30}
+    body.oa-lions-full .topbar{background:#14243A!important;color:#f7f5ef!important}
+    body.oa-lions-full .topbar a{color:#f2c7c1!important}
+    body.oa-lions-full .nav-wrap{background:rgba(255,255,255,.97)!important;border-bottom-color:#e7e4dc!important}
+    body.oa-lions-full .brand-mark{background:#14243A!important;border-color:#C9433B!important}
+    body.oa-lions-full .brand-name{color:#14243A!important}
+    body.oa-lions-full .btn-gold,body.oa-lions-full .nav-actions .btn-gold{background:#C9433B!important;border-color:#C9433B!important;color:#fff!important;box-shadow:0 8px 20px rgba(201,67,59,.16)!important}
+    body.oa-lions-full .btn-gold:hover{background:#a9342e!important}
+    body.oa-lions-full .btn-navy{background:#14243A!important;color:#fff!important}
+    body.oa-lions-full .hero{background:#14243A!important}
+    body.oa-lions-full .hero:before{background-image:linear-gradient(90deg,rgba(12,25,42,.91) 0%,rgba(20,36,58,.78) 47%,rgba(20,36,58,.3) 100%),url("https://images.unsplash.com/photo-1775194177220-5ff00cdb0245?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000")!important;background-size:cover!important;background-position:center 40%!important}
+    body.oa-lions-full .eyebrow{background:rgba(201,67,59,.18)!important;border-color:rgba(240,178,170,.55)!important;color:#f4c2bc!important}
+    body.oa-lions-full .hero-note{color:#f4d5d1!important}
+    body.oa-lions-full .section.soft,body.oa-lions-full .oa-quick-access{background:#F7F5EF!important}
+    body.oa-lions-full .section-kicker{color:#C9433B!important}
+    body.oa-lions-full .section h2,body.oa-lions-full .oa-lions-service-card h3,body.oa-lions-full .oa-program-card h3{color:#14243A!important}
+    body.oa-lions-full .oa-quick-access-card,body.oa-lions-full .oa-lions-service-card,body.oa-lions-full .oa-program-card,body.oa-lions-full .oa-company-panel,body.oa-lions-full .oa-staff-card,body.oa-lions-full .oa-post-card,body.oa-lions-full .oa-lions-office-card,body.oa-lions-full .oa-testimonial-card{background:#fff!important;border-color:#e7e4dc!important}
+    body.oa-lions-full .oa-quick-access-icon,body.oa-lions-full .oa-lions-service-icon,body.oa-lions-full .oa-program-card .program-icon,body.oa-lions-full .oa-staff-role{background:#F7F5EF!important;color:#14243A!important}
+    body.oa-lions-full .oa-lions-class-banner{background:#14243A!important}
+    body.oa-lions-full .oa-lions-class-banner-copy .section-kicker{color:#f0b2aa!important}
+    body.oa-lions-full .oa-lions-class-banner-visual{background:linear-gradient(135deg,#14243A,#263d58)!important}
+    body.oa-lions-full .oa-lions-class-type-grid article,body.oa-lions-full .oa-lions-support-grid article{background:#fff!important;border-color:#e7e4dc!important}
+    body.oa-lions-full .oa-lions-class-type-grid b,body.oa-lions-full .oa-lions-support-grid h3{color:#14243A!important}
+    body.oa-lions-full .oa-company-panel.mission{border-top-color:#C9433B!important}
+    body.oa-lions-full .oa-company-panel.vision{border-top-color:#14243A!important}
+    body.oa-lions-full .oa-company-panel.leadership{background:#14243A!important}
+    body.oa-lions-full .oa-company-panel.leadership h3{color:#f0b2aa!important}
+    body.oa-lions-full .oa-testimonial-stars{color:#C9433B!important}
+    body.oa-lions-full .oa-testimonial-submit{background:#fff!important;border-color:#e7e4dc!important}
+    body.oa-lions-full .oa-testimonial-submit-btn{background:#C9433B!important}
+    body.oa-lions-full .oa-office-tag,body.oa-lions-full .oa-office-actions a{background:#F7F5EF!important;color:#14243A!important}
+    body.oa-lions-full .oa-office-actions a.primary{background:#C9433B!important;color:#fff!important}
+    body.oa-lions-full .footer{background:#14243A!important}
+    body.oa-lions-full .footer h4{color:#f0b2aa!important}
+    body.oa-lions-full .footer .brand-name{color:#fff!important}
+    body.oa-lions-full .oa-footer-kicker{color:#f0b2aa!important}
+    body.oa-lions-full .oa-footer-bottom{border-top-color:rgba(255,255,255,.17)!important}
+    body.oa-lions-full .oa-footer-bottom a{color:#f0b2aa!important}
+    body.oa-lions-full .oa-lions-exam-preparation{background:#F7F5EF!important}
+    body.oa-lions-full .oa-exam-grid,body.oa-lions-full .oa-method-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+    body.oa-lions-full .oa-exam-grid article,body.oa-lions-full .oa-method-grid article{min-width:0;padding:22px;border:1px solid #e7e4dc;border-radius:14px;background:#fff;box-shadow:0 8px 23px rgba(20,36,58,.045)}
+    body.oa-lions-full .oa-exam-grid article>span,body.oa-lions-full .oa-method-grid article>b{display:grid;place-items:center;width:38px;height:38px;margin-bottom:13px;border-radius:10px;background:#14243A;color:#fff;font-size:12px;font-weight:900}
+    body.oa-lions-full .oa-exam-grid h3,body.oa-lions-full .oa-method-grid h3{margin:0 0 8px;color:#14243A;font:750 18px/1.25 "Playfair Display",Georgia,serif}
+    body.oa-lions-full .oa-exam-grid p,body.oa-lions-full .oa-method-grid p{margin:0;color:#68717d;font-size:11px;line-height:1.8}
+    body.oa-lions-full .oa-exam-grid a{display:inline-flex;margin-top:14px;color:#C9433B;font-size:11px;font-weight:900}
+    body.oa-lions-full .oa-exam-note,body.oa-lions-full .oa-method-note{margin:16px 0 0;color:#747d86;font-size:10px;line-height:1.75}
+    body.oa-lions-full .oa-teaching-methodology{background:#fff!important}
+    body.oa-lions-full .oa-method-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    @media(max-width:900px){body.oa-lions-full .oa-exam-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body.oa-lions-full .oa-method-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:560px){body.oa-lions-full .oa-exam-grid,body.oa-lions-full .oa-method-grid{grid-template-columns:1fr;gap:10px}body.oa-lions-full .oa-exam-grid article,body.oa-lions-full .oa-method-grid article{padding:18px}}
+`;
   document.head.appendChild(additionalStyles);
 
   const closeMobileMenu = () => {
