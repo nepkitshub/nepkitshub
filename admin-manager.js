@@ -694,7 +694,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     if (viewAll) viewAll.addEventListener('click', () => openSection('admissions'));
   }
 
-  const getContentMap = {
+  async function getContentMap() {
     const { data, error } = await db.from('oa_site_content').select('*').order('content_key');
     if (error) throw error;
     const map = {};
