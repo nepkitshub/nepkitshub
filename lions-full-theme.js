@@ -730,12 +730,13 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         footer.innerHTML =
           '<div class="container"><div class="oa-footer-grid">' +
             '<section class="oa-footer-explore"><span class="oa-footer-kicker">OXFORD ACADEMIC INSTRUCTION</span>' +
-              '<div class="oa-footer-brand"><span class="brand-mark">OA</span><div><b class="brand-name">OXFORD ACADEMIC INSTRUCTION PVT.LTD.</b><small class="brand-place">Kushma · Baglung, Nepal</small></div></div>' +
+              '<div class="oa-footer-brand"><span class="brand-mark">OA</span><div><b class="brand-name">OXFORD ACADEMIC INSTRUCTION PVT.LTD.</b></div></div>' +
               '<h3>Explore</h3><nav class="oa-footer-links" aria-label="Footer navigation">' +
-                '<a href="/about/">About Oxford</a><a href="#oa-lions-services">Services</a>' +
-                '<a href="/services/?type=japanese-classes">Japanese Language</a><a href="/services/?type=korean-classes">Korean Language</a>' +
-                '<a href="/calendar/">Calendar & Intakes</a><a href="#oa-lions-testimonials">Student Experiences</a>' +
-                '<a href="#notices">News & Notices</a><a href="#oa-lions-offices">Contact Offices</a>' +
+                '<a href="/about/">About Oxford</a><a href="/courses/">Japanese Courses</a>' +
+                '<a href="/examination-preparation/">Exam Preparation</a><a href="/services/?type=student-visa">Japan Study Counselling</a>' +
+                '<a href="/services/?type=ssw">SSW Preparation</a><a href="/branches/">Our Branches</a>' +
+                '<a href="/calendar/">Calendar</a><a href="#oa-lions-testimonials">Learner Reviews</a>' +
+                '<a href="#notices">Notices</a><a href="#oa-lions-offices">Contact Us</a>' +
               '</nav>' +
             '</section>' +
             '<section class="oa-footer-connect"><span class="oa-footer-kicker">CONTACT & SOCIAL</span><h3>Connect with Oxford</h3>' +
@@ -797,12 +798,36 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         if (!enquiryForm.querySelector('[name="enquiry_type"]')) {
           const field = document.createElement('div');
           field.className = 'field full oa-enquiry-type-field';
-          field.innerHTML = '<label for="oa-enquiry-type">What do you need help with? *</label><select id="oa-enquiry-type" name="enquiry_type" required><option value="">Choose an enquiry type</option><option value="Japanese Language Classes (N5–N1)">Japanese Language Classes (N5–N1)</option><option value="Korean Language Classes">Korean Language Classes</option><option value="Japanese Language Test Preparation (JLPT, NAT, J-CERT, JLCT, JFT-Basic)">Japanese Language Test Preparation</option><option value="SSW Preparation Class">SSW Preparation Class</option><option value="Study in Japan / Student Visa Guidance">Study in Japan / Student Visa Guidance</option><option value="Working Visa Language Preparation">Working Visa Language Preparation</option><option value="Documentation and Application Support">Documentation and Application Support</option><option value="Other Enquiry or Issue">Other Enquiry or Issue</option></select>';
+          field.innerHTML = '<label for="oa-enquiry-type">Course or service you are interested in *</label><select id="oa-enquiry-type" name="enquiry_type" required><option value="">Choose a course or service</option><option value="Japanese N5 Course">Japanese N5 Course</option><option value="Japanese N4 Course">Japanese N4 Course</option><option value="Japanese N3 Course">Japanese N3 Course</option><option value="Japanese Language Classes N5–N1">Japanese Language Classes N5–N1</option><option value="Korean Language Classes">Korean Language Classes</option><option value="JLPT Preparation">JLPT Preparation</option><option value="NAT-TEST Preparation">NAT-TEST Preparation</option><option value="JFT-Basic Preparation">JFT-Basic Preparation</option><option value="Other Japanese Language Tests">Other Japanese Language Tests (J-CERT / JLCT)</option><option value="Japan Study Counselling">Japan Study Counselling</option><option value="SSW Preparation">SSW Preparation</option><option value="Working Pathway Language Preparation">Working Pathway Language Preparation</option><option value="Dependent Visa Guidance">Dependent Visa Guidance</option><option value="Application Documentation Support">Application Documentation Support</option><option value="Other Enquiry">Other Enquiry</option></select>';
           const branchField = $('#admissionBranch', enquiryForm)?.closest('.field');
           const formGrid = $('.form-grid', enquiryForm);
           if (branchField) branchField.insertAdjacentElement('beforebegin', field);
           else if (formGrid) formGrid.prepend(field);
           else enquiryForm.prepend(field);
+        }
+        if (!enquiryForm.querySelector('[name="preferred_batch"]')) {
+          const batchField = document.createElement('div');
+          batchField.className = 'field full oa-preferred-batch-field';
+          batchField.innerHTML = '<label for="oa-preferred-batch">Preferred batch (optional)</label><input id="oa-preferred-batch" name="preferred_batch" type="text" maxlength="80" placeholder="e.g. Morning, daytime or evening">';
+          const messageFieldBeforeBatch = $('#message', enquiryForm)?.closest('.field') || $('[name="message"]', enquiryForm)?.closest('.field');
+          if (messageFieldBeforeBatch) messageFieldBeforeBatch.insertAdjacentElement('beforebegin', batchField);
+          else $('.form-grid', enquiryForm)?.appendChild(batchField);
+        }
+        const branchParam = new URLSearchParams(window.location.search).get('branch');
+        const branchSelect = $('#admissionBranch', enquiryForm) || $('[name="branch_name"]', enquiryForm);
+        if (branchParam && branchSelect) {
+          const preferred = String(branchParam).toLowerCase() === 'baglung' ? 'Baglung Branch' : 'Kushma Branch';
+          let option = Array.from(branchSelect.options || []).find((item) =>
+            item.value.toLowerCase() === preferred.toLowerCase() ||
+            item.textContent.toLowerCase().includes(preferred.replace(' Branch','').toLowerCase())
+          );
+          if (!option) {
+            option = document.createElement('option');
+            option.value = preferred;
+            option.textContent = preferred;
+            branchSelect.appendChild(option);
+          }
+          branchSelect.value = option.value;
         }
         const messageField = $('#message', enquiryForm)?.closest('.field') || $('[name="message"]', enquiryForm)?.closest('.field');
         if (messageField) {
@@ -837,19 +862,26 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const requestedService = new URLSearchParams(window.location.search).get('service');
       if (requestedService) {
         const serviceLabels = {
-          'student-visa':'Student visa guidance and study in Japan',
+          'student-visa':'Japan study counselling and student visa guidance',
           'working-visa-language':'Japanese language preparation for work in Japan',
           'ssw':'Specified Skilled Worker (SSW) preparation',
           'dependent-visa':'Dependent visa guidance',
           'documentation':'Japan application documentation support',
-          'career-counselling':'Career counselling for study or work in Japan',
+          'career-counselling':'Study and career counselling',
           'language-tests':'Japanese language test preparation',
-          'japanese-classes':'Japanese language classes',
-          'korean-classes':'Korean language classes'
+          'japanese-classes':'Japanese language classes'
         };
         const message = $('#message');
-        if (message && serviceLabels[requestedService] && !message.value.trim()) {
-          message.value = 'I would like information about: ' + serviceLabels[requestedService] + '.';
+        const params = new URLSearchParams(window.location.search);
+        const level = params.get('level');
+        const exam = params.get('exam');
+        const details = [
+          serviceLabels[requestedService] || '',
+          level ? 'Target course level: ' + level.toUpperCase() : '',
+          exam ? 'Target examination: ' + exam.toUpperCase() : ''
+        ].filter(Boolean);
+        if (message && details.length && !message.value.trim()) {
+          message.value = 'I would like information about: ' + details.join(' · ') + '.';
         }
       }
 
@@ -871,9 +903,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       document.querySelectorAll('.footer .brand-name').forEach((node) => {
         node.textContent = 'OXFORD ACADEMIC INSTRUCTION PVT.LTD.';
       });
-      document.querySelectorAll('.footer .brand-place').forEach((node) => {
-        node.textContent = 'Kushma · Baglung, Nepal';
-      });
+      document.querySelectorAll('.brand-place,.page-brand-name small').forEach((node) => node.remove());
       const title = document.title || '';
       if (!title.includes('OXFORD ACADEMIC INSTRUCTION PVT.LTD.')) {
         document.title = 'OXFORD ACADEMIC INSTRUCTION PVT.LTD. | Kushma & Baglung, Nepal';
