@@ -110,9 +110,7 @@ async function applyPageBranding() {
     if (error) return;
     const map = {};
     (data || []).forEach((row) => { map[row.content_key] = row.value_en || ''; });
-    const savedBrandName = String(map.brand_name || '').trim();
-    const brandName = !savedBrandName || /^Oxford Academy$/i.test(savedBrandName)
-      ? 'Oxford Academic Instruction Pvt. Ltd.' : savedBrandName;
+    const brandName = 'OXFORD ACADEMIC INSTRUCTION PVT.LTD.';
     const mark = $('.page-mark');
     const logo = /^https:\/\//i.test(map.logo_url || '') ? map.logo_url : '';
     if (mark) {
@@ -124,7 +122,7 @@ async function applyPageBranding() {
       } else mark.textContent = 'OA';
     }
     const name = $('.page-brand-name');
-    if (name && brandName) name.firstChild.textContent = brandName;
+    if (name) name.replaceChildren(document.createTextNode(brandName));
   } catch (error) {
     console.error('Shared academy branding could not be loaded:', error);
   }
