@@ -41,18 +41,23 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const levels = {
     n5: {
       code:'N5', title:'Japanese N5 — Beginner Course',
-      intro:'Build a foundation in Japanese scripts, essential vocabulary, basic grammar and everyday expressions.',
-      focus:['Hiragana and katakana recognition','Introductory kanji and high-frequency vocabulary','Basic sentence patterns and grammar','Listening to simple, familiar conversations','Reading short messages and everyday texts']
+      intro:'Explore the beginner level of the Japanese language programme. Ask Oxford about the current class plan and enrolment availability.'
     },
     n4: {
       code:'N4', title:'Japanese N4 — Elementary Course',
-      intro:'Strengthen elementary Japanese and build confidence with familiar everyday situations.',
-      focus:['Core elementary grammar and sentence patterns','Expanded vocabulary and kanji recognition','Reading short texts on familiar topics','Listening to everyday conversations spoken clearly','Expressing simple needs, opinions and experiences']
+      intro:'Explore the elementary level of the Japanese language programme. Ask Oxford about the current class plan and enrolment availability.'
     },
     n3: {
       code:'N3', title:'Japanese N3 — Intermediate Course',
-      intro:'Develop practical intermediate Japanese for understanding and communicating in familiar real-life contexts.',
-      focus:['Intermediate grammar and connected expressions','Broader vocabulary and kanji practice','Reading explanations and articles on familiar topics','Listening for key information in everyday conversations','Explaining opinions and experiences more clearly']
+      intro:'Explore the intermediate level of the Japanese language programme. Ask Oxford about the current class plan and enrolment availability.'
+    },
+    n2: {
+      code:'N2', title:'Japanese N2 — Upper-Intermediate Course',
+      intro:'Explore the upper-intermediate level listed in Oxford’s Japanese N5–N1 programme. Confirm current classes and availability with the academy.'
+    },
+    n1: {
+      code:'N1', title:'Japanese N1 — Advanced Course',
+      intro:'Explore the advanced level listed in Oxford’s Japanese N5–N1 programme. Confirm current classes and availability with the academy.'
     }
   };
 
@@ -89,7 +94,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   }
 
   async function renderCourseIndex() {
-    setTitle('Japanese Language Courses', 'Explore Japanese N5, N4 and N3 course information from ' + BRAND + '. Contact the academy to confirm fees, schedules and current availability.');
+    setTitle('Japanese Language Courses', 'Explore the Japanese N5–N1 programme listed by ' + BRAND + '. Contact the academy to confirm course details and current availability.');
     let intro = 'Explore the Japanese language levels offered in the academy programme. Contact Oxford to confirm current class availability, course duration, fees and schedules.';
     let programmeExtra = '';
     try {
@@ -109,7 +114,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     }
     root.innerHTML =
       '<section class="oa-pathway-hero"><span class="oa-pathway-kicker">COURSES</span><h1>Japanese Language Courses</h1><p>' + esc(intro) + '</p><div class="oa-pathway-actions"><a href="/#admission">Admission enquiry ↗</a><a class="secondary" href="/examination-preparation/">Explore exam preparation</a></div></section>' +
-      '<section class="oa-pathway-section"><div class="oa-pathway-section-heading"><span>JAPANESE LANGUAGE LEVELS</span><h2>Choose a learning level</h2><p>Each level page explains the learning focus. Current fees, teachers, batches and schedules are confirmed directly by the academy.</p></div><div class="oa-pathway-grid">' +
+      '<section class="oa-pathway-section"><div class="oa-pathway-section-heading"><span>JAPANESE LANGUAGE LEVELS</span><h2>Choose a learning level</h2><p>Each level page uses the programme information published by Oxford. Fees, prerequisites, teachers, batches and schedules must be confirmed with the academy.</p></div><div class="oa-pathway-grid">' +
       Object.keys(levels).map((key) => {
         const item = levels[key];
         return '<article class="oa-pathway-card"><span class="oa-pathway-level">' + item.code + '</span><h2>' + esc(item.title) + '</h2><p>' +
@@ -121,18 +126,27 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
   async function renderCourseLevel(key) {
     const item = levels[key];
-    setTitle(item.title, item.intro + ' Contact Oxford for current schedules, fees and availability.');
+    setTitle(item.title, item.intro + ' Contact Oxford for current course details and availability.');
     let service = null;
     try { service = await fetchJapaneseService(); }
     catch (error) { console.warn('Japanese course details are temporarily unavailable:', error); }
-    const overview = service?.body_en || 'This course forms part of the academy’s published Japanese language learning programme.';
-    const focus = lineList(service?.highlights_en);
+
+    const overview = service?.body_en || 'Oxford lists Japanese language classes from N5 to N1. A level-specific course description has not yet been published.';
+    const highlights = lineList(service?.highlights_en);
+    const steps = lineList(service?.steps_en);
+    const highlightSection = highlights.length
+      ? '<h2>Published programme highlights</h2><ul>' + highlights.map((text) => '<li>' + esc(text) + '</li>').join('') + '</ul>'
+      : '<div class="oa-pathway-note"><b>Detailed syllabus not yet published</b><p>Oxford has not yet published level-specific learning outcomes or a detailed syllabus for this course. Contact the academy for the current course plan.</p></div>';
+    const stepsSection = steps.length
+      ? '<h2>Published preparation steps</h2><ul>' + steps.map((text) => '<li>' + esc(text) + '</li>').join('') + '</ul>'
+      : '';
+    const note = service?.note_en || 'Course duration, class schedule, fees, prerequisites, teacher allocation and branch availability are not published in the current course records. Please contact Oxford for confirmation.';
+
     root.innerHTML =
       '<section class="oa-pathway-hero"><span class="oa-pathway-kicker">JAPANESE LANGUAGE · ' + item.code + '</span><h1>' + esc(item.title) + '</h1><p>' + esc(item.intro) + '</p><div class="oa-pathway-actions"><a href="/?service=japanese-classes&level=' + key + '#admission">Enquire about ' + item.code + ' ↗</a><a class="secondary" href="/courses/">All Japanese courses</a></div></section>' +
-      '<section class="oa-pathway-columns"><article class="oa-pathway-panel"><span class="oa-pathway-eyebrow">COURSE OVERVIEW</span><h2>About this level</h2><p>' + esc(overview) + '</p><h2>Learning focus</h2><ul>' + item.focus.map((text) => '<li>' + esc(text) + '</li>').join('') + '</ul>' +
-      (focus.length ? '<h2>Published programme highlights</h2><ul>' + focus.map((text) => '<li>' + esc(text) + '</li>').join('') + '</ul>' : '') +
-      '</article><aside class="oa-pathway-panel"><span class="oa-pathway-eyebrow">COURSE INFORMATION</span><h2>Confirm current details</h2><dl class="oa-pathway-facts"><div><dt>Duration</dt><dd>Contact the academy</dd></div><div><dt>Class schedule</dt><dd>Contact the academy</dd></div><div><dt>Course fees</dt><dd>Contact the academy</dd></div><div><dt>Teacher / batch</dt><dd>Confirm current availability</dd></div><div><dt>Branch</dt><dd>Ask Kushma or Baglung about available classes</dd></div></dl><a class="oa-pathway-primary-link" href="/?service=japanese-classes&level=' + key + '#admission">Send an enquiry →</a></aside></section>' +
-      '<section class="oa-pathway-note"><b>Course availability</b><p>' + esc(service?.note_en || 'The current course schedule and level availability should be confirmed with the academy before enrolment.') + '</p></section>' +
+      '<section class="oa-pathway-columns"><article class="oa-pathway-panel"><span class="oa-pathway-eyebrow">COURSE OVERVIEW</span><h2>About this programme</h2><p>' + esc(overview) + '</p>' + highlightSection + stepsSection +
+      '</article><aside class="oa-pathway-panel"><span class="oa-pathway-eyebrow">COURSE INFORMATION</span><h2>Confirm current details</h2><dl class="oa-pathway-facts"><div><dt>Duration</dt><dd>Contact the academy</dd></div><div><dt>Class schedule</dt><dd>Contact the academy</dd></div><div><dt>Course fees</dt><dd>Contact the academy</dd></div><div><dt>Prerequisites</dt><dd>Confirm with the academy</dd></div><div><dt>Teacher / batch</dt><dd>Confirm current availability</dd></div><div><dt>Branch</dt><dd>Ask Kushma or Baglung about available classes</dd></div></dl><a class="oa-pathway-primary-link" href="/?service=japanese-classes&level=' + key + '#admission">Send an enquiry →</a></aside></section>' +
+      '<section class="oa-pathway-note"><b>Course availability</b><p>' + esc(note) + '</p></section>' +
       footer;
   }
 
@@ -256,7 +270,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   root.classList.add('oa-pathway-main');
   const render = async () => {
     if (path === '/courses') return renderCourseIndex();
-    if (/^\/courses\/n[543]$/.test(path)) return renderCourseLevel(path.split('/').pop());
+    if (/^\/courses\/n[54321]$/.test(path)) return renderCourseLevel(path.split('/').pop());
     if (path === '/examination-preparation') return renderExamIndex();
     if (/^\/examination-preparation\/(jlpt|nat-test|jft-basic)$/.test(path)) return renderExam(path.split('/').pop());
     if (path === '/branches') return renderBranches();
