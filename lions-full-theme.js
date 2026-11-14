@@ -255,20 +255,26 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const primaryBranch = activeBranches.find((item) => item.slug === 'kushma') || activeBranches[0] || {};
       const topMeta = $('.top-meta');
       if (topMeta) {
-        const phone = String(primaryBranch.phone || '+977 9857631100');
-        const email = String(primaryBranch.email || 'oxfordmilankushma@gmail.com');
-        topMeta.innerHTML =
-          '<span class="oa-top-contact"><span aria-hidden="true">☎</span><a href="tel:' + esc(phone.replace(/[^\d+]/g, '')) + '">' + esc(phone) + '</a></span>' +
-          '<span class="oa-top-contact"><span aria-hidden="true">✉</span><a href="mailto:' + esc(email) + '">' + esc(email) + '</a></span>';
+        const phone = String(primaryBranch.phone || '').trim();
+        const email = String(primaryBranch.email || '').trim();
+        const contactItems = [];
+        if (phone) contactItems.push('<span class="oa-top-contact"><span aria-hidden="true">☎</span><a href="tel:' + esc(phone.replace(/[^\d+]/g, '')) + '">' + esc(phone) + '</a></span>');
+        if (email) contactItems.push('<span class="oa-top-contact"><span aria-hidden="true">✉</span><a href="mailto:' + esc(email) + '">' + esc(email) + '</a></span>');
+        topMeta.innerHTML = contactItems.join('');
+        topMeta.hidden = !contactItems.length;
       }
       const topFollow = $('.topbar .container > a');
       if (topFollow) {
-        const facebookUrl = safeHttps(primaryBranch.facebook_url || '') || 'https://www.facebook.com/';
-        topFollow.href = facebookUrl;
-        topFollow.textContent = 'Follow us on Facebook ↗';
-        topFollow.target = '_blank';
-        topFollow.rel = 'noopener noreferrer';
-        topFollow.setAttribute('aria-label', 'Follow Oxford Academic Instruction on Facebook');
+        const facebookUrl = safeHttps(primaryBranch.facebook_url || '');
+        if (facebookUrl) {
+          topFollow.href = facebookUrl;
+          topFollow.textContent = 'Follow us on Facebook ↗';
+          topFollow.target = '_blank';
+          topFollow.rel = 'noopener noreferrer';
+          topFollow.setAttribute('aria-label', 'Follow Oxford Academic Instruction on Facebook');
+        } else {
+          topFollow.remove();
+        }
       }
 
       const nav = $('#navLinks');
@@ -278,6 +284,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           '<details class="oa-nav-drop"><summary>Courses</summary><div class="oa-nav-menu">' +
             '<a href="/courses/">All Courses</a><a href="/courses/n5/">Japanese N5</a>' +
             '<a href="/courses/n4/">Japanese N4</a><a href="/courses/n3/">Japanese N3</a>' +
+            '<a href="/courses/n2/">Japanese N2</a><a href="/courses/n1/">Japanese N1</a>' +
             '<a href="/services/?type=korean-classes">Korean Language</a>' +
           '</div></details>' +
           '<details class="oa-nav-drop"><summary>Examination Preparation</summary><div class="oa-nav-menu">' +
@@ -309,7 +316,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       // Rewrite only Oxford's existing generic homepage copy. No Lions text, logos or claims are reused.
       setText('#heroEyebrow', 'JAPANESE LANGUAGE · EXAM PREPARATION · JAPAN COUNSELLING');
       setText('#heroTitle', 'Learn Japanese. Prepare for your next step.');
-      setText('#heroSubtitle', 'Explore Japanese N5, N4 and N3 learning, Japanese language test preparation, Japan study counselling and SSW preparation through Oxford’s Kushma and Baglung branches.');
+      setText('#heroSubtitle', 'Explore Japanese N5–N1 learning, Japanese language test preparation, Japan study counselling and SSW preparation through Oxford’s Kushma and Baglung branches.');
       setText('#heroNote', 'Japanese Courses · JLPT, NAT-TEST & JFT-Basic · Japan Study & SSW Guidance');
       setAnchor('.hero-buttons a:first-child', 'Explore Courses ↓', '/courses/');
       setAnchor('.hero-buttons a:last-child', 'Admission Enquiry ↗', '#admission');
@@ -336,7 +343,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         quickAccess.setAttribute('aria-label', 'Quick access to Oxford services');
         quickAccess.innerHTML =
           '<div class="container"><div class="oa-quick-access-grid">' +
-            '<a class="oa-quick-access-card" href="/courses/"><span class="oa-quick-access-icon" aria-hidden="true">あ</span><span class="oa-quick-access-copy"><b>Japanese Courses</b><small>Explore N5, N4 and N3 course information</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
+            '<a class="oa-quick-access-card" href="/courses/"><span class="oa-quick-access-icon" aria-hidden="true">あ</span><span class="oa-quick-access-copy"><b>Japanese Courses</b><small>Explore Japanese N5–N1 course information</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
             '<a class="oa-quick-access-card" href="/examination-preparation/"><span class="oa-quick-access-icon" aria-hidden="true">文</span><span class="oa-quick-access-copy"><b>Exam Preparation</b><small>JLPT, NAT-TEST and JFT-Basic</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
             '<a class="oa-quick-access-card" href="/services/?type=student-visa"><span class="oa-quick-access-icon" aria-hidden="true">学</span><span class="oa-quick-access-copy"><b>Study in Japan</b><small>Explore counselling and application guidance</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
             '<a class="oa-quick-access-card" href="/branches/"><span class="oa-quick-access-icon" aria-hidden="true">⌖</span><span class="oa-quick-access-copy"><b>Visit a Branch</b><small>Contact Kushma or Baglung</small></span><span class="oa-quick-access-arrow" aria-hidden="true">→</span></a>' +
