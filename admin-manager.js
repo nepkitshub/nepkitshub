@@ -24,7 +24,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     const {data,error}=await db.from('oa_site_content').select('content_key,value_en');
     if(error)return;
     const map={};(data||[]).forEach(row=>map[row.content_key]=row);
-    const savedBrandName=String(map.brand_name?.value_en||'').trim();const nameEn=!savedBrandName||/^Oxford Academy$/i.test(savedBrandName)?'Oxford Academic Instruction Pvt. Ltd.':savedBrandName;
+    const nameEn='OXFORD ACADEMIC INSTRUCTION PVT.LTD.';
+    document.querySelectorAll('.brand-place,.oa-brand small,.oa-admin-brand-copy .brand-place').forEach(node=>node.remove());
     document.querySelectorAll('.brand-name,.oa-brand b').forEach(node=>{node.textContent=nameEn;});
     const logo=safeUrl(map.logo_url?.value_en||'');
     document.querySelectorAll('.brand-mark,.oa-mark').forEach(node=>{
@@ -414,7 +415,28 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       'body.admin-route .oa-enquiry-contact>span,body.admin-route .oa-enquiry-message strong{font-size:10px;letter-spacing:.08em}',
       'body.admin-route .oa-enquiry-contact a,body.admin-route .oa-enquiry-contact strong{font-size:12px;font-weight:750}',
       'body.admin-route .oa-enquiry-message p{font-size:13px;line-height:1.75}',
-      '@media(max-width:600px){body.admin-route .oa-dashboard-welcome h2{font-size:21px}body.admin-route .oa-dashboard-metric strong{font-size:25px}body.admin-route .oa-dashboard-section-heading h2{font-size:16px}body.admin-route .oa-dashboard-panel-head h2{font-size:15px}body.admin-route .oa-top h1{font-size:22px}}'
+      '@media(max-width:600px){body.admin-route .oa-dashboard-welcome h2{font-size:21px}body.admin-route .oa-dashboard-metric strong{font-size:25px}body.admin-route .oa-dashboard-section-heading h2{font-size:16px}body.admin-route .oa-dashboard-panel-head h2{font-size:15px}body.admin-route .oa-top h1{font-size:22px}}',
+      'body.admin-route{--oxford-navy:#14243A;--oxford-ivory:#F7F5EF;--oxford-red:#C9433B;--oxford-charcoal:#242A30;background:#F7F5EF!important;color:#242A30!important}',
+      'body.admin-route .oa-admin-header{background:#fff!important;border-bottom:1px solid #e7e4dc!important}',
+      'body.admin-route .oa-admin-brand-copy .brand-name{color:#14243A!important;font-size:13px!important;white-space:normal!important;max-width:320px!important}',
+      'body.admin-route .oa-admin-brand-copy .brand-place{display:none!important}',
+      'body.admin-route .oa-admin-header-mark,body.admin-route .oa-mark{background:#14243A!important;color:#fff!important;border:1px solid #C9433B!important}',
+      'body.admin-route .oa-side{background:#14243A!important}',
+      'body.admin-route .oa-side-heading span,body.admin-route .oa-side-foot{color:#d6dce3!important}',
+      'body.admin-route .oa-nav button.active{background:rgba(201,67,59,.2)!important;border-color:rgba(201,67,59,.42)!important;color:#fff!important}',
+      'body.admin-route .oa-nav button.active .oa-nav-icon{color:#f0b4ad!important}',
+      'body.admin-route .oa-main{background:#F7F5EF!important;color:#242A30!important}',
+      'body.admin-route .oa-top small,body.admin-route .oa-dashboard-eyebrow,body.admin-route .oa-enquiry-kicker{color:#C9433B!important}',
+      'body.admin-route .oa-top h1,body.admin-route .oa-main h2,body.admin-route .oa-main h3{color:#14243A!important}',
+      'body.admin-route .oa-button,body.admin-route .oa-dashboard-primary-link,body.admin-route .oa-enquiry-action.primary{background:#C9433B!important;color:#fff!important;border-color:#C9433B!important}',
+      'body.admin-route .oa-button.light{background:#F7F5EF!important;color:#14243A!important;border:1px solid #e5e1d8!important}',
+      'body.admin-route .oa-dashboard-metric,body.admin-route .oa-dashboard-panel,body.admin-route .oa-card,body.admin-route .oa-enquiry-card{background:#fff!important;border-color:#e7e4dc!important}',
+      'body.admin-route .oa-dashboard-metric strong,body.admin-route .oa-stat strong{color:#14243A!important}',
+      'body.admin-route .oa-dashboard-metric .oa-dashboard-metric-icon{background:#f8e8e5!important;color:#C9433B!important}',
+      'body.admin-route .oa-dashboard-status{border-color:#e7e4dc!important}',
+      'body.admin-route .oa-main input:focus,body.admin-route .oa-main select:focus,body.admin-route .oa-main textarea:focus{border-color:#C9433B!important;box-shadow:0 0 0 3px rgba(201,67,59,.12)!important;outline:0!important}',
+      'body.admin-route .oa-msg{background:#14243A!important;border-left:4px solid #C9433B!important}',
+      '@media(max-width:600px){body.admin-route .oa-admin-brand-copy .brand-name{font-size:11px!important;max-width:230px!important}}'
     ].join('');
     document.head.appendChild(typographyStyle);
   }
@@ -427,7 +449,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         "<header class='oa-admin-header'>" +
           "<a class='oa-admin-header-brand' href='/' target='_blank' rel='noopener'>" +
             "<span class='brand-mark oa-admin-header-mark'>OA</span>" +
-            "<span class='oa-admin-brand-copy'><b class='brand-name'>Oxford Academic Instruction Pvt. Ltd.</b><small class='brand-place'>KUSHMA · BAGLUNG, NEPAL</small></span>" +
+            "<span class='oa-admin-brand-copy'><b class='brand-name'>OXFORD ACADEMIC INSTRUCTION PVT.LTD.</b></span>" +
           "</a>" +
           "<div class='oa-admin-header-actions'>" +
             "<a class='oa-button light oa-live-site-link' href='/' target='_blank' rel='noopener'>Open website <span aria-hidden='true'>↗</span></a>" +
@@ -832,7 +854,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     let map;try{map=await getContentMap();}catch(error){view.innerHTML="<div class='oa-card'>"+esc(error.message)+"</div>";return;}
     const brand=map.brand_name||{},desktop=Math.max(40,Math.min(160,Number(map.logo_size_desktop?.value_en||48))),mobile=Math.max(34,Math.min(60,Number(map.logo_size_mobile?.value_en||42)));
     view.innerHTML="<div class='oa-card'><h2>Academy name, logo & sizing</h2><p>Upload your logo, crop it in the popup, and choose its size on desktop and mobile.</p><form id='oa-brand-form'><div class='oa-grid'>"+
-      "<div class='oa-field'><label>Academy name</label><input name='brand_en' required value='"+esc(brand.value_en||'Oxford Academy')+"'></div>"+
+      "<div class='oa-field'><label>Official company name</label><input name='brand_en' value='OXFORD ACADEMIC INSTRUCTION PVT.LTD.' readonly aria-readonly='true'><small>The official company name is fixed across the website.</small></div>"+
 
       logoUploadField(map.logo_url?.value_en||'')+imageField('hero_image_url','Homepage hero background',map.hero_image_url?.value_en||'','branding')+
       "<div class='oa-field full'><label>Desktop logo size (company text stays the same): <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='128' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
@@ -863,7 +885,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           preview.classList.remove('hide');
           await applyBranding();
           window.dispatchEvent(new Event('oa-branding-updated'));
-          note.textContent = 'Logo uploaded, saved and applied. Save branding after changing the academy name or logo sizes.';
+          note.textContent = 'Logo uploaded, saved and applied. Save branding after changing the logo sizes.';
           showMessage('Academy logo updated successfully.');
         } catch (error) {
           note.textContent = error.message || 'Logo upload failed. The image may have uploaded, but it was not saved as the active logo.';
@@ -883,7 +905,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       {content_key:'hero_image_url',value_en:f.get('hero_image_url')||''},
       {content_key:'logo_size_desktop',value_en:String(f.get('logo_size_desktop')||48)},
       {content_key:'logo_size_mobile',value_en:String(f.get('logo_size_mobile')||42)}
-    ];const {error}=await db.from('oa_site_content').upsert(rows,{onConflict:'content_key'});if(error)showMessage(error.message);else{await applyBranding();window.dispatchEvent(new Event('oa-branding-updated'));showMessage('Logo, crop and display sizes saved. Refresh the public website to see the updated branding everywhere.');}});
+    ];const {error}=await db.from('oa_site_content').upsert(rows,{onConflict:'content_key'});if(error)showMessage(error.message);else{await applyBranding();window.dispatchEvent(new Event('oa-branding-updated'));showMessage('Logo, crop and display sizes saved. The official company name remains consistent across the website.');}});
   }
 
   async function renderHomepage() {

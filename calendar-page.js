@@ -81,16 +81,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       const values = {};
       (data || []).forEach((row) => { values[row.content_key] = row.value_en; });
 
-      const name = String(values.brand_name || '').trim() || 'Oxford Academic Instruction Pvt. Ltd.';
+      const name = 'OXFORD ACADEMIC INSTRUCTION PVT.LTD.';
       const nameNode = $('#oa-cal-brand-name');
-      if (nameNode) {
-        const small = nameNode.querySelector('small');
-        const nameText = Array.from(nameNode.childNodes).find((child) => child.nodeType === Node.TEXT_NODE);
-        if (nameText) nameText.nodeValue = name;
-        else nameNode.insertBefore(document.createTextNode(name), small || null);
-      }
+      if (nameNode) nameNode.replaceChildren(document.createTextNode(name));
       const stripBrand = $('#oa-cal-strip-brand');
-      if (stripBrand) stripBrand.textContent = name.toUpperCase();
+      if (stripBrand) stripBrand.textContent = name;
 
       const logoUrl = safeUrl(values.logo_url);
       const logoNode = $('#oa-cal-logo');
