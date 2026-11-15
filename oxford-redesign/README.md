@@ -27,8 +27,8 @@ This is a separate Next.js App Router application under `oxford-redesign/`. The 
 
 ## Backend setup sequence
 1. Create/approve an isolated Supabase development branch. Do not connect the new app to the production database.
-2. Apply the SQL migration in `supabase/migrations/202611150001_oa_cms.sql`.
-3. Configure the public URL and publishable key in the Vercel preview environment.
+2. Apply both SQL migrations in order: `supabase/migrations/202611150001_oa_cms.sql`, then `supabase/migrations/202611150002_oa_cms_seed_verified_content.sql`.
+3. Configure `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_APP_URL` and `NEXT_PUBLIC_SITE_URL` in the Vercel preview environment. The current isolated project domain is `https://oxford-academy-redesign-nepkits-hub.vercel.app`.
 4. Configure the Supabase secret key as a server-only Vercel environment variable for staff invitations and provisioning.
 5. Set `BOOTSTRAP_ADMIN_EMAIL` and `BOOTSTRAP_ADMIN_FULL_NAME` locally and run `npm run bootstrap:admin` once. The script refuses to proceed if a CMS staff record already exists, and grants the initial Super Admin role to only that invited account.
 6. Remove the bootstrap environment variables after provisioning.
