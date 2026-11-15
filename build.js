@@ -951,6 +951,7 @@ fs.writeFileSync(notFoundDir, notFoundHtml);
 const professionalThemeCss = fs.readFileSync(path.join(__dirname, 'professional-theme.css'), 'utf8');
 const professionalUxSource = fs.readFileSync(path.join(__dirname, 'professional-ux.js'), 'utf8');
 const publicBrandingSource = fs.readFileSync(path.join(__dirname, 'public-branding.js'), 'utf8');
+const oxfordSiteFooterSource = fs.readFileSync(path.join(__dirname, 'oxford-site-footer.js'), 'utf8');
 let professionalPagesUpdated = 0;
 function applyProfessionalLayer(folder) {
   for (const entry of fs.readdirSync(folder, { withFileTypes: true })) {
@@ -992,8 +993,9 @@ function applyProfessionalLayer(folder) {
     const themeBlock = '<style id="oa-professional-design-system">\n' + professionalThemeCss + '\n</style>';
     const uxBlock = '<script id="oa-professional-ux">\n' + professionalUxSource + '\n</script>';
     const brandingBlock = '<script type="module" id="oa-public-branding">\n' + publicBrandingSource + '\n</script>';
+    const footerBlock = isAdminPage ? '' : '<script type="module" id="oa-site-footer">\n' + oxfordSiteFooterSource + '\n</script>';
     page = page.replace('</head>', themeBlock + '</head>');
-    page = page.replace('</body>', brandingBlock + uxBlock + '</body>');
+    page = page.replace('</body>', brandingBlock + uxBlock + footerBlock + '</body>');
     fs.writeFileSync(filePath, page);
     professionalPagesUpdated += 1;
   }
