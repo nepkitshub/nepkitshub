@@ -2879,3 +2879,32 @@ body.admin-route .oa-social-admin-note b {
     animation-duration:.01ms !important;
   }
 }
+
+
+/* Mobile reference frame: keep the footer inset as a rounded navy panel. */
+.oa-reference-footer .oa-ref-landscape {
+  position:absolute;
+  z-index:-1;
+  left:19%;
+  bottom:55px;
+  width:430px;
+  height:245px;
+  opacity:.17;
+  pointer-events:none;
+  background:
+    linear-gradient(155deg,transparent 45%,rgba(218,233,247,.42) 45.5% 46%,transparent 46.5%),
+    linear-gradient(25deg,transparent 43%,rgba(190,215,237,.35) 43.5% 44%,transparent 44.5%);
+  clip-path:polygon(0 76%,12% 42%,21% 62%,35% 22%,47% 65%,58% 38%,69% 70%,83% 33%,100% 74%,100% 100%,0 100%);
+}
+@media (max-width:760px) {
+  .oa-reference-footer {
+    width:min(calc(100% - 24px),860px);
+    margin:22px auto 18px;
+    border:1px solid rgba(16,52,89,.16);
+    border-top:4px solid var(--oa-ref-red);
+    border-radius:16px;
+    box-shadow:0 18px 45px rgba(11,33,59,.14);
+  }
+  .oa-reference-footer .oa-ref-footer-bottom { border-radius:0 0 15px 15px; }
+  .oa-reference-footer .oa-ref-back-top { right:10px;bottom:10px; }
+}
