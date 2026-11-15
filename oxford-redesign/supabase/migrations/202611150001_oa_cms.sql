@@ -404,3 +404,17 @@ public.oa_cms_programs,public.oa_cms_program_levels,public.oa_cms_services,publi
 public.oa_cms_branches,public.oa_cms_news_categories,public.oa_cms_news_articles,public.oa_cms_events,
 public.oa_cms_gallery_images,public.oa_cms_testimonials,public.oa_cms_faqs,public.oa_cms_seo_metadata
 to anon;
+
+
+-- Public student feedback enters moderation only. Visitors cannot read or self-approve submissions.
+grant insert(student_name,course_name,quote,permission_confirmed)
+on public.oa_cms_testimonials to anon,authenticated;
+create policy oa_cms_testimonials_public_insert on public.oa_cms_testimonials
+for insert to anon,authenticated
+with check (
+  status='pending'
+  and permission_confirmed=true
+  and char_length(btrim(student_name)) between 2 and 120
+  and char_length(btrim(quote)) between 10 and 4000
+  and char_length(course_name)<=150
+);
