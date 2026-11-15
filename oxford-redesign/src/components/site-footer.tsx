@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowUpRight, Mail, MapPin, Phone, Globe2, Camera, Music2 } from "lucide-react";
+import { ArrowUpRight, Mail, MapPin, Phone, MessageCircle, Globe2, Camera, Music2 } from "lucide-react";
+import { whatsappUrl } from "@/lib/contact";
 import { branches as fallbackBranches } from "@/lib/content";
 import { getPublicBranches, type PublicSiteSettings } from "@/lib/public-content";
 export async function SiteFooter({settings}:{settings:PublicSiteSettings}){
