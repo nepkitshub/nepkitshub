@@ -26,10 +26,10 @@ export async function POST(request:NextRequest){
  }
  try{
   const supabase=await createServerSupabaseClient();
-  const {data,error}=await supabase.from("oa_cms_consultation_requests").insert({
+  const {error}=await supabase.from("oa_cms_consultation_requests").insert({
    full_name:fullName,email,phone,branch_slug:branchSlug,requested_at:requestedTimestamp,message,consent:true
-  }).select("id").single();
-  if(error||!data){
+  });
+  if(error){
    console.error("Oxford consultation request failed",error?.code??"unknown");
    return NextResponse.json({error:"We could not save the consultation request. Please contact an Oxford branch directly."},{status:503});
   }

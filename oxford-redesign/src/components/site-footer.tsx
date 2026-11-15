@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Phone, Globe2, Camera, Music2 } from "lucide-react";
-import { branches as fallbackBranches, company } from "@/lib/content";
+import { company } from "@/lib/content";
 import { getPublicBranches, type PublicSiteSettings } from "@/lib/public-content";
 
 export async function SiteFooter({settings}:{settings:PublicSiteSettings}) {
  const branches=await getPublicBranches();
- const branchItems=branches.length?branches:fallbackBranches;
+ const branchItems=branches;
  return <footer className="site-footer"><div className="container footer-main">
   <div className="footer-brand">
    <Link href="/" className="brand brand-light"><img className="brand-logo" src={settings.logoUrl} alt={`${settings.brandName} logo`}/><span className="brand-wordmark"><strong>{settings.brandName}</strong><small>{settings.legalName}</small></span></Link>

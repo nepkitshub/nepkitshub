@@ -15,7 +15,7 @@ function jsonValue(row:Row,key:string,fallback:unknown):unknown{const raw=row[ke
 function recordBody(value:unknown):Row{return value&&typeof value==="object"&&!Array.isArray(value)?value as Row:{};}
 function idValue(value:unknown):string{return typeof value==="string"&&/^[0-9a-f-]{36}$/i.test(value)?value:"";}
 function safeUrl(value:unknown,max=1000):string{const raw=typeof value==="string"?value.trim().slice(0,max):"";if(!raw)return"";try{const url=new URL(raw);return url.protocol==="https:"||url.protocol==="http:"?url.toString():"";}catch{return"";}}
-function safeNavigationHref(value:unknown):string{const raw=textValue({value},"value",1000);if(raw.startsWith("/")&&!raw.startsWith("//")&&!raw.includes("\\\\"))return raw;const parsed=safeUrl(raw);if(!parsed)throw new Error("Use an internal path or a valid HTTP(S) link.");return parsed;}
+function safeNavigationHref(value:unknown):string{const raw=textValue({value},"value",1000);if(raw.startsWith("/")&&!raw.startsWith("//")&&!raw.includes("\\"))return raw;const parsed=safeUrl(raw);if(!parsed)throw new Error("Use an internal path or a valid HTTP(S) link.");return parsed;}
 function safeSlug(value:unknown):string{const raw=textValue({value},"value",120).toLowerCase();if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(raw))throw new Error("Use a simple URL slug with lowercase letters, numbers and hyphens.");return raw;}
 async function listRows(s:AdminSupabaseClient,module:ModuleName):Promise<{data:Row[];error:string|null}>{
  switch(module){
