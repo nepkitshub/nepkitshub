@@ -7,6 +7,7 @@ export default function AdminLoginPage() {
   <span className="card-kicker">OXFORD ADMINISTRATION</span><h1>Administrator sign in</h1>
   <p>Private access for authorised Oxford staff. Account permissions are verified by the server and database.</p>
   <AdminSignInForm />
+  <Link className="forgot-password-link" href="/admin/forgot-password">Forgot your password?</Link>
   <Link className="text-link" href="/">Return to website</Link>
  </div></section>;
 }
