@@ -52,7 +52,7 @@ function sanitize(module:ModuleName,row:Row):Row{
  default:throw new Error("This module is view-only or does not support changes.");
  }
 }
-async function writeRow(s:Awaited<ReturnType<typeof requireCmsPermission>> extends {ok:true;supabase:infer S}?S:never,module:ModuleName,record:Row,id:string){
+async function writeRow(s:AdminSupabaseClient,module:ModuleName,record:Row,id:string){
  const value=sanitize(module,record);
  if(module==="consultations"){const r=await s.from("oa_cms_consultation_requests").update(value).eq("id",id);return r.error?.message??null;}
  if(module==="settings"){const r=await s.from("oa_cms_site_settings").upsert(value);return r.error?.message??null;}
@@ -71,7 +71,7 @@ async function writeRow(s:Awaited<ReturnType<typeof requireCmsPermission>> exten
  default:return "This module does not support edits.";
  }
 }
-async function deleteRow(s:Awaited<ReturnType<typeof requireCmsPermission>> extends {ok:true;supabase:infer S}?S:never,module:ModuleName,id:string){
+async function deleteRow(s:AdminSupabaseClient,module:ModuleName,id:string){
  switch(module){
  case"content":return(await s.from("oa_cms_pages").delete().eq("id",id)).error?.message??null;
  case"programs":return(await s.from("oa_cms_programs").delete().eq("id",id)).error?.message??null;
