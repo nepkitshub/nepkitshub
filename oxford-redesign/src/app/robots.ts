@@ -1,1 +1,2 @@
-import type{MetadataRoute}from"next";export default function robots():MetadataRoute.Robots{return{rules:[{userAgent:"*",allow:"/",disallow:["/admin/","/api/"]}],sitemap:"https://oxford-academy-redesign.vercel.app/sitemap.xml"}}
+import type{MetadataRoute}from"next";
+export default function robots():MetadataRoute.Robots{return{rules:[{userAgent:"*",allow:"/",disallow:["/admin","/api"]}],sitemap:"https://oxford-academy-redesign-nepkits-hub.vercel.app/sitemap.xml"};}
