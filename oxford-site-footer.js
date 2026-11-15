@@ -246,7 +246,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
     const html = renderMarkup(branches, gallery, settings);
     const oldFooter = document.querySelector(
-      'footer.footer, footer.page-content-footer, footer.oa-pathway-footer, footer.oa-reference-footer'
+      'footer.footer, footer.page-content-footer, footer.oa-pathway-footer, footer.oa-reference-footer, .page-content-footer, footer'
     );
     if (oldFooter) oldFooter.outerHTML = html;
     else document.body.insertAdjacentHTML('beforeend', html);
