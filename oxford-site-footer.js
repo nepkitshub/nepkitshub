@@ -127,8 +127,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
     const privacyUrl = safeHttps(settings.privacy_policy_url);
     const termsUrl = safeHttps(settings.terms_and_conditions_url);
-    const legalLinks = (privacyUrl ? '<a href="' + esc(privacyUrl) + '" target="_blank" rel="noopener noreferrer">Privacy Policy</a>' : '') +
-      (termsUrl ? '<a href="' + esc(termsUrl) + '" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>' : '');
+    const legalLinks =
+      (privacyUrl ? '<a href="' + esc(privacyUrl) + '" target="_blank" rel="noopener noreferrer">Privacy Policy</a>' :
+        '<span class="is-unavailable" title="Add the URL in Admin > Branding">Privacy Policy</span>') +
+      (termsUrl ? '<a href="' + esc(termsUrl) + '" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>' :
+        '<span class="is-unavailable" title="Add the URL in Admin > Branding">Terms &amp; Conditions</span>');
 
     const socials = (className) =>
       '<div class="' + className + '">' +
@@ -178,7 +181,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       '</div>' +
       '<div class="oa-ref-footer-bottom"><span>© ' + new Date().getFullYear() + ' ' + esc(BRAND) + ' All rights reserved.</span>' +
         '<span class="oa-ref-designed">Designed by <a href="https://wa.me/9779867947202?text=Hello%20Saksham%2C%20I%20came%20from%20the%20Oxford%20Academy%20website." target="_blank" rel="noopener noreferrer">Saksham Lamsal</a></span>' +
-        (legalLinks ? '<span class="oa-ref-legal">' + legalLinks + '</span>' : '') +
+        '<span class="oa-ref-legal">' + legalLinks + '</span>' +
       '</div>' +
       '<button class="oa-ref-back-top" type="button" aria-label="Back to top">↑</button>' +
     '</footer>';
