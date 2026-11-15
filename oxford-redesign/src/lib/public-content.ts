@@ -74,13 +74,23 @@ export async function getPublicNavigationItems(): Promise<PublicNavigationItem[]
  for(const row of records)if(row.parent_id){const items=children.get(row.parent_id)??[];items.push({id:row.id,label:row.label,href:row.href,children:[]});children.set(row.parent_id,items);}
  return records.filter(row=>!row.parent_id).map(row=>({id:row.id,label:row.label,href:row.href,children:children.get(row.id)??[]}));
 }
-export type PublicHomeContent = { eyebrow:string; title:string; accent:string; description:string; primaryCta:string; secondaryCta:string };
-const defaultHomeContent:PublicHomeContent={eyebrow:"OXFORD ACADEMIC INSTRUCTION PVT. LTD.",title:"Build Your Future",accent:"With Confidence.",description:"Explore language learning, examination preparation and practical guidance for your next academic or professional step.",primaryCta:"Explore Programs",secondaryCta:"Contact Oxford"};
+export type PublicHomeContent = { eyebrow:string; title:string; accent:string; description:string; primaryCta:string; secondaryCta:string; heroImage:string };
+const defaultHomeContent:PublicHomeContent={eyebrow:"OXFORD ACADEMIC INSTRUCTION PVT. LTD.",title:"Build Your Future",accent:"With Confidence.",description:"Explore language learning, examination preparation and practical guidance for your next academic or professional step.",primaryCta:"Explore Programs",secondaryCta:"Contact Oxford",heroImage:"https://gsfhhvkipvoutqqgyick.supabase.co/storage/v1/object/public/oa-academy-media/branding/1794201976743-images.jpeg"};
 export async function getPublicHomeContent():Promise<PublicHomeContent>{
  const db=await clientOrNull();if(!db)return defaultHomeContent;
- const {data,error}=await db.from("oa_cms_site_settings").select("setting_value").eq("setting_key","homepage").maybeSingle();
- if(error||!data)return defaultHomeContent;
- const value=settingObject(data.setting_value);
- const text=(key:keyof PublicHomeContent)=>typeof value[key]==="string"?(value[key] as string).trim():defaultHomeContent[key];
- return {eyebrow:text("eyebrow"),title:text("title"),accent:text("accent"),description:text("description"),primaryCta:text("primaryCta"),secondaryCta:text("secondaryCta")};
+ const {data,error}=await db.from("oa_cms_site_settings").select("setting_key,setting_value").in("setting_key",["homepage","branding"]);
+ if(error||!data?.length)return defaultHomeContent;
+ const settings=new Map(data.map(row=>[row.setting_key,settingObject(row.setting_value)]));
+ const home=settings.get("homepage")??{},branding=settings.get("branding")??{};
+ const pick=(object:Record<string,unknown>,key:string,fallback:string)=>typeof object[key]==="string"&&(object[key] as string).trim()?(object[key] as string).trim():fallback;
+ const hero=pick(home,"heroImage",pick(branding,"hero_image_url",defaultHomeContent.heroImage));
+ return{
+  eyebrow:pick(home,"eyebrow",defaultHomeContent.eyebrow),
+  title:pick(home,"title",defaultHomeContent.title),
+  accent:pick(home,"accent",defaultHomeContent.accent),
+  description:pick(home,"description",defaultHomeContent.description),
+  primaryCta:pick(home,"primaryCta",defaultHomeContent.primaryCta),
+  secondaryCta:pick(home,"secondaryCta",defaultHomeContent.secondaryCta),
+  heroImage:safePublicUrl(hero,defaultHomeContent.heroImage)
+ };
 }
