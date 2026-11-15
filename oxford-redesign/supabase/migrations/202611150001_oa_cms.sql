@@ -504,3 +504,17 @@ from (values
 ) as child(parent_label,label,href,sort_order)
 join public.oa_cms_navigation_items parent on parent.label=child.parent_label and parent.parent_id is null
 where not exists(select 1 from public.oa_cms_navigation_items n where n.parent_id=parent.id and n.label=child.label);
+
+-- Limit uploads and deletes in the public academy bucket to authorised CMS media staff.
+create policy oa_cms_media_upload on storage.objects
+for insert to authenticated
+with check (bucket_id='oa-academy-media' and private.oa_cms_has_permission('media.manage')
+  and lower(storage.extension(name)) in ('jpg','jpeg','png','webp'));
+create policy oa_cms_media_update on storage.objects
+for update to authenticated
+using (bucket_id='oa-academy-media' and private.oa_cms_has_permission('media.manage'))
+with check (bucket_id='oa-academy-media' and private.oa_cms_has_permission('media.manage')
+  and lower(storage.extension(name)) in ('jpg','jpeg','png','webp'));
+create policy oa_cms_media_delete on storage.objects
+for delete to authenticated
+using (bucket_id='oa-academy-media' and private.oa_cms_has_permission('media.manage'));
