@@ -1192,35 +1192,50 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
   async function renderBranches() {
     const view=$('#oa-view');
-    view.innerHTML="<div class='oa-card'><h2>Branches & contact details</h2><p>Update each branch's address, phone, WhatsApp, email and social media accounts separately.</p><div id='oa-branch-loader'>Loading branches…</div></div>";
+    view.innerHTML="<div class='oa-card'><h2>Branches & contact details</h2><p>Manage branch contacts and the photo used in the new desktop and mobile website footer.</p><div id='oa-branch-loader'>Loading branches…</div></div>";
     const {data,error}=await db.from('oa_branches').select('*').order('sort_order');
     if(error){$('#oa-branch-loader').textContent=error.message;return;}
     const rows=data||[];
+    const photoKeys=rows.map(row=>'branch_photo_'+row.slug);
+    let photoMap={};
+    if(photoKeys.length){
+      const {data:photos}=await db.from('oa_site_content').select('content_key,value_en').in('content_key',photoKeys);
+      (photos||[]).forEach(row=>photoMap[row.content_key]=row.value_en||'');
+    }
     function field(name,label,value,type='text'){return "<div class='oa-field'><label>"+esc(label)+"</label><input name='"+esc(name)+"' type='"+type+"' value='"+esc(value||'')+"'></div>";}
-    const formMarkup=row=>"<form class='oa-card oa-branch-form' data-id='"+esc(row.id)+"'><h2>"+esc(row.branch_name)+"</h2><p>Branch key: "+esc(row.slug)+"</p><div class='oa-social-admin-note'><b>Instagram & TikTok footer buttons</b><span>Paste each full public profile URL in the fields below and save this branch. Its footer buttons will open the saved profiles in a new tab.</span></div><div class='oa-grid'>"+
+    function photoField(row){
+      const key='branch_photo_'+row.slug, url=safeUrl(photoMap[key]||'');
+      return "<div class='oa-field full'><label>Branch photo for website footer</label><input type='url' name='"+esc(key)+"' value='"+esc(url)+"' placeholder='https://…'><div class='oa-upload'><small>Upload a clear branch photo (JPG, PNG or WebP, maximum 5 MB). This image appears in the public footer on desktop and mobile.</small><input type='file' accept='image/jpeg,image/png,image/webp' data-file-for='"+esc(key)+"' data-folder='branches'></div><img class='oa-preview "+(url?'':'hide')+"' data-preview='"+esc(key)+"' src='"+esc(url)+"' alt='"+esc(row.branch_name)+" footer photo preview'></div>";
+    }
+    const formMarkup=row=>"<form class='oa-card oa-branch-form' data-id='"+esc(row.id)+"' data-photo-key='branch_photo_"+esc(row.slug)+"'><h2>"+esc(row.branch_name)+"</h2><p>Branch key: "+esc(row.slug)+"</p><div class='oa-social-admin-note'><b>Footer social buttons and branch image</b><span>Save Facebook, Instagram and TikTok profile URLs to update the public links. Upload a branch photo below to replace the illustrated placeholder in the footer.</span></div><div class='oa-grid'>"+
       field('branch_name','Branch name',row.branch_name)+field('address','Address',row.address)+field('phone','Phone number',row.phone,'tel')+
       field('whatsapp_number','WhatsApp number',row.whatsapp_number,'tel')+field('email','Email address',row.email,'email')+
       field('facebook_url','Facebook URL',row.facebook_url,'url')+field('instagram_url','Instagram profile URL',row.instagram_url,'url')+
       field('tiktok_url','TikTok profile URL',row.tiktok_url,'url')+field('maps_url','Google Maps pin link',row.maps_url,'url')+field('sort_order','Display order',row.sort_order,'number')+
+      photoField(row)+
       "</div><label class='oa-check'><input type='checkbox' name='is_active' "+(row.is_active?'checked':'')+"> Show on the public website</label><button class='oa-button'>Save branch details</button></form>";
-    view.innerHTML="<div class='oa-card'><h2>Branches & contact details</h2><p>Only active branches appear publicly. Contact details display on the website, and each branch's Instagram and TikTok profile URLs control the matching buttons in the public footer.</p></div>"+
+    view.innerHTML="<div class='oa-card'><h2>Branches & contact details</h2><p>Only active branches appear publicly. Each branch photo and saved social profile URL controls the matching content in the responsive website footer.</p></div>"+
       rows.map(formMarkup).join('')+
       "<div class='oa-card'><h2>Add another branch</h2><form id='oa-add-branch'><div class='oa-grid'>"+
       field('branch_name','Branch name','New branch')+field('address','Address','City, District, Province')+field('phone','Phone number','','tel')+
       field('whatsapp_number','WhatsApp number','','tel')+field('email','Email address','','email')+field('facebook_url','Facebook URL','','url')+
       field('instagram_url','Instagram profile URL','','url')+field('tiktok_url','TikTok profile URL','','url')+field('maps_url','Google Maps pin link','','url')+field('sort_order','Display order',rows.length+1,'number')+
       "</div><label class='oa-check'><input type='checkbox' name='is_active' checked> Show on the public website</label><button class='oa-button'>Add branch</button></form></div>";
+    bindUploads(view);
     document.querySelectorAll('.oa-branch-form').forEach(form=>form.addEventListener('submit',async event=>{
       event.preventDefault();const f=new FormData(form);
       const payload={branch_name:f.get('branch_name')||'',address:f.get('address')||'',phone:f.get('phone')||'',whatsapp_number:f.get('whatsapp_number')||'',email:f.get('email')||'',facebook_url:f.get('facebook_url')||'',instagram_url:f.get('instagram_url')||'',tiktok_url:f.get('tiktok_url')||'',maps_url:safeUrl(f.get('maps_url')||''),sort_order:Number(f.get('sort_order')||0),is_active:f.get('is_active')==='on',updated_at:new Date().toISOString()};
-      const {error}=await db.from('oa_branches').update(payload).eq('id',form.dataset.id);
-      showMessage(error?error.message:'Branch details saved.');
+      const {error:branchError}=await db.from('oa_branches').update(payload).eq('id',form.dataset.id);
+      if(branchError){showMessage(branchError.message);return;}
+      const photoUrl=safeUrl(f.get(form.dataset.photoKey)||'');
+      const {error:photoError}=await db.from('oa_site_content').upsert({content_key:form.dataset.photoKey,value_en:photoUrl},{onConflict:'content_key'});
+      showMessage(photoError?photoError.message:'Branch details and footer photo saved.');
     }));
     $('#oa-add-branch').addEventListener('submit',async event=>{
       event.preventDefault();const f=new FormData(event.currentTarget),name=f.get('branch_name')||'New Branch';
       const slug=name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
       const {error}=await db.from('oa_branches').insert({slug,branch_name:name,address:f.get('address')||'',phone:f.get('phone')||'',whatsapp_number:f.get('whatsapp_number')||'',email:f.get('email')||'',facebook_url:f.get('facebook_url')||'',instagram_url:f.get('instagram_url')||'',tiktok_url:f.get('tiktok_url')||'',maps_url:safeUrl(f.get('maps_url')||''),sort_order:Number(f.get('sort_order')||0),is_active:f.get('is_active')==='on'});
-      if(error)showMessage(error.message);else{showMessage('Branch added.');await openSection('branches');}
+      if(error)showMessage(error.message);else{showMessage('Branch added. You can add its footer photo after it appears in the branch list.');await openSection('branches');}
     });
   }
 
