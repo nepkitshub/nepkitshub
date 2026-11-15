@@ -21,3 +21,20 @@
 .event-card h2{margin:12px 0;font:600 25px "Playfair Display",Georgia,serif}
 .event-card p{color:var(--muted);font-size:12px;line-height:1.85}
 @media(max-width:780px){.student-review-grid,.events-grid{grid-template-columns:1fr}}
+
+.gallery-experience{display:grid;gap:22px}
+.gallery-filters{display:flex;flex-wrap:wrap;gap:8px}
+.gallery-filter{min-height:38px;padding:0 15px;border:1px solid #ddd;background:white;color:#444;font-size:10px;font-weight:700;cursor:pointer;transition:.2s}
+.gallery-filter:hover,.gallery-filter.active{border-color:#111;background:#111;color:white}
+.gallery-trigger{display:block;width:100%;padding:0;border:1px solid var(--line);background:white;color:inherit;text-align:left;font:inherit;cursor:pointer}
+.gallery-trigger:hover{transform:translateY(-3px);box-shadow:0 15px 34px rgba(0,0,0,.08)}
+.gallery-open{display:flex;align-items:center;gap:7px;margin-top:10px;color:var(--red);font-size:10px;font-weight:800}
+.gallery-lightbox{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:35px;background:rgba(7,8,10,.94)}
+.lightbox-content{width:min(980px,calc(100% - 100px));max-height:calc(100svh - 70px);display:grid;gap:15px;justify-items:center;color:white;text-align:center}
+.lightbox-content img{max-width:100%;max-height:75svh;object-fit:contain}
+.lightbox-content strong{font:600 24px "Playfair Display",Georgia,serif}
+.lightbox-content p{margin:7px 0 0;color:#ddd;font-size:12px;line-height:1.7}
+.lightbox-close,.lightbox-prev,.lightbox-next{position:absolute;display:grid;place-items:center;width:46px;height:46px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:white;cursor:pointer}
+.lightbox-close{right:25px;top:25px}.lightbox-prev{left:22px;top:50%;transform:translateY(-50%)}.lightbox-next{right:22px;top:50%;transform:translateY(-50%)}
+.news-article{max-width:820px}.news-article>p{font-size:15px;line-height:2.1;white-space:pre-wrap}.news-date{display:flex;align-items:center;gap:8px;color:var(--red)!important;font-size:11px!important;font-weight:700}
+@media(max-width:780px){.gallery-lightbox{padding:15px}.lightbox-content{width:calc(100% - 60px)}.lightbox-content img{max-height:72svh}.lightbox-close{right:12px;top:12px}.lightbox-prev{left:6px}.lightbox-next{right:6px}.lightbox-close,.lightbox-prev,.lightbox-next{width:38px;height:38px}.lightbox-content strong{font-size:20px}}
