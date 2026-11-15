@@ -29,6 +29,8 @@ export async function POST(request: NextRequest) {
   }
 
   // Honeypot: silently accept bot submissions without storing them.
+  const origin = request.headers.get("origin");
+  if (origin && origin !== request.nextUrl.origin) return NextResponse.json({ error: "Invalid request origin." }, { status: 403 });
   if (clean(payload.website, 200)) return NextResponse.json({ ok: true, message: "Thank you. Your enquiry has been received." });
 
   const fullName = clean(payload.fullName, 120);
@@ -46,7 +48,9 @@ export async function POST(request: NextRequest) {
 
   try {
     const supabase = await createServerSupabaseClient();
-    const { data, error } = await supabase.from("oa_cms_enquiries").insert({
+    const reference = `OA-${crypto.randomUUID().replace(/-/g, "").slice(0, 10).toUpperCase()}`;
+    const { error } = await supabase.from("oa_cms_enquiries").insert({
+      reference_code: reference,
       full_name: fullName,
       email,
       phone,
@@ -57,13 +61,13 @@ export async function POST(request: NextRequest) {
       message,
       consent: true,
       source: "website"
-    }).select("reference_code").single();
+    });
 
-    if (error || !data) {
+    if (error) {
       console.error("OA enquiry submission failed", error?.code ?? "unknown");
       return NextResponse.json({ error: "We could not save your enquiry. Please contact an Oxford branch directly." }, { status: 503 });
     }
-    return NextResponse.json({ ok: true, reference: data.reference_code, message: "Thank you. Your enquiry has been received." }, { status: 201 });
+    return NextResponse.json({ ok: true, reference, message: "Thank you. Your enquiry has been received." }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "The enquiry service is not configured in this preview. Please contact an Oxford branch directly." }, { status: 503 });
   }

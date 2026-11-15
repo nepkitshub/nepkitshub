@@ -1,1 +1,8 @@
-import type{Metadata}from"next";import{PageHero,SectionHeading}from"@/components/ui";export const metadata:Metadata={title:"Admissions and Enquiries"};export default function AdmissionPage(){return <><PageHero eyebrow="Admissions" title="Take the first step towards enrolment." description="Tell Oxford which programme or service interests you. Sending an enquiry does not confirm admission."/><section className="section"><div className="container"><SectionHeading eyebrow="Admission enquiry" title="Speak with the Oxford team" description="The enquiry submission backend is not connected in this isolated preview. No customer data will be sent to or stored in the production database."/><div className="form-card"><div className="disabled-note">Enquiry submission is temporarily disabled in this preview until an isolated development database and secure server-side endpoint are configured. The existing production enquiry system remains unchanged. Contact either branch directly for current programme details.</div></div></div></section></>}
+import type { Metadata } from "next";
+import { PageHero, SectionHeading } from "@/components/ui";
+import { AdmissionEnquiryForm } from "@/components/admission-enquiry-form";
+export const metadata: Metadata = { title:"Admissions and Enquiries" };
+export default function AdmissionPage(){return <>
+ <PageHero eyebrow="Admissions" title="Take the first step towards enrolment." description="Tell Oxford which programme or service interests you. Sending an enquiry does not confirm admission."/>
+ <section className="section"><div className="container"><SectionHeading eyebrow="Admission enquiry" title="Speak with the Oxford team" description="Complete the enquiry form and the selected branch can follow up with you. You will receive a reference number when the enquiry has been saved."/><AdmissionEnquiryForm /></div></section>
+ </>}
