@@ -96,3 +96,19 @@
 @media(max-width:780px){.staff-invite-form{padding:17px}.staff-role-explainer{grid-template-columns:1fr}.staff-card{align-items:flex-start;flex-direction:column}.staff-controls{justify-content:flex-start;width:100%}.staff-controls label{flex:1}.staff-controls select{min-width:0;width:100%}}
 
 .forgot-password-link{justify-self:end;color:var(--red);font-size:11px;font-weight:700}
+
+.logo-crop-backdrop{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:22px;background:rgba(10,10,10,.68);backdrop-filter:blur(6px)}
+.logo-crop-dialog{width:min(520px,100%);max-height:min(92svh,820px);overflow:auto;padding:26px;background:#fff;border:1px solid #e7e7e7;box-shadow:0 24px 80px rgba(0,0,0,.28)}
+.logo-crop-header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:20px}
+.logo-crop-header h2{margin:8px 0 5px;font:600 29px "Playfair Display",Georgia,serif}
+.logo-crop-header p{margin:0;color:#666;font-size:12px;line-height:1.7}
+.logo-crop-close{display:grid;place-items:center;width:38px;height:38px;border:1px solid #ddd;background:#fff;cursor:pointer}
+.logo-crop-preview{width:min(310px,100%);aspect-ratio:1/1;margin:0 auto 24px;overflow:hidden;background:repeating-conic-gradient(#eee 0% 25%,#fff 0% 50%) 50%/22px 22px;border:1px solid #ddd;border-radius:10px}
+.logo-crop-preview img{width:100%;height:100%;object-fit:cover;display:block}
+.logo-crop-controls{display:grid;gap:15px}
+.logo-crop-controls label{display:grid;gap:7px;color:#333;font-size:11px;font-weight:700}
+.logo-crop-controls label span{display:flex;justify-content:space-between}
+.logo-crop-controls label b{color:#C8202F;font-variant-numeric:tabular-nums}
+.logo-crop-controls input{width:100%;accent-color:#C8202F}
+.logo-crop-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+@media(max-width:560px){.logo-crop-dialog{padding:19px}.logo-crop-actions{flex-direction:column-reverse}.logo-crop-actions .button{width:100%}}
