@@ -23,6 +23,7 @@ export function AdminStaffManager(){
   catch(e){setError(e instanceof Error?e.message:"Unable to load staff.");}
   finally{setLoading(false);}
  },[]);
+ // eslint-disable-next-line react-hooks/set-state-in-effect -- load updates state only after its async request resolves.
  useEffect(()=>{void load();},[load]);
  async function invite(event:FormEvent<HTMLFormElement>){
   event.preventDefault();setBusy(true);setError("");setMessage("");
