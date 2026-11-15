@@ -729,11 +729,17 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
           const emailHtml = email ? '<a href="mailto:' + esc(email) + '"><span aria-hidden="true">✉</span>' + esc(email) + '</a>' : '';
           const whatsappHtml = whatsapp ? '<a href="https://wa.me/' + esc(whatsappInternational) + '" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">◉</span>WhatsApp</a>' : '';
           const facebookHtml = facebook ? '<a href="' + esc(facebook) + '" target="_blank" rel="noopener noreferrer"><span class="oa-social-icon facebook" aria-hidden="true">f</span>Facebook</a>' : '';
-          const instagramHtml = instagram ? '<a href="' + esc(instagram) + '" target="_blank" rel="noopener noreferrer"><span class="oa-social-icon instagram" aria-hidden="true">◎</span>Instagram</a>' : '';
-          const tiktokHtml = tiktok ? '<a href="' + esc(tiktok) + '" target="_blank" rel="noopener noreferrer"><span class="oa-social-icon tiktok" aria-hidden="true">♪</span>TikTok</a>' : '';
-          return '<div class="oa-footer-branch"><b>' + esc(item.branch_name || 'Oxford Branch') + '</b>' +
+          const branchLabel = String(item.branch_name || 'Oxford Branch').trim();
+          const instagramHtml = instagram
+            ? '<a class="oa-footer-social-button instagram" href="' + esc(instagram) + '" target="_blank" rel="noopener noreferrer" aria-label="Open ' + esc(branchLabel) + ' Instagram profile"><span class="oa-footer-social-icon instagram" aria-hidden="true">◎</span><span>Instagram</span><span class="oa-footer-social-arrow" aria-hidden="true">↗</span></a>'
+            : '<span class="oa-footer-social-button instagram is-unavailable" aria-disabled="true"><span class="oa-footer-social-icon instagram" aria-hidden="true">◎</span><span>Instagram</span><small>Profile not linked</small></span>';
+          const tiktokHtml = tiktok
+            ? '<a class="oa-footer-social-button tiktok" href="' + esc(tiktok) + '" target="_blank" rel="noopener noreferrer" aria-label="Open ' + esc(branchLabel) + ' TikTok profile"><span class="oa-footer-social-icon tiktok" aria-hidden="true">♪</span><span>TikTok</span><span class="oa-footer-social-arrow" aria-hidden="true">↗</span></a>'
+            : '<span class="oa-footer-social-button tiktok is-unavailable" aria-disabled="true"><span class="oa-footer-social-icon tiktok" aria-hidden="true">♪</span><span>TikTok</span><small>Profile not linked</small></span>';
+          const socialButtonsHtml = '<div class="oa-footer-socials"><span class="oa-footer-social-heading">FOLLOW THIS BRANCH</span><div class="oa-footer-social-buttons">' + instagramHtml + tiktokHtml + '</div></div>';
+          return '<div class="oa-footer-branch"><b>' + esc(branchLabel) + '</b>' +
             (item.address ? '<span class="oa-footer-address"><span aria-hidden="true">⌖</span>' + esc(item.address) + '</span>' : '') +
-            phoneHtml + emailHtml + whatsappHtml + facebookHtml + instagramHtml + tiktokHtml + '</div>';
+            phoneHtml + emailHtml + whatsappHtml + facebookHtml + socialButtonsHtml + '</div>';
         }).join('');
         footer.classList.add('oa-clean-footer');
         footer.innerHTML =

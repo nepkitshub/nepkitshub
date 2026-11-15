@@ -2206,3 +2206,112 @@ body:not(.admin-route) .page-brand-name{color:#14243A!important}
 body:not(.admin-route) .page-mark{background:#14243A!important;border-color:#C9433B!important}
 body:not(.admin-route) .page-content-footer{background:#14243A!important}
 @media(prefers-reduced-motion:reduce){body:not(.admin-route) *{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+
+/* Oxford footer social profile actions — URLs are supplied by Admin > Branches & contacts. */
+body.oa-lions-full .oa-footer-socials {
+  width:100%;
+  margin-top:5px;
+  padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.13);
+}
+body.oa-lions-full .oa-footer-social-heading {
+  display:block;
+  margin-bottom:8px;
+  color:#f1c47d;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+body.oa-lions-full .oa-footer-social-buttons {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  width:100%;
+}
+body.oa-lions-full .oa-footer-social-button {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+  min-height:42px;
+  padding:8px 10px;
+  border:1px solid rgba(255,255,255,.17);
+  border-radius:9px;
+  background:rgba(255,255,255,.075);
+  color:#f7f9fc;
+  font-size:10px;
+  font-weight:900;
+  line-height:1.25;
+  text-decoration:none;
+  transition:background .18s ease,border-color .18s ease,transform .18s ease;
+}
+body.oa-lions-full a.oa-footer-social-button:hover {
+  transform:translateY(-2px);
+  border-color:rgba(241,196,125,.68);
+  background:rgba(255,255,255,.13);
+  color:#fff;
+}
+body.oa-lions-full .oa-footer-social-button:focus-visible {
+  outline:3px solid #f1c47d;
+  outline-offset:2px;
+}
+body.oa-lions-full .oa-footer-social-icon {
+  display:inline-grid;
+  place-items:center;
+  width:25px;
+  height:25px;
+  flex:0 0 25px;
+  border-radius:7px;
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+}
+body.oa-lions-full .oa-footer-social-icon.instagram { background:linear-gradient(145deg,#7045a5,#c34f78 58%,#e8a14e); }
+body.oa-lions-full .oa-footer-social-icon.tiktok { background:#111827; }
+body.oa-lions-full .oa-footer-social-arrow {
+  margin-left:auto;
+  color:#f1c47d;
+  font-size:13px;
+}
+body.oa-lions-full .oa-footer-social-button small {
+  margin-left:auto;
+  color:#aebdcc;
+  font-size:8px;
+  font-weight:700;
+  text-align:right;
+}
+body.oa-lions-full .oa-footer-social-button.is-unavailable {
+  border-style:dashed;
+  background:rgba(255,255,255,.035);
+  color:#bdcad7;
+  cursor:not-allowed;
+}
+body.admin-route .oa-social-admin-note {
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  margin:12px 0 15px;
+  padding:12px 14px;
+  border:1px solid #e5eaf0;
+  border-radius:10px;
+  background:#f7f9fc;
+  color:#536476;
+  font-size:12px;
+  line-height:1.6;
+}
+body.admin-route .oa-social-admin-note b {
+  color:#163b61;
+  font-size:11px;
+  font-weight:900;
+}
+@media (max-width:760px) {
+  body.oa-lions-full .oa-footer-socials { margin-top:4px; padding-top:9px; }
+  body.oa-lions-full .oa-footer-social-buttons { grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+  body.oa-lions-full .oa-footer-social-button { min-height:40px; padding:7px 8px; gap:6px; font-size:10px; }
+}
+@media (max-width:390px) {
+  body.oa-lions-full .oa-footer-social-button { min-height:38px; padding:6px; gap:5px; font-size:9px; }
+  body.oa-lions-full .oa-footer-social-button small { font-size:7px; }
+}

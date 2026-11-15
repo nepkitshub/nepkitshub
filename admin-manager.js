@@ -1197,18 +1197,18 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     if(error){$('#oa-branch-loader').textContent=error.message;return;}
     const rows=data||[];
     function field(name,label,value,type='text'){return "<div class='oa-field'><label>"+esc(label)+"</label><input name='"+esc(name)+"' type='"+type+"' value='"+esc(value||'')+"'></div>";}
-    const formMarkup=row=>"<form class='oa-card oa-branch-form' data-id='"+esc(row.id)+"'><h2>"+esc(row.branch_name)+"</h2><p>Branch key: "+esc(row.slug)+"</p><div class='oa-grid'>"+
+    const formMarkup=row=>"<form class='oa-card oa-branch-form' data-id='"+esc(row.id)+"'><h2>"+esc(row.branch_name)+"</h2><p>Branch key: "+esc(row.slug)+"</p><div class='oa-social-admin-note'><b>Instagram & TikTok footer buttons</b><span>Paste each full public profile URL in the fields below and save this branch. Its footer buttons will open the saved profiles in a new tab.</span></div><div class='oa-grid'>"+
       field('branch_name','Branch name',row.branch_name)+field('address','Address',row.address)+field('phone','Phone number',row.phone,'tel')+
       field('whatsapp_number','WhatsApp number',row.whatsapp_number,'tel')+field('email','Email address',row.email,'email')+
-      field('facebook_url','Facebook URL',row.facebook_url,'url')+field('instagram_url','Instagram URL',row.instagram_url,'url')+
-      field('tiktok_url','TikTok URL',row.tiktok_url,'url')+field('maps_url','Google Maps pin link',row.maps_url,'url')+field('sort_order','Display order',row.sort_order,'number')+
+      field('facebook_url','Facebook URL',row.facebook_url,'url')+field('instagram_url','Instagram profile URL',row.instagram_url,'url')+
+      field('tiktok_url','TikTok profile URL',row.tiktok_url,'url')+field('maps_url','Google Maps pin link',row.maps_url,'url')+field('sort_order','Display order',row.sort_order,'number')+
       "</div><label class='oa-check'><input type='checkbox' name='is_active' "+(row.is_active?'checked':'')+"> Show on the public website</label><button class='oa-button'>Save branch details</button></form>";
-    view.innerHTML="<div class='oa-card'><h2>Branches & contact details</h2><p>Only active branches appear in the public branch selector. Saved details display in the Contact section and WhatsApp button.</p></div>"+
+    view.innerHTML="<div class='oa-card'><h2>Branches & contact details</h2><p>Only active branches appear publicly. Contact details display on the website, and each branch's Instagram and TikTok profile URLs control the matching buttons in the public footer.</p></div>"+
       rows.map(formMarkup).join('')+
       "<div class='oa-card'><h2>Add another branch</h2><form id='oa-add-branch'><div class='oa-grid'>"+
       field('branch_name','Branch name','New branch')+field('address','Address','City, District, Province')+field('phone','Phone number','','tel')+
       field('whatsapp_number','WhatsApp number','','tel')+field('email','Email address','','email')+field('facebook_url','Facebook URL','','url')+
-      field('instagram_url','Instagram URL','','url')+field('tiktok_url','TikTok URL','','url')+field('maps_url','Google Maps pin link','','url')+field('sort_order','Display order',rows.length+1,'number')+
+      field('instagram_url','Instagram profile URL','','url')+field('tiktok_url','TikTok profile URL','','url')+field('maps_url','Google Maps pin link','','url')+field('sort_order','Display order',rows.length+1,'number')+
       "</div><label class='oa-check'><input type='checkbox' name='is_active' checked> Show on the public website</label><button class='oa-button'>Add branch</button></form></div>";
     document.querySelectorAll('.oa-branch-form').forEach(form=>form.addEventListener('submit',async event=>{
       event.preventDefault();const f=new FormData(form);
