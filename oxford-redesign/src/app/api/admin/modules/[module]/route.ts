@@ -1,10 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { requireCmsPermission } from "@/lib/auth";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { adminModules } from "@/lib/admin-module-config";
 export const runtime="nodejs";
 type ModuleName=keyof typeof adminModules;
 type Row=Record<string,unknown>;
 type Context={params:Promise<{module:string}>};
+type AdminSupabaseClient = SupabaseClient;
 function asRows(value:unknown):Row[]{return Array.isArray(value)?value as Row[]:[];}
 function textValue(row:Row,key:string,max=5000):string{return typeof row[key]==="string"?(row[key] as string).trim().slice(0,max):"";}
 function boolValue(row:Row,key:string):boolean{return row[key]===true;}
@@ -12,7 +14,7 @@ function numberValue(row:Row,key:string):number{const n=Number(row[key]);return 
 function jsonValue(row:Row,key:string,fallback:unknown):unknown{const raw=row[key];if(typeof raw!=="string")return raw??fallback;try{const v:unknown=JSON.parse(raw);if(v&&typeof v==="object")return v;}catch{}throw new Error(`Field ${key} must contain valid JSON.`);}
 function recordBody(value:unknown):Row{return value&&typeof value==="object"&&!Array.isArray(value)?value as Row:{};}
 function idValue(value:unknown):string{return typeof value==="string"&&/^[0-9a-f-]{36}$/i.test(value)?value:"";}
-async function listRows(s:Awaited<ReturnType<typeof requireCmsPermission>> extends {ok:true;supabase:infer S}?S:never,module:ModuleName):Promise<{data:Row[];error:string|null}>{
+async function listRows(s:AdminSupabaseClient,module:ModuleName):Promise<{data:Row[];error:string|null}>{
  switch(module){
  case"content":{const r=await s.from("oa_cms_pages").select("id,slug,title,summary,status,published_at,updated_at").order("updated_at",{ascending:false}).limit(200);return{data:asRows(r.data),error:r.error?.message??null};}
  case"programs":{const r=await s.from("oa_cms_programs").select("*").order("sort_order").limit(200);return{data:asRows(r.data),error:r.error?.message??null};}
