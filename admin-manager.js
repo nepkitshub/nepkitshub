@@ -857,6 +857,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       "<div class='oa-field'><label>Official company name</label><input name='brand_en' value='OXFORD ACADEMIC INSTRUCTION PVT.LTD.' readonly aria-readonly='true'><small>The official company name is fixed across the website.</small></div>"+
 
       logoUploadField(map.logo_url?.value_en||'')+imageField('hero_image_url','Homepage hero background',map.hero_image_url?.value_en||'','branding')+
+      "<div class='oa-field full'><h3>Footer legal links</h3><p>Add the public URLs for your Privacy Policy and Terms &amp; Conditions. The links appear at the bottom-right of the website footer.</p></div>"+
+      field('privacy_policy_url','Privacy Policy URL',map.privacy_policy_url?.value_en||'','url')+
+      field('terms_and_conditions_url','Terms & Conditions URL',map.terms_and_conditions_url?.value_en||'','url')+
       "<div class='oa-field full'><label>Desktop logo size (company text stays the same): <strong id='oa-desktop-value'>"+desktop+" px</strong></label><input type='range' min='40' max='128' name='logo_size_desktop' id='oa-desktop-slider' value='"+desktop+"'></div>"+
       "<div class='oa-field full'><label>Mobile logo size (company text stays the same): <strong id='oa-mobile-value'>"+mobile+" px</strong></label><input type='range' min='34' max='84' name='logo_size_mobile' id='oa-mobile-slider' value='"+mobile+"'></div>"+
       "</div><div class='oa-actions'><button class='oa-button' type='submit'>Save branding</button></div></form></div>";
@@ -904,7 +907,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       {content_key:'logo_url',value_en:f.get('logo_url')||''},
       {content_key:'hero_image_url',value_en:f.get('hero_image_url')||''},
       {content_key:'logo_size_desktop',value_en:String(f.get('logo_size_desktop')||48)},
-      {content_key:'logo_size_mobile',value_en:String(f.get('logo_size_mobile')||42)}
+      {content_key:'logo_size_mobile',value_en:String(f.get('logo_size_mobile')||42)},
+      {content_key:'privacy_policy_url',value_en:safeUrl(f.get('privacy_policy_url')||'')},
+      {content_key:'terms_and_conditions_url',value_en:safeUrl(f.get('terms_and_conditions_url')||'')}
     ];const {error}=await db.from('oa_site_content').upsert(rows,{onConflict:'content_key'});if(error)showMessage(error.message);else{await applyBranding();window.dispatchEvent(new Event('oa-branding-updated'));showMessage('Logo, crop and display sizes saved. The official company name remains consistent across the website.');}});
   }
 
