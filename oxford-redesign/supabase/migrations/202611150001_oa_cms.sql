@@ -390,4 +390,17 @@ public.oa_cms_programs,public.oa_cms_program_levels,public.oa_cms_services,publi
 public.oa_cms_branches,public.oa_cms_news_categories,public.oa_cms_news_articles,public.oa_cms_events,
 public.oa_cms_gallery_images,public.oa_cms_testimonials,public.oa_cms_faqs,public.oa_cms_seo_metadata
 to anon,authenticated;
-grant select,insert,update,delete on all tables in schema public to authenticated;
+grant select,insert,update,delete on public.oa_cms_roles,public.oa_cms_permissions,public.oa_cms_role_permissions,
+public.oa_cms_staff,public.oa_cms_staff_role_assignments,public.oa_cms_pages,public.oa_cms_page_sections,
+public.oa_cms_navigation_items,public.oa_cms_programs,public.oa_cms_program_levels,public.oa_cms_services,
+public.oa_cms_examinations,public.oa_cms_branches,public.oa_cms_enquiries,public.oa_cms_enquiry_notes,
+public.oa_cms_enquiry_assignments,public.oa_cms_consultation_requests,public.oa_cms_news_categories,
+public.oa_cms_news_articles,public.oa_cms_events,public.oa_cms_gallery_images,public.oa_cms_testimonials,
+public.oa_cms_faqs,public.oa_cms_media_assets,public.oa_cms_site_settings,public.oa_cms_seo_metadata,
+public.oa_cms_activity_logs to authenticated;
+
+grant select on public.oa_cms_pages,public.oa_cms_page_sections,public.oa_cms_navigation_items,
+public.oa_cms_programs,public.oa_cms_program_levels,public.oa_cms_services,public.oa_cms_examinations,
+public.oa_cms_branches,public.oa_cms_news_categories,public.oa_cms_news_articles,public.oa_cms_events,
+public.oa_cms_gallery_images,public.oa_cms_testimonials,public.oa_cms_faqs,public.oa_cms_seo_metadata
+to anon;

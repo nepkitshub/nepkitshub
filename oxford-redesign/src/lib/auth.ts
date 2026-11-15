@@ -12,8 +12,8 @@ export async function requireCmsPermission(permission: string): Promise<CmsPermi
     return { ok: false, status: 503, reason: "The secure CMS database is not configured in this environment." };
   }
 
-  const { data: claims, error: claimsError } = await supabase.auth.getClaims();
-  const userId = typeof claims?.sub === "string" ? claims.sub : null;
+  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
+  const userId = typeof claimsData?.claims?.sub === "string" ? claimsData.claims.sub : null;
   if (claimsError || !userId) return { ok: false, status: 401, reason: "Please sign in to continue." };
 
   const { data: allowed, error } = await supabase.rpc("oa_cms_has_permission", { p_permission: permission });
