@@ -1203,7 +1203,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       field('facebook_url','Facebook URL',row.facebook_url,'url')+field('instagram_url','Instagram profile URL',row.instagram_url,'url')+
       field('tiktok_url','TikTok profile URL',row.tiktok_url,'url')+field('maps_url','Google Maps pin link',row.maps_url,'url')+field('sort_order','Display order',row.sort_order,'number')+
       "</div><label class='oa-check'><input type='checkbox' name='is_active' "+(row.is_active?'checked':'')+"> Show on the public website</label><button class='oa-button'>Save branch details</button></form>";
-    view.innerHTML="<div class='oa-card'><h2>Branches & contact details</h2><p>Only active branches appear in the public branch selector. Saved details display in the Contact section and WhatsApp button.</p></div>"+
+    view.innerHTML="<div class='oa-card'><h2>Branches & contact details</h2><p>Only active branches appear publicly. Contact details display on the website, and each branch's Instagram and TikTok profile URLs control the matching buttons in the public footer.</p></div>"+
       rows.map(formMarkup).join('')+
       "<div class='oa-card'><h2>Add another branch</h2><form id='oa-add-branch'><div class='oa-grid'>"+
       field('branch_name','Branch name','New branch')+field('address','Address','City, District, Province')+field('phone','Phone number','','tel')+
