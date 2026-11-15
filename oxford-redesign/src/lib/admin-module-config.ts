@@ -45,4 +45,10 @@ export const adminModules:Record<string,AdminModule>={
  {key:"setting_key",label:"Setting key",kind:"text",required:true},{key:"setting_value",label:"Setting value (JSON)",kind:"json",required:true}
  ]},
  activity:{title:"Activity Logs",description:"Read the record of staff actions for accountability.",readPermission:"logs.read",managePermission:null,fields:[],readOnly:true}
+ homepage:{title:"Homepage Manager",description:"Edit the hero, homepage sections and calls to action using structured JSON content. Do not add unsupported student statistics or claims.",readPermission:"settings.manage",managePermission:"settings.manage",fields:[
+  {key:"setting_value",label:"Homepage content (JSON)",kind:"json",required:true,help:"Use a JSON object with approved heading, summary, CTA and section text values."}
+ ]},
+ navigation:{title:"Navigation Manager",description:"Manage the links displayed in the primary website navigation.",readPermission:"content.read",managePermission:"content.manage",fields:[
+  {key:"label",label:"Navigation label",kind:"text",required:true},{key:"href",label:"Link destination",kind:"text",required:true,help:"Use an internal path such as /programs or a complete https URL."},{key:"parent_id",label:"Parent item ID (optional)",kind:"text"},{key:"sort_order",label:"Display order",kind:"number"},{key:"visible",label:"Visible in navigation",kind:"checkbox"}
+ ]}
 };

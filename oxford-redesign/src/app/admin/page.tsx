@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, BookOpen, Building2, ClipboardList, FileText, Image, MessageSquare, Settings, ShieldCheck, CalendarDays, HelpCircle, Newspaper, Search, Star, Users, ScrollText, Video } from "lucide-react";
+import { ArrowUpRight, BookOpen, Building2, ClipboardList, FileText, Image, MessageSquare, Settings, ShieldCheck, CalendarDays, HelpCircle, Newspaper, Search, Star, Users, ScrollText, Video, Home, Menu } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { requireCmsPermission } from "@/lib/auth";
 import { adminModules } from "@/lib/admin-module-config";
 export const metadata: Metadata = { title:"Administration", robots:{index:false,follow:false} };
-const moduleIcons:Record<string,LucideIcon>={content:FileText,programs:BookOpen,services:ClipboardList,examinations:BookOpen,branches:Building2,news:Newspaper,events:CalendarDays,gallery:Image,testimonials:Star,faqs:HelpCircle,consultations:MessageSquare,media:Image,seo:Search,staff:Users,settings:Settings,activity:ScrollText};
+const moduleIcons:Record<string,LucideIcon>={homepage:Home,navigation:Menu,content:FileText,programs:BookOpen,services:ClipboardList,examinations:BookOpen,branches:Building2,news:Newspaper,events:CalendarDays,gallery:Image,testimonials:Star,faqs:HelpCircle,consultations:MessageSquare,media:Image,seo:Search,staff:Users,settings:Settings,activity:ScrollText};
 export default async function AdminPage(){
  const access=await requireCmsPermission("dashboard.read");
  if(!access.ok) return <section className="admin-shell"><div className="admin-card"><span className="card-kicker">PRIVATE WORKSPACE</span><h1>Oxford administration</h1><p>{access.reason}</p><Link className="button button-red" href="/admin/login">Administrator sign in</Link></div></section>;

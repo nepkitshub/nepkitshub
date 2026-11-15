@@ -15,10 +15,10 @@ function jsonValue(row:Row,key:string,fallback:unknown):unknown{const raw=row[ke
 function recordBody(value:unknown):Row{return value&&typeof value==="object"&&!Array.isArray(value)?value as Row:{};}
 function idValue(value:unknown):string{return typeof value==="string"&&/^[0-9a-f-]{36}$/i.test(value)?value:"";}
 function safeUrl(value:unknown,max=1000):string{const raw=typeof value==="string"?value.trim().slice(0,max):"";if(!raw)return"";try{const url=new URL(raw);return url.protocol==="https:"||url.protocol==="http:"?url.toString():"";}catch{return"";}}
-function safeSlug(value:unknown):string{const raw=textValue({value},"value",120).toLowerCase();if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(raw))throw new Error("Use a simple URL slug with lowercase letters, numbers and hyphens.");return raw;}
+function safeNavigationHref(value:unknown):string{const raw=textValue({value},"value",1000);if(raw.startsWith("/")&&!raw.startsWith("//")&&!raw.includes("\\\\"))return raw;const parsed=safeUrl(raw);if(!parsed)throw new Error("Use an internal path or a valid HTTP(S) link.");return parsed;}\nfunction safeSlug(value:unknown):string{const raw=textValue({value},"value",120).toLowerCase();if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(raw))throw new Error("Use a simple URL slug with lowercase letters, numbers and hyphens.");return raw;}
 async function listRows(s:AdminSupabaseClient,module:ModuleName):Promise<{data:Row[];error:string|null}>{
  switch(module){
- case"content":{const r=await s.from("oa_cms_pages").select("id,slug,title,summary,status,published_at,updated_at").order("updated_at",{ascending:false}).limit(200);return{data:asRows(r.data),error:r.error?.message??null};}
+ case"homepage":{const r=await s.from("oa_cms_site_settings").select("*").eq("setting_key","homepage").limit(1);return{data:asRows(r.data),error:r.error?.message??null};}\n case"navigation":{const r=await s.from("oa_cms_navigation_items").select("*").order("sort_order").limit(200);return{data:asRows(r.data),error:r.error?.message??null};}\n case"content":{const r=await s.from("oa_cms_pages").select("id,slug,title,summary,status,published_at,updated_at").order("updated_at",{ascending:false}).limit(200);return{data:asRows(r.data),error:r.error?.message??null};}
  case"programs":{const r=await s.from("oa_cms_programs").select("*").order("sort_order").limit(200);return{data:asRows(r.data),error:r.error?.message??null};}
  case"services":{const r=await s.from("oa_cms_services").select("*").order("sort_order").limit(200);return{data:asRows(r.data),error:r.error?.message??null};}
  case"examinations":{const r=await s.from("oa_cms_examinations").select("*").order("sort_order").limit(200);return{data:asRows(r.data),error:r.error?.message??null};}
@@ -39,7 +39,7 @@ async function listRows(s:AdminSupabaseClient,module:ModuleName):Promise<{data:R
 }
 function sanitize(module:ModuleName,row:Row):Row{
  switch(module){
- case"content":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),summary:textValue(row,"summary",2000),status:textValue(row,"status",20)||"draft"};
+ case"homepage":return{setting_key:"homepage",setting_value:jsonValue(row,"setting_value",{})};\n case"navigation":{const parent=textValue(row,"parent_id",36);return{label:textValue(row,"label",100),href:safeNavigationHref(row.href),parent_id:parent||null,sort_order:numberValue(row,"sort_order"),visible:row.visible!==false};}\n case"content":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),summary:textValue(row,"summary",2000),status:textValue(row,"status",20)||"draft"};
  case"programs":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),category:textValue(row,"category",20)==="Korean"?"Korean":"Japanese",level_label:textValue(row,"level_label",100)||"Language programme",summary:textValue(row,"summary",2000),overview:textValue(row,"overview",5000),topics:jsonValue(row,"topics",[]),image_url:safeUrl(row.image_url),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
  case"services":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),category:textValue(row,"category",100),summary:textValue(row,"summary",2000),body:textValue(row,"body",8000),highlights:jsonValue(row,"highlights",[]),steps:jsonValue(row,"steps",[]),disclaimer:textValue(row,"disclaimer",4000),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
  case"examinations":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),full_name:textValue(row,"full_name",180),summary:textValue(row,"summary",2000),preparation_topics:jsonValue(row,"preparation_topics",[]),official_note:textValue(row,"official_note",4000),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
@@ -58,9 +58,9 @@ function sanitize(module:ModuleName,row:Row):Row{
 async function writeRow(s:AdminSupabaseClient,module:ModuleName,record:Row,id:string){
  const value=sanitize(module,record);
  if(module==="consultations"){const q=id?s.from("oa_cms_consultation_requests").update(value).eq("id",id):s.from("oa_cms_consultation_requests").insert(value);const r=await q;return r.error?.message??null;}
- if(module==="settings"){const r=await s.from("oa_cms_site_settings").upsert(value);return r.error?.message??null;}
+ if(module==="settings"||module==="homepage"){const r=await s.from("oa_cms_site_settings").upsert(value);return r.error?.message??null;}
  switch(module){
- case"content":{const q=id?s.from("oa_cms_pages").update(value).eq("id",id):s.from("oa_cms_pages").insert(value);const r=await q;return r.error?.message??null;}
+ case"navigation":{const q=id?s.from("oa_cms_navigation_items").update(value).eq("id",id):s.from("oa_cms_navigation_items").insert(value);const r=await q;return r.error?.message??null;}\n case"content":{const q=id?s.from("oa_cms_pages").update(value).eq("id",id):s.from("oa_cms_pages").insert(value);const r=await q;return r.error?.message??null;}
  case"programs":{const q=id?s.from("oa_cms_programs").update(value).eq("id",id):s.from("oa_cms_programs").insert(value);const r=await q;return r.error?.message??null;}
  case"services":{const q=id?s.from("oa_cms_services").update(value).eq("id",id):s.from("oa_cms_services").insert(value);const r=await q;return r.error?.message??null;}
  case"examinations":{const q=id?s.from("oa_cms_examinations").update(value).eq("id",id):s.from("oa_cms_examinations").insert(value);const r=await q;return r.error?.message??null;}
@@ -76,7 +76,7 @@ async function writeRow(s:AdminSupabaseClient,module:ModuleName,record:Row,id:st
 }
 async function deleteRow(s:AdminSupabaseClient,module:ModuleName,id:string){
  switch(module){
- case"content":return(await s.from("oa_cms_pages").delete().eq("id",id)).error?.message??null;
+ case"navigation":return(await s.from("oa_cms_navigation_items").delete().eq("id",id)).error?.message??null;\n case"content":return(await s.from("oa_cms_pages").delete().eq("id",id)).error?.message??null;
  case"programs":return(await s.from("oa_cms_programs").delete().eq("id",id)).error?.message??null;
  case"services":return(await s.from("oa_cms_services").delete().eq("id",id)).error?.message??null;
  case"examinations":return(await s.from("oa_cms_examinations").delete().eq("id",id)).error?.message??null;
