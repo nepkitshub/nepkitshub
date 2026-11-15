@@ -420,3 +420,6 @@ with check (
   and char_length(btrim(quote)) between 10 and 4000
   and char_length(course_name)<=150
 );
+
+-- Public read is limited to non-sensitive brand and public company settings.
+grant select on public.oa_cms_site_settings to anon;

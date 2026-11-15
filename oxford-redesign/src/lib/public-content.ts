@@ -16,3 +16,41 @@ export async function getPublicNews():Promise<Notice[]>{const db=await clientOrN
 export async function getPublicGallery():Promise<GalleryImage[]>{const db=await clientOrNull();if(!db)return fallbackGallery.map(x=>({title:x.title,caption:x.caption,image:x.image,altText:x.title,category:"Academy"}));const{data,error}=await db.from("oa_cms_gallery_images").select("*").eq("status","published").order("sort_order").limit(200);if(error||!data?.length)return fallbackGallery.map(x=>({title:x.title,caption:x.caption,image:x.image,altText:x.title,category:"Academy"}));return data.map(row=>({title:row.title,caption:row.caption||"",image:row.image_url,altText:row.alt_text||row.title,category:row.category||"Academy"}));}
 export async function getPublicFaqs():Promise<FaqCategory[]>{const db=await clientOrNull();if(!db)return fallbackFaqs;const{data,error}=await db.from("oa_cms_faqs").select("*").eq("status","published").order("category").order("sort_order");if(error||!data?.length)return fallbackFaqs;const grouped=new Map<string,{q:string;a:string}[]>();for(const row of data){const items=grouped.get(row.category)||[];items.push({q:row.question,a:row.answer});grouped.set(row.category,items);}return [...grouped.entries()].map(([category,items])=>({category,items}));}
 export async function getPublicTestimonials():Promise<Testimonial[]>{const db=await clientOrNull();if(!db)return [];const{data,error}=await db.from("oa_cms_testimonials").select("id,student_name,course_name,quote,photo_url").eq("status","approved").eq("permission_confirmed",true).order("created_at",{ascending:false});if(error||!data?.length)return [];return data.map(row=>({id:row.id,studentName:row.student_name,courseName:row.course_name||"",quote:row.quote,photoUrl:row.photo_url||"",location:""}));}
+
+export type PublicSiteSettings = { logoUrl: string; brandName: string; legalName: string; tagline: string };
+const defaultSiteSettings: PublicSiteSettings = {
+  logoUrl: "https://gsfhhvkipvoutqqgyick.supabase.co/storage/v1/object/public/oa-academy-media/branding/1794111699180-WhatsApp-Image-2026-11-08-at-9.03.23-AM.jpeg",
+  brandName: "OXFORD", legalName: "ACADEMIC INSTRUCTION PVT. LTD.", tagline: "Learn. Prepare. Progress."
+};
+function settingObject(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
+}
+function settingString(objects: Record<string, unknown>[], keys: string[], fallback: string): string {
+  for (const object of objects) for (const key of keys) {
+    const value = object[key];
+    if (typeof value === "string" && value.trim()) return value.trim();
+  }
+  return fallback;
+}
+function safePublicUrl(value: string, fallback: string): string {
+  try { const url = new URL(value); return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : fallback; }
+  catch { return fallback; }
+}
+export async function getPublicSiteSettings(): Promise<PublicSiteSettings> {
+  const db = await clientOrNull();
+  if (!db) return defaultSiteSettings;
+  const { data, error } = await db.from("oa_cms_site_settings")
+    .select("setting_key,setting_value").in("setting_key", ["branding","company","site"]);
+  if (error || !data?.length) return defaultSiteSettings;
+  const settings = new Map(data.map(row => [row.setting_key, settingObject(row.setting_value)]));
+  const branding = settings.get("branding") ?? {};
+  const companySettings = settings.get("company") ?? {};
+  const site = settings.get("site") ?? {};
+  const logo = settingString([branding], ["logo_url","logoUrl"], defaultSiteSettings.logoUrl);
+  return {
+    logoUrl: safePublicUrl(logo, defaultSiteSettings.logoUrl),
+    brandName: settingString([branding,companySettings,site], ["brand_name","brandName","short_name","shortName"], defaultSiteSettings.brandName),
+    legalName: settingString([companySettings,branding,site], ["legal_name","legalName","company_name","companyName"], defaultSiteSettings.legalName),
+    tagline: settingString([branding,site], ["tagline","short_description"], defaultSiteSettings.tagline)
+  };
+}
