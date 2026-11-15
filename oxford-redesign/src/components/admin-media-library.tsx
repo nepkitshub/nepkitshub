@@ -1,0 +1,180 @@
+"use client";
+
+import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { Copy, ImagePlus, RefreshCw, Trash2, UploadCloud, Crop, X, Check } from "lucide-react";
+
+type MediaFile = {
+  id:string; storage_path:string; original_name:string; mime_type:string; byte_size:number;
+  title:string; alt_text:string; created_at:string; publicUrl:string;
+};
+
+export function AdminMediaLibrary() {
+  const router=useRouter();
+  const [files,setFiles]=useState<MediaFile[]>([]);
+  const [loading,setLoading]=useState(true);
+  const [busy,setBusy]=useState(false);
+  const [error,setError]=useState("");
+  const [message,setMessage]=useState("");
+  const [query,setQuery]=useState("");
+  const [title,setTitle]=useState("");
+  const [altText,setAltText]=useState("");
+  const [file,setFile]=useState<File|null>(null);
+  const [logoTarget,setLogoTarget]=useState<MediaFile|null>(null);
+  const [zoom,setZoom]=useState(1);
+  const [offsetX,setOffsetX]=useState(50);
+  const [offsetY,setOffsetY]=useState(50);
+  const [savingLogo,setSavingLogo]=useState(false);
+
+  const load=useCallback(async()=>{
+    try {
+      const response=await fetch("/api/admin/media",{cache:"no-store"});
+      const body=await response.json();
+      if(!response.ok)throw new Error(body.error??"Unable to load media.");
+      setFiles(body.files??[]);
+    } catch(e) {
+      setError(e instanceof Error?e.message:"Unable to load media.");
+    } finally {
+      setLoading(false);
+    }
+  },[]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- load updates state only after its async request resolves.
+  useEffect(()=>{void load();},[load]);
+
+  async function upload(event:FormEvent<HTMLFormElement>) {
+    const formElement=event.currentTarget;
+    event.preventDefault();
+    if(!file)return;
+    setBusy(true);setError("");setMessage("");
+    try {
+      const form=new FormData();
+      form.set("file",file);form.set("title",title);form.set("altText",altText);
+      const response=await fetch("/api/admin/media",{method:"POST",body:form});
+      const body=await response.json();
+      if(!response.ok)throw new Error(body.error??"Upload failed.");
+      setMessage("Image uploaded to the Oxford media library.");
+      setFile(null);setTitle("");setAltText("");
+      const input=formElement.querySelector<HTMLInputElement>('input[type="file"]');
+      if(input)input.value="";
+      await load();
+    } catch(e) {
+      setError(e instanceof Error?e.message:"Upload failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function remove(item:MediaFile) {
+    if(!window.confirm(`Delete “${item.title}” from the media library? Check first that it is not being used on a published page or as the logo.`))return;
+    setBusy(true);setError("");setMessage("");
+    try {
+      const response=await fetch(`/api/admin/media?id=${encodeURIComponent(item.id)}`,{method:"DELETE"});
+      const body=await response.json();
+      if(!response.ok)throw new Error(body.error??"Could not delete this image.");
+      setFiles(prev=>prev.filter(x=>x.id!==item.id));setMessage("Image removed.");
+    } catch(e) {
+      setError(e instanceof Error?e.message:"Could not delete this image.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function copy(url:string) {
+    try {
+      await navigator.clipboard.writeText(url);setMessage("Public image URL copied.");
+    } catch {
+      setError("Clipboard access was blocked by your browser. Copy the URL from its field instead.");
+    }
+  }
+
+  function openLogoCrop(item:MediaFile) {
+    setLogoTarget(item);setZoom(1);setOffsetX(50);setOffsetY(50);setError("");setMessage("");
+  }
+
+  async function saveLogo() {
+    if(!logoTarget)return;
+    setSavingLogo(true);setError("");setMessage("");
+    try {
+      const image=new Image();
+      image.crossOrigin="anonymous";
+      image.src=logoTarget.publicUrl;
+      await image.decode();
+      const size=512;
+      const scale=Math.max(size/image.naturalWidth,size/image.naturalHeight)*zoom;
+      const drawWidth=image.naturalWidth*scale;
+      const drawHeight=image.naturalHeight*scale;
+      const left=-(drawWidth-size)*(offsetX/100);
+      const top=-(drawHeight-size)*(offsetY/100);
+      const canvas=document.createElement("canvas");
+      canvas.width=size;canvas.height=size;
+      const context=canvas.getContext("2d");
+      if(!context)throw new Error("Your browser could not prepare the cropped logo.");
+      context.fillStyle="#ffffff";context.fillRect(0,0,size,size);
+      context.drawImage(image,left,top,drawWidth,drawHeight);
+      const blob=await new Promise<Blob>((resolve,reject)=>{
+        canvas.toBlob(value=>value?resolve(value):reject(new Error("The cropped logo could not be exported.")),"image/webp",0.92);
+      });
+      const form=new FormData();
+      form.set("file",blob,"oxford-logo.webp");
+      form.set("title","Oxford Academy logo");
+      form.set("altText","Oxford Academic Instruction logo");
+      const response=await fetch("/api/admin/branding/logo",{method:"POST",body:form});
+      const body=await response.json();
+      if(!response.ok)throw new Error(body.error??"Could not update the website logo.");
+      setMessage("Website logo updated. The public header and footer will use the new crop.");
+      setLogoTarget(null);
+      await load();
+      router.refresh();
+    } catch(e) {
+      setError(e instanceof Error?e.message:"Could not update the website logo.");
+    } finally {
+      setSavingLogo(false);
+    }
+  }
+
+  const visible=files.filter(item=>[item.title,item.original_name,item.alt_text].some(value=>value.toLowerCase().includes(query.toLowerCase())));
+
+  return <section className="media-library">
+    <div className="module-toolbar">
+      <div><span className="card-kicker">IMAGE STORAGE</span><h2>Media Library</h2><p>JPG, PNG and WebP images up to 5 MB. Uploaded images use the academy media bucket.</p></div>
+      <button className="button button-outline-dark" type="button" onClick={()=>void load()}><RefreshCw size={15}/> Refresh</button>
+    </div>
+    {error?<div className="form-status" role="alert">{error}</div>:null}
+    {message?<div className="form-success" role="status">{message}</div>:null}
+    <form className="media-upload-form" onSubmit={upload}>
+      <div className="media-upload-heading"><ImagePlus size={22}/><div><strong>Upload an image</strong><p>Choose an image, add an accessible description and upload it.</p></div></div>
+      <label className="form-field"><span>Image file *</span><input type="file" accept="image/jpeg,image/png,image/webp" required onChange={e=>setFile(e.target.files?.[0]??null)}/><small>Maximum size 5 MB. Only JPG, PNG and WebP.</small></label>
+      <div className="module-fields">
+        <label className="form-field"><span>Image title</span><input value={title} maxLength={180} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Oxford Academy front building"/></label>
+        <label className="form-field"><span>Alternative text</span><input value={altText} maxLength={300} onChange={e=>setAltText(e.target.value)} placeholder="Describe the meaningful content of the image"/></label>
+      </div>
+      <button className="button button-red" type="submit" disabled={!file||busy}>{busy?<RefreshCw size={15}/>:<UploadCloud size={15}/>} {busy?"Uploading…":"Upload to library"}</button>
+    </form>
+    <div className="media-list-toolbar"><h3>Stored images <span>{files.length}</span></h3><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search title, filename or alt text" aria-label="Search media library"/></div>
+    {loading?<div className="disabled-note">Loading media records…</div>:visible.length===0?<div className="disabled-note">{files.length?"No images match your search.":"No images have been uploaded yet."}</div>:<div className="media-grid">{visible.map(item=><article className="media-card" key={item.id}>
+      <div className="media-preview"><img src={item.publicUrl} alt={item.alt_text||item.title}/></div>
+      <div className="media-card-body">
+        <strong>{item.title}</strong><small>{item.original_name} · {Math.max(1,Math.round(item.byte_size/1024))} KB</small>
+        {item.alt_text?<p>{item.alt_text}</p>:<p className="media-missing-alt">Alternative text not provided.</p>}
+        <input className="media-url" readOnly value={item.publicUrl} onFocus={e=>e.currentTarget.select()} aria-label={`Public URL for ${item.title}`}/>
+        <div className="media-actions">
+          <button type="button" className="button button-outline-dark" onClick={()=>void copy(item.publicUrl)}><Copy size={14}/> Copy URL</button>
+          <button type="button" className="button button-outline-dark" onClick={()=>openLogoCrop(item)}><Crop size={14}/> Crop as logo</button>
+          <button type="button" className="button button-outline-dark" disabled={busy} onClick={()=>void remove(item)}><Trash2 size={14}/> Delete</button>
+        </div>
+      </div>
+    </article>)}</div>}
+    {logoTarget?<div className="logo-crop-backdrop" role="presentation" onMouseDown={event=>{if(event.target===event.currentTarget&&!savingLogo)setLogoTarget(null);}}>
+      <section className="logo-crop-dialog" role="dialog" aria-modal="true" aria-labelledby="logo-crop-title">
+        <div className="logo-crop-header"><div><span className="card-kicker">BRANDING</span><h2 id="logo-crop-title">Crop website logo</h2><p>Adjust the image inside a square crop. The source file remains unchanged.</p></div><button type="button" className="logo-crop-close" aria-label="Close crop dialog" disabled={savingLogo} onClick={()=>setLogoTarget(null)}><X size={19}/></button></div>
+        <div className="logo-crop-preview"><img src={logoTarget.publicUrl} alt="Logo crop preview" style={{objectPosition:`${offsetX}% ${offsetY}%`,transform:`scale(${zoom})`,transformOrigin:`${offsetX}% ${offsetY}%`}}/></div>
+        <div className="logo-crop-controls">
+          <label><span>Zoom <b>{zoom.toFixed(2)}×</b></span><input type="range" min="1" max="3" step="0.05" value={zoom} onChange={e=>setZoom(Number(e.target.value))}/></label>
+          <label><span>Horizontal position <b>{offsetX}%</b></span><input type="range" min="0" max="100" step="1" value={offsetX} onChange={e=>setOffsetX(Number(e.target.value))}/></label>
+          <label><span>Vertical position <b>{offsetY}%</b></span><input type="range" min="0" max="100" step="1" value={offsetY} onChange={e=>setOffsetY(Number(e.target.value))}/></label>
+        </div>
+        <div className="logo-crop-actions"><button type="button" className="button button-outline-dark" disabled={savingLogo} onClick={()=>setLogoTarget(null)}>Cancel</button><button type="button" className="button button-red" disabled={savingLogo} onClick={()=>void saveLogo()}>{savingLogo?<RefreshCw size={15}/>:<Check size={15}/>} {savingLogo?"Saving logo…":"Save as website logo"}</button></div>
+      </section>
+    </div>:null}
+  </section>;
+}
