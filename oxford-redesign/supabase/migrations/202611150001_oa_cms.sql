@@ -129,8 +129,10 @@ create table if not exists public.oa_cms_navigation_items (
 );
 create table if not exists public.oa_cms_programs (
   id uuid primary key default gen_random_uuid(), slug text not null unique,
-  title text not null, summary text not null default '', overview text not null default '',
-  image_url text not null default '', status text not null default 'draft' check(status in ('draft','published','archived')),
+  title text not null, category text not null default 'Japanese' check(category in ('Japanese','Korean')),
+  level_label text not null default 'Language programme', summary text not null default '', overview text not null default '',
+  topics jsonb not null default '[]'::jsonb, image_url text not null default '',
+  status text not null default 'draft' check(status in ('draft','published','archived')),
   sort_order integer not null default 0, created_at timestamptz not null default now(), updated_at timestamptz not null default now()
 );
 create table if not exists public.oa_cms_program_levels (

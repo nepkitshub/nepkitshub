@@ -40,7 +40,7 @@ async function listRows(s:AdminSupabaseClient,module:ModuleName):Promise<{data:R
 function sanitize(module:ModuleName,row:Row):Row{
  switch(module){
  case"content":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),summary:textValue(row,"summary",2000),status:textValue(row,"status",20)||"draft"};
- case"programs":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),summary:textValue(row,"summary",2000),overview:textValue(row,"overview",5000),image_url:safeUrl(row.image_url),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
+ case"programs":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),category:textValue(row,"category",20)==="Korean"?"Korean":"Japanese",level_label:textValue(row,"level_label",100)||"Language programme",summary:textValue(row,"summary",2000),overview:textValue(row,"overview",5000),topics:jsonValue(row,"topics",[]),image_url:safeUrl(row.image_url),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
  case"services":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),category:textValue(row,"category",100),summary:textValue(row,"summary",2000),body:textValue(row,"body",8000),highlights:jsonValue(row,"highlights",[]),steps:jsonValue(row,"steps",[]),disclaimer:textValue(row,"disclaimer",4000),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
  case"examinations":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),full_name:textValue(row,"full_name",180),summary:textValue(row,"summary",2000),preparation_topics:jsonValue(row,"preparation_topics",[]),official_note:textValue(row,"official_note",4000),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
  case"branches":return{slug:textValue(row,"slug",80),name:textValue(row,"name",140),address:textValue(row,"address",500),phone:textValue(row,"phone",50),whatsapp:textValue(row,"whatsapp",50),email:textValue(row,"email",254),facebook_url:safeUrl(row.facebook_url),instagram_url:safeUrl(row.instagram_url),tiktok_url:safeUrl(row.tiktok_url),maps_url:safeUrl(row.maps_url),active:boolValue(row,"active"),sort_order:numberValue(row,"sort_order")};
@@ -57,7 +57,7 @@ function sanitize(module:ModuleName,row:Row):Row{
 }
 async function writeRow(s:AdminSupabaseClient,module:ModuleName,record:Row,id:string){
  const value=sanitize(module,record);
- if(module==="consultations"){const r=await s.from("oa_cms_consultation_requests").update(value).eq("id",id);return r.error?.message??null;}
+ if(module==="consultations"){const q=id?s.from("oa_cms_consultation_requests").update(value).eq("id",id):s.from("oa_cms_consultation_requests").insert(value);const r=await q;return r.error?.message??null;}
  if(module==="settings"){const r=await s.from("oa_cms_site_settings").upsert(value);return r.error?.message??null;}
  switch(module){
  case"content":{const q=id?s.from("oa_cms_pages").update(value).eq("id",id):s.from("oa_cms_pages").insert(value);const r=await q;return r.error?.message??null;}

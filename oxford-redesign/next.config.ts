@@ -17,7 +17,6 @@ const config: NextConfig = {
  {source:"/all",has:[{type:"query",key:"type",value:"notices"}],destination:"/news",permanent:true},
  {source:"/all",has:[{type:"query",key:"type",value:"gallery"}],destination:"/gallery",permanent:true},
  {source:"/all",has:[{type:"query",key:"type",value:"team"}],destination:"/team",permanent:true},
- {source:"/admin",destination:"/admin/login",permanent:false}
  ];}
 };
 export default config;
