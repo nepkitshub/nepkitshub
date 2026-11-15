@@ -376,7 +376,6 @@ create policy oa_cms_faqs_public on public.oa_cms_faqs for select to anon,authen
 create policy oa_cms_faqs_manage on public.oa_cms_faqs for all to authenticated using(private.oa_cms_has_permission('faqs.manage')) with check(private.oa_cms_has_permission('faqs.manage'));
 create policy oa_cms_media_manage on public.oa_cms_media_assets for all to authenticated using(private.oa_cms_has_permission('media.manage')) with check(private.oa_cms_has_permission('media.manage'));
 create policy oa_cms_settings_read on public.oa_cms_site_settings for select to authenticated using(private.oa_cms_has_permission('settings.manage'));
-create policy oa_cms_settings_public_read on public.oa_cms_site_settings for select to anon,authenticated using(setting_key in ('branding','company','site'));
 create policy oa_cms_settings_public_read on public.oa_cms_site_settings for select to anon,authenticated using(setting_key in ('branding','company','site','homepage'));
 create policy oa_cms_settings_manage on public.oa_cms_site_settings for all to authenticated using(private.oa_cms_has_permission('settings.manage')) with check(private.oa_cms_has_permission('settings.manage'));
 create policy oa_cms_seo_public_read on public.oa_cms_seo_metadata for select to anon,authenticated using(no_index=false);

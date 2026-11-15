@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { getPublicSiteSettings } from "@/lib/public-content";
+import { getPublicNavigationItems, getPublicSiteSettings } from "@/lib/public-content";
 import "./globals.css";
 export const metadata:Metadata={
  title:{default:"Oxford Academic Instruction Pvt. Ltd. | Learn. Prepare. Progress.",template:"%s | Oxford Academic Instruction"},
@@ -10,6 +10,6 @@ export const metadata:Metadata={
  robots:{index:true,follow:true}
 };
 export default async function RootLayout({children}:{children:React.ReactNode}){
- const settings=await getPublicSiteSettings();
- return <html lang="en"><body><SiteHeader settings={settings}/><main>{children}</main><SiteFooter settings={settings}/></body></html>;
+ const [settings,navigation]=await Promise.all([getPublicSiteSettings(),getPublicNavigationItems()]);
+ return <html lang="en"><body><SiteHeader settings={settings} navigation={navigation}/><main>{children}</main><SiteFooter settings={settings}/></body></html>;
 }
