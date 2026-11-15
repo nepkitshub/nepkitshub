@@ -543,6 +543,12 @@ with check (
 );
 
 
+-- The existing public media bucket is recreated in the isolated development database if absent.
+insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types)
+values ('oa-academy-media','oa-academy-media',true,5242880,array['image/jpeg','image/png','image/webp'])
+on conflict (id) do update
+set public=true,file_size_limit=5242880,allowed_mime_types=array['image/jpeg','image/png','image/webp'];
+
 -- Storage writes for the new CMS are limited to staff with the media.manage permission.
 -- The bucket remains public-read; no anonymous upload, update or delete access is granted.
 create policy oa_cms_storage_insert
