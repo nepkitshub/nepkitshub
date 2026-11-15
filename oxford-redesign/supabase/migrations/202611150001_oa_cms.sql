@@ -376,6 +376,7 @@ create policy oa_cms_faqs_public on public.oa_cms_faqs for select to anon,authen
 create policy oa_cms_faqs_manage on public.oa_cms_faqs for all to authenticated using(private.oa_cms_has_permission('faqs.manage')) with check(private.oa_cms_has_permission('faqs.manage'));
 create policy oa_cms_media_manage on public.oa_cms_media_assets for all to authenticated using(private.oa_cms_has_permission('media.manage')) with check(private.oa_cms_has_permission('media.manage'));
 create policy oa_cms_settings_read on public.oa_cms_site_settings for select to authenticated using(private.oa_cms_has_permission('settings.manage'));
+create policy oa_cms_settings_public_read on public.oa_cms_site_settings for select to anon,authenticated using(setting_key in ('branding','company','site'));
 create policy oa_cms_settings_public_read on public.oa_cms_site_settings for select to anon,authenticated using(setting_key in ('branding','company','site','homepage'));
 create policy oa_cms_settings_manage on public.oa_cms_site_settings for all to authenticated using(private.oa_cms_has_permission('settings.manage')) with check(private.oa_cms_has_permission('settings.manage'));
 create policy oa_cms_seo_public_read on public.oa_cms_seo_metadata for select to anon,authenticated using(no_index=false);
@@ -405,7 +406,7 @@ public.oa_cms_activity_logs to authenticated;
 grant select on public.oa_cms_pages,public.oa_cms_page_sections,public.oa_cms_navigation_items,
 public.oa_cms_programs,public.oa_cms_program_levels,public.oa_cms_services,public.oa_cms_examinations,
 public.oa_cms_branches,public.oa_cms_news_categories,public.oa_cms_news_articles,public.oa_cms_events,
-public.oa_cms_gallery_images,public.oa_cms_testimonials,public.oa_cms_faqs,public.oa_cms_seo_metadata
+public.oa_cms_gallery_images,public.oa_cms_testimonials,public.oa_cms_faqs,public.oa_cms_seo_metadata,public.oa_cms_site_settings
 to anon;
 
 
