@@ -14,6 +14,8 @@ function numberValue(row:Row,key:string):number{const n=Number(row[key]);return 
 function jsonValue(row:Row,key:string,fallback:unknown):unknown{const raw=row[key];if(typeof raw!=="string")return raw??fallback;try{const v:unknown=JSON.parse(raw);if(v&&typeof v==="object")return v;}catch{}throw new Error(`Field ${key} must contain valid JSON.`);}
 function recordBody(value:unknown):Row{return value&&typeof value==="object"&&!Array.isArray(value)?value as Row:{};}
 function idValue(value:unknown):string{return typeof value==="string"&&/^[0-9a-f-]{36}$/i.test(value)?value:"";}
+function safeUrl(value:unknown,max=1000):string{const raw=typeof value==="string"?value.trim().slice(0,max):"";if(!raw)return"";try{const url=new URL(raw);return url.protocol==="https:"||url.protocol==="http:"?url.toString():"";}catch{return"";}}
+function safeSlug(value:unknown):string{const raw=textValue({value},"value",120).toLowerCase();if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(raw))throw new Error("Use a simple URL slug with lowercase letters, numbers and hyphens.");return raw;}
 async function listRows(s:AdminSupabaseClient,module:ModuleName):Promise<{data:Row[];error:string|null}>{
  switch(module){
  case"content":{const r=await s.from("oa_cms_pages").select("id,slug,title,summary,status,published_at,updated_at").order("updated_at",{ascending:false}).limit(200);return{data:asRows(r.data),error:r.error?.message??null};}
@@ -37,18 +39,18 @@ async function listRows(s:AdminSupabaseClient,module:ModuleName):Promise<{data:R
 }
 function sanitize(module:ModuleName,row:Row):Row{
  switch(module){
- case"content":return{slug:textValue(row,"slug",120),title:textValue(row,"title",180),summary:textValue(row,"summary",2000),status:textValue(row,"status",20)||"draft"};
- case"programs":return{slug:textValue(row,"slug",120),title:textValue(row,"title",180),summary:textValue(row,"summary",2000),overview:textValue(row,"overview",5000),image_url:textValue(row,"image_url",1000),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
- case"services":return{slug:textValue(row,"slug",120),title:textValue(row,"title",180),category:textValue(row,"category",100),summary:textValue(row,"summary",2000),body:textValue(row,"body",8000),highlights:jsonValue(row,"highlights",[]),steps:jsonValue(row,"steps",[]),disclaimer:textValue(row,"disclaimer",4000),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
- case"examinations":return{slug:textValue(row,"slug",120),title:textValue(row,"title",180),full_name:textValue(row,"full_name",180),summary:textValue(row,"summary",2000),preparation_topics:jsonValue(row,"preparation_topics",[]),official_note:textValue(row,"official_note",4000),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
- case"branches":return{slug:textValue(row,"slug",80),name:textValue(row,"name",140),address:textValue(row,"address",500),phone:textValue(row,"phone",50),whatsapp:textValue(row,"whatsapp",50),email:textValue(row,"email",254),facebook_url:textValue(row,"facebook_url",1000),instagram_url:textValue(row,"instagram_url",1000),tiktok_url:textValue(row,"tiktok_url",1000),maps_url:textValue(row,"maps_url",1000),active:boolValue(row,"active"),sort_order:numberValue(row,"sort_order")};
- case"news":return{slug:textValue(row,"slug",120),title:textValue(row,"title",180),summary:textValue(row,"summary",2000),body:textValue(row,"body",12000),cover_image_url:textValue(row,"cover_image_url",1000),status:textValue(row,"status",20)||"draft",published_at:textValue(row,"published_at",60)||null};
- case"events":return{slug:textValue(row,"slug",120),title:textValue(row,"title",180),summary:textValue(row,"summary",2000),body:textValue(row,"body",10000),starts_at:textValue(row,"starts_at",60)||null,ends_at:textValue(row,"ends_at",60)||null,venue:textValue(row,"venue",300),cover_image_url:textValue(row,"cover_image_url",1000),status:textValue(row,"status",20)||"draft"};
- case"gallery":return{title:textValue(row,"title",180),caption:textValue(row,"caption",2000),image_url:textValue(row,"image_url",1000),alt_text:textValue(row,"alt_text",300),category:textValue(row,"category",100),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
- case"testimonials":return{student_name:textValue(row,"student_name",120),course_name:textValue(row,"course_name",150),quote:textValue(row,"quote",4000),photo_url:textValue(row,"photo_url",1000),permission_confirmed:boolValue(row,"permission_confirmed"),status:textValue(row,"status",20)||"pending"};
+ case"content":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),summary:textValue(row,"summary",2000),status:textValue(row,"status",20)||"draft"};
+ case"programs":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),summary:textValue(row,"summary",2000),overview:textValue(row,"overview",5000),image_url:safeUrl(row.image_url),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
+ case"services":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),category:textValue(row,"category",100),summary:textValue(row,"summary",2000),body:textValue(row,"body",8000),highlights:jsonValue(row,"highlights",[]),steps:jsonValue(row,"steps",[]),disclaimer:textValue(row,"disclaimer",4000),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
+ case"examinations":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),full_name:textValue(row,"full_name",180),summary:textValue(row,"summary",2000),preparation_topics:jsonValue(row,"preparation_topics",[]),official_note:textValue(row,"official_note",4000),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
+ case"branches":return{slug:textValue(row,"slug",80),name:textValue(row,"name",140),address:textValue(row,"address",500),phone:textValue(row,"phone",50),whatsapp:textValue(row,"whatsapp",50),email:textValue(row,"email",254),facebook_url:safeUrl(row.facebook_url),instagram_url:safeUrl(row.instagram_url),tiktok_url:safeUrl(row.tiktok_url),maps_url:safeUrl(row.maps_url),active:boolValue(row,"active"),sort_order:numberValue(row,"sort_order")};
+ case"news":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),summary:textValue(row,"summary",2000),body:textValue(row,"body",12000),cover_image_url:safeUrl(row.cover_image_url),status:textValue(row,"status",20)||"draft",published_at:textValue(row,"published_at",60)||null};
+ case"events":return{slug:safeSlug(row.slug),title:textValue(row,"title",180),summary:textValue(row,"summary",2000),body:textValue(row,"body",10000),starts_at:textValue(row,"starts_at",60)||null,ends_at:textValue(row,"ends_at",60)||null,venue:textValue(row,"venue",300),cover_image_url:safeUrl(row.cover_image_url),status:textValue(row,"status",20)||"draft"};
+ case"gallery":return{title:textValue(row,"title",180),caption:textValue(row,"caption",2000),image_url:safeUrl(row.image_url),alt_text:textValue(row,"alt_text",300),category:textValue(row,"category",100),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
+ case"testimonials":return{student_name:textValue(row,"student_name",120),course_name:textValue(row,"course_name",150),quote:textValue(row,"quote",4000),photo_url:safeUrl(row.photo_url),permission_confirmed:boolValue(row,"permission_confirmed"),status:textValue(row,"status",20)||"pending"};
  case"faqs":return{category:textValue(row,"category",100),question:textValue(row,"question",500),answer:textValue(row,"answer",5000),status:textValue(row,"status",20)||"draft",sort_order:numberValue(row,"sort_order")};
  case"consultations":return{status:textValue(row,"status",20),proposed_at:textValue(row,"proposed_at",60)||null,confirmed_at:textValue(row,"confirmed_at",60)||null,staff_notes:textValue(row,"staff_notes",4000)};
- case"seo":return{page_path:textValue(row,"page_path",500),title:textValue(row,"title",180),description:textValue(row,"description",1000),canonical_url:textValue(row,"canonical_url",1000),no_index:boolValue(row,"no_index"),og_image_url:textValue(row,"og_image_url",1000)};
+ case"seo":return{page_path:textValue(row,"page_path",500),title:textValue(row,"title",180),description:textValue(row,"description",1000),canonical_url:safeUrl(row.canonical_url),no_index:boolValue(row,"no_index"),og_image_url:safeUrl(row.og_image_url)};
  case"settings":{const raw=row.setting_value;const val=typeof raw==="string"?jsonValue(row,"setting_value",{}):raw??{};return{setting_key:textValue(row,"setting_key",100),setting_value:val};}
  default:throw new Error("This module is view-only or does not support changes.");
  }
@@ -89,14 +91,14 @@ async function deleteRow(s:AdminSupabaseClient,module:ModuleName,id:string){
  }
 }
 export async function GET(_:NextRequest,{params}:Context){
- const {module}=await params;if(!(module in adminModules))return NextResponse.json({error:"Unknown CMS module."},{status:404});
+ const {module}=await params;if(!Object.prototype.hasOwnProperty.call(adminModules,module))return NextResponse.json({error:"Unknown CMS module."},{status:404});
  const key=module as ModuleName;const access=await requireCmsPermission(adminModules[key].readPermission);
  if(!access.ok)return NextResponse.json({error:access.reason},{status:access.status});
  const result=await listRows(access.supabase,key);if(result.error)return NextResponse.json({error:"Unable to read this CMS module."},{status:500});
  return NextResponse.json({records:result.data},{headers:{"Cache-Control":"private, no-store"}});
 }
 export async function POST(request:NextRequest,{params}:Context){
- const {module}=await params;if(!(module in adminModules))return NextResponse.json({error:"Unknown CMS module."},{status:404});
+ const {module}=await params;if(!Object.prototype.hasOwnProperty.call(adminModules,module))return NextResponse.json({error:"Unknown CMS module."},{status:404});
  const key=module as ModuleName;const config=adminModules[key];if(!config.managePermission)return NextResponse.json({error:"This module is read-only."},{status:403});
  const access=await requireCmsPermission(config.managePermission);if(!access.ok)return NextResponse.json({error:access.reason},{status:access.status});
  const body:unknown=await request.json().catch(()=>null);const row=recordBody(body);
@@ -104,7 +106,7 @@ export async function POST(request:NextRequest,{params}:Context){
  catch(e){return NextResponse.json({error:e instanceof Error?e.message:"Invalid record."},{status:400});}
 }
 export async function PATCH(request:NextRequest,{params}:Context){
- const {module}=await params;if(!(module in adminModules))return NextResponse.json({error:"Unknown CMS module."},{status:404});
+ const {module}=await params;if(!Object.prototype.hasOwnProperty.call(adminModules,module))return NextResponse.json({error:"Unknown CMS module."},{status:404});
  const key=module as ModuleName;const config=adminModules[key];if(!config.managePermission)return NextResponse.json({error:"This module is read-only."},{status:403});
  const access=await requireCmsPermission(config.managePermission);if(!access.ok)return NextResponse.json({error:access.reason},{status:access.status});
  const body:unknown=await request.json().catch(()=>null);const row=recordBody(body);const id=idValue(row.id);if(!id)return NextResponse.json({error:"Invalid record id."},{status:400});
@@ -112,7 +114,7 @@ export async function PATCH(request:NextRequest,{params}:Context){
  catch(e){return NextResponse.json({error:e instanceof Error?e.message:"Invalid record."},{status:400});}
 }
 export async function DELETE(request:NextRequest,{params}:Context){
- const {module}=await params;if(!(module in adminModules))return NextResponse.json({error:"Unknown CMS module."},{status:404});
+ const {module}=await params;if(!Object.prototype.hasOwnProperty.call(adminModules,module))return NextResponse.json({error:"Unknown CMS module."},{status:404});
  const key=module as ModuleName;const config=adminModules[key];if(!config.managePermission)return NextResponse.json({error:"This module is read-only."},{status:403});
  const access=await requireCmsPermission(config.managePermission);if(!access.ok)return NextResponse.json({error:access.reason},{status:access.status});
  const id=idValue(request.nextUrl.searchParams.get("id"));if(!id)return NextResponse.json({error:"Invalid record id."},{status:400});
