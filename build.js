@@ -962,6 +962,7 @@ function applyProfessionalLayer(folder) {
     }
     if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
     let page = fs.readFileSync(filePath, 'utf8');
+    const routeIsAdminPage = path.relative(output, filePath).split(path.sep).join('/') === 'admin/index.html';
     if (page.includes('id="oa-professional-design-system"')) continue;
     if (entry.name === 'index.html' || entry.name === '404.html') {
       const titleStart = page.indexOf('<title>');
@@ -993,7 +994,7 @@ function applyProfessionalLayer(folder) {
     const themeBlock = '<style id="oa-professional-design-system">\n' + professionalThemeCss + '\n</style>';
     const uxBlock = '<script id="oa-professional-ux">\n' + professionalUxSource + '\n</script>';
     const brandingBlock = '<script type="module" id="oa-public-branding">\n' + publicBrandingSource + '\n</script>';
-    const footerBlock = isAdminPage ? '' : '<script type="module" id="oa-site-footer">\n' + oxfordSiteFooterSource + '\n</script>';
+    const footerBlock = routeIsAdminPage ? '' : '<script type="module" id="oa-site-footer">\n' + oxfordSiteFooterSource + '\n</script>';
     page = page.replace('</head>', themeBlock + '</head>');
     page = page.replace('</body>', brandingBlock + uxBlock + footerBlock + '</body>');
     fs.writeFileSync(filePath, page);
