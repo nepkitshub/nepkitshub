@@ -40,7 +40,7 @@ export const adminModules:Record<string,AdminModule>={
  seo:{title:"SEO Manager",description:"Manage metadata and indexing directives for public pages.",readPermission:"content.read",managePermission:"seo.manage",fields:[
  {key:"page_path",label:"Page path",kind:"text",required:true},{key:"title",label:"SEO title",kind:"text"},{key:"description",label:"Meta description",kind:"textarea"},{key:"canonical_url",label:"Canonical URL",kind:"url"},{key:"no_index",label:"Prevent search indexing",kind:"checkbox"},{key:"og_image_url",label:"Open Graph image URL",kind:"url"}
  ]},
- staff:{title:"Staff & Permissions",description:"View invited CMS staff and assigned roles. Staff invitations and role changes are handled through secure, server-only administration.",readPermission:"staff.manage",managePermission:null,fields:[],readOnly:true},
+ staff:{title:"Staff & Permissions",description:"Invite authorised staff, assign CMS roles and suspend access when required.",readPermission:"staff.manage",managePermission:"staff.manage",fields:[]},
  settings:{title:"Website Settings",description:"Manage structured website branding, footer and contact settings.",readPermission:"settings.manage",managePermission:"settings.manage",fields:[
  {key:"setting_key",label:"Setting key",kind:"text",required:true},{key:"setting_value",label:"Setting value (JSON)",kind:"json",required:true}
  ]},
