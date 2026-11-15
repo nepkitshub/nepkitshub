@@ -541,3 +541,31 @@ with check (
   and char_length(btrim(phone)) between 7 and 32
   and char_length(message)<=3000
 );
+
+
+-- Storage writes for the new CMS are limited to staff with the media.manage permission.
+-- The bucket remains public-read; no anonymous upload, update or delete access is granted.
+create policy oa_cms_storage_insert
+on storage.objects for insert to authenticated
+with check (
+  bucket_id = 'oa-academy-media'
+  and private.oa_cms_has_permission('media.manage')
+);
+
+create policy oa_cms_storage_update
+on storage.objects for update to authenticated
+using (
+  bucket_id = 'oa-academy-media'
+  and private.oa_cms_has_permission('media.manage')
+)
+with check (
+  bucket_id = 'oa-academy-media'
+  and private.oa_cms_has_permission('media.manage')
+);
+
+create policy oa_cms_storage_delete
+on storage.objects for delete to authenticated
+using (
+  bucket_id = 'oa-academy-media'
+  and private.oa_cms_has_permission('media.manage')
+);
