@@ -521,8 +521,9 @@ using (bucket_id='oa-academy-media' and private.oa_cms_has_permission('media.man
 
 -- Public visitors may request a consultation, but cannot set staff-controlled appointment fields.
 alter table public.oa_cms_consultation_requests
-  add column if not exists message text not null default '';
-grant insert(full_name,email,phone,branch_slug,requested_at,message)
+  add column if not exists message text not null default '',
+  add column if not exists consent boolean not null default false;
+grant insert(full_name,email,phone,branch_slug,requested_at,message,consent)
 on public.oa_cms_consultation_requests to anon,authenticated;
 create policy oa_cms_consultation_public_insert
 on public.oa_cms_consultation_requests
@@ -532,6 +533,7 @@ with check (
   and proposed_at is null
   and confirmed_at is null
   and staff_notes=''
+  and consent=true
   and char_length(btrim(full_name)) between 2 and 120
   and char_length(btrim(email)) between 5 and 254
   and position('@' in email)>1

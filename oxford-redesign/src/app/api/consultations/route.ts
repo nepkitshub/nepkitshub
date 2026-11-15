@@ -1,7 +1,7 @@
 import {NextResponse,type NextRequest}from"next/server";
 import {createServerSupabaseClient}from"@/lib/supabase/server";
 export const runtime="nodejs";
-type Payload={fullName?:unknown;email?:unknown;phone?:unknown;branchSlug?:unknown;requestedAt?:unknown;message?:unknown;website?:unknown};
+type Payload={fullName?:unknown;email?:unknown;phone?:unknown;branchSlug?:unknown;requestedAt?:unknown;message?:unknown;consent?:unknown;website?:unknown};
 const clean=(value:unknown,max:number)=>typeof value==="string"?value.trim().slice(0,max):"";
 export async function POST(request:NextRequest){
  const origin=request.headers.get("origin");
@@ -27,7 +27,7 @@ export async function POST(request:NextRequest){
  try{
   const supabase=await createServerSupabaseClient();
   const {data,error}=await supabase.from("oa_cms_consultation_requests").insert({
-   full_name:fullName,email,phone,branch_slug:branchSlug,requested_at:requestedTimestamp,message
+   full_name:fullName,email,phone,branch_slug:branchSlug,requested_at:requestedTimestamp,message,consent:true
   }).select("id").single();
   if(error||!data){
    console.error("Oxford consultation request failed",error?.code??"unknown");
