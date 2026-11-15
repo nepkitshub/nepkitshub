@@ -39,6 +39,12 @@ export async function POST(request:NextRequest) {
   const altText = String(form.get("altText")??"").trim().slice(0,300);
   const storagePath = `content/${crypto.randomUUID()}.${extension}`;
   const buffer = Buffer.from(await file.arrayBuffer());
+  const jpeg = buffer.length >= 3 && buffer[0]===0xff && buffer[1]===0xd8 && buffer[2]===0xff;
+  const png = buffer.length >= 8 && buffer.subarray(0,8).equals(Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]));
+  const webp = buffer.length >= 12 && buffer.toString("ascii",0,4)==="RIFF" && buffer.toString("ascii",8,12)==="WEBP";
+  if (!((file.type==="image/jpeg"&&jpeg)||(file.type==="image/png"&&png)||(file.type==="image/webp"&&webp))) {
+    return NextResponse.json({error:"The image content does not match its declared file type."},{status:415});
+  }
   const {error:uploadError} = await access.supabase.storage.from(BUCKET).upload(storagePath,buffer,{
     contentType:file.type,
     cacheControl:"31536000",
