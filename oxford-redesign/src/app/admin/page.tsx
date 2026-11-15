@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, BookOpen, Building2, ClipboardList, FileText, Image, MessageSquare, Settings, ShieldCheck, CalendarDays, HelpCircle, Newspaper, Search, Star, Users, ScrollText, Video, Home, Menu } from "lucide-react";
+import { ArrowUpRight, BookOpen, Building2, ClipboardList, FileText, Image, MessageSquare, Settings, CalendarDays, HelpCircle, Newspaper, Search, Star, Users, ScrollText, Home, Menu } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { requireCmsPermission } from "@/lib/auth";
 import { adminModules } from "@/lib/admin-module-config";
@@ -22,7 +22,7 @@ export default async function AdminPage(){
   canReviews?access.supabase.from("oa_cms_testimonials").select("id",{count:"exact",head:true}).eq("status","pending"):Promise.resolve({count:null}),
   canConsultations?access.supabase.from("oa_cms_consultation_requests").select("id",{count:"exact",head:true}).eq("status","requested"):Promise.resolve({count:null})
  ]);
- const modules=Object.entries(adminModules).filter(([_,m])=>permissions.get(m.readPermission)===true);
+ const modules=Object.entries(adminModules).filter((entry)=>permissions.get(entry[1].readPermission)===true);
  return <section className="admin-dashboard"><div className="container admin-dashboard-inner">
   <div className="admin-welcome"><div><span className="card-kicker">PRIVATE WORKSPACE</span><h1>Oxford administration</h1><p>Manage your website, learner enquiries and academy information. Available modules depend on your staff permissions.</p></div><form action="/api/auth/signout" method="post"><button className="button button-outline-dark" type="submit">Sign out</button></form></div>
   <div className="admin-stats"><div><span>Total enquiries</span><strong>{countResults[0].count??"—"}</strong></div><div><span>Published pages</span><strong>{countResults[1].count??"—"}</strong></div><div><span>Pending reviews</span><strong>{countResults[2].count??"—"}</strong></div><div><span>Consultation requests</span><strong>{countResults[3].count??"—"}</strong></div></div>

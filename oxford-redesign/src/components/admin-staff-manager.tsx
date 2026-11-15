@@ -19,7 +19,6 @@ export function AdminStaffManager(){
  const[email,setEmail]=useState("");
  const[roleKey,setRoleKey]=useState<StaffRole>("content_editor");
  const load=useCallback(async()=>{
-  setLoading(true);setError("");
   try{const response=await fetch("/api/admin/staff",{cache:"no-store"});const body=await response.json();if(!response.ok)throw new Error(body.error??"Unable to load staff.");setStaff(body.staff??[]);}
   catch(e){setError(e instanceof Error?e.message:"Unable to load staff.");}
   finally{setLoading(false);}
