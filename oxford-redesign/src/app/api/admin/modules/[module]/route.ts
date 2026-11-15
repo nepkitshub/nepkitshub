@@ -33,6 +33,7 @@ async function listRows(s:AdminSupabaseClient,module:ModuleName):Promise<{data:R
  case"settings":{const r=await s.from("oa_cms_site_settings").select("*").order("setting_key");return{data:asRows(r.data),error:r.error?.message??null};}
  case"activity":{const r=await s.from("oa_cms_activity_logs").select("*").order("created_at",{ascending:false}).limit(300);return{data:asRows(r.data),error:r.error?.message??null};}
  }
+ return {data:[],error:"Unsupported CMS module."};
 }
 function sanitize(module:ModuleName,row:Row):Row{
  switch(module){

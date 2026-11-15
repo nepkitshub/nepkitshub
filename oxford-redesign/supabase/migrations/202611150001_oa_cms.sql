@@ -1,7 +1,7 @@
 -- Oxford CMS data model. Additive only: does not alter legacy oa_* tables, commerce tables, or unrelated applications.
 create schema if not exists private;
 revoke all on schema private from public, anon, authenticated;
-grant usage on schema private to anon, authenticated;
+grant usage on schema private to authenticated;
 
 create table if not exists public.oa_cms_roles (
   id uuid primary key default gen_random_uuid(),
@@ -43,7 +43,7 @@ create table if not exists public.oa_cms_staff_role_assignments (
 create or replace function private.oa_cms_has_permission(p_permission text)
 returns boolean
 language sql stable security definer
-set search_path = public, pg_temp
+set search_path = pg_catalog, public, pg_temp
 as $$
   select exists (
     select 1
@@ -57,12 +57,12 @@ as $$
   );
 $$;
 revoke all on function private.oa_cms_has_permission(text) from public;
-grant execute on function private.oa_cms_has_permission(text) to anon, authenticated;
+grant execute on function private.oa_cms_has_permission(text) to authenticated;
 
 create or replace function public.oa_cms_has_permission(p_permission text)
 returns boolean
 language sql stable security definer
-set search_path = public, private, pg_temp
+set search_path = pg_catalog, public, private, pg_temp
 as $$ select private.oa_cms_has_permission(p_permission); $$;
 revoke all on function public.oa_cms_has_permission(text) from public, anon;
 grant execute on function public.oa_cms_has_permission(text) to authenticated;
