@@ -716,7 +716,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
       }
 
       const footer = $('.footer');
-      if (footer) {
+      if (footer && !document.getElementById('oa-site-footer')) {
         const branchFooterHtml = activeBranches.map((item) => {
           const phone = String(item.phone || '');
           const email = String(item.email || '');
