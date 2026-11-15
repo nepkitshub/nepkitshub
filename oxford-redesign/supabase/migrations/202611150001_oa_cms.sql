@@ -340,7 +340,7 @@ create policy oa_cms_branches_public_read on public.oa_cms_branches for select t
 create policy oa_cms_branches_manage on public.oa_cms_branches for all to authenticated using (private.oa_cms_has_permission('branches.manage')) with check (private.oa_cms_has_permission('branches.manage'));
 
 -- Anon can submit a new enquiry only. There is intentionally no public read policy.
-grant insert(full_name,email,phone,programme_interest,service_interest,preferred_branch_slug,preferred_batch,message,consent,source)
+grant insert(reference_code,full_name,email,phone,programme_interest,service_interest,preferred_branch_slug,preferred_batch,message,consent,source)
 on public.oa_cms_enquiries to anon,authenticated;
 create policy oa_cms_enquiries_public_insert on public.oa_cms_enquiries for insert to anon,authenticated
 with check (status='new' and assigned_to is null and consent=true
