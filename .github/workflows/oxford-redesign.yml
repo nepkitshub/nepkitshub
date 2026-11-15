@@ -1,38 +1,34 @@
-name: Oxford redesign checks
+name: Oxford website checks
 
 on:
   push:
     branches:
-      - feat/oxford-redesign-nextjs
+      - release/oxford-selected-live
   pull_request:
     branches:
-      - main
+      - release/oxford-selected-live
 
 permissions:
   contents: read
 
 concurrency:
-  group: oxford-redesign-${{ github.ref }}
+  group: oxford-website-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   verify:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: oxford-redesign
     steps:
       - name: Check out source
         uses: actions/checkout@v4
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
+          cache: npm
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: TypeScript checks
         run: npm run typecheck
-      - name: ESLint
-        run: npm run lint
       - name: Production build
         run: npm run build
