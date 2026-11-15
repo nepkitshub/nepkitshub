@@ -488,3 +488,19 @@ insert into public.oa_cms_site_settings(setting_key,setting_value) values
 on conflict (setting_key) do nothing;
 
 -- No FAQ, event, testimonial or registration claims are seeded: those records require company approval.
+
+-- Default public navigation items are editable through the Navigation Manager.
+insert into public.oa_cms_navigation_items(label,href,parent_id,sort_order,visible)
+select v.label,v.href,null,v.sort_order,true
+from (values ('About','/about',1),('Programs','/programs',2),('Services','/services',3),('Examinations','/examinations',4),('Branches','/branches',5),('More','/news',6)) as v(label,href,sort_order)
+where not exists(select 1 from public.oa_cms_navigation_items n where n.parent_id is null and n.label=v.label);
+insert into public.oa_cms_navigation_items(label,href,parent_id,sort_order,visible)
+select child.label,child.href,parent.id,child.sort_order,true
+from (values
+ ('Programs','Japanese Language N5–N1','/programs',1),('Programs','Korean Language','/programs/korean-language',2),
+ ('More','Our Team','/team',1),('More','Nepali Calendar','/calendar',2),('More','News & Notices','/news',3),
+ ('More','Events','/events',4),('More','Gallery','/gallery',5),('More','Student Experiences','/experiences',6),
+ ('More','FAQs','/faq',7),('More','Contact','/contact',8)
+) as child(parent_label,label,href,sort_order)
+join public.oa_cms_navigation_items parent on parent.label=child.parent_label and parent.parent_id is null
+where not exists(select 1 from public.oa_cms_navigation_items n where n.parent_id=parent.id and n.label=child.label);

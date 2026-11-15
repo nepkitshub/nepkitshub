@@ -54,3 +54,33 @@ export async function getPublicSiteSettings(): Promise<PublicSiteSettings> {
     tagline: settingString([branding,site], ["tagline","short_description"], defaultSiteSettings.tagline)
   };
 }
+
+export type PublicNavigationItem = { id: string; label: string; href: string; children: PublicNavigationItem[] };
+const fallbackNavigation: PublicNavigationItem[] = [
+ {id:"about",label:"About",href:"/about",children:[]},
+ {id:"programs",label:"Programs",href:"/programs",children:[{id:"programs-japanese",label:"Japanese Language N5–N1",href:"/programs",children:[]},{id:"programs-korean",label:"Korean Language",href:"/programs/korean-language",children:[]}]},
+ {id:"services",label:"Services",href:"/services",children:[]},
+ {id:"examinations",label:"Examinations",href:"/examinations",children:[]},
+ {id:"branches",label:"Branches",href:"/branches",children:[]},
+ {id:"more",label:"More",href:"/news",children:[{id:"more-team",label:"Our Team",href:"/team",children:[]},{id:"more-calendar",label:"Nepali Calendar",href:"/calendar",children:[]},{id:"more-news",label:"News & Notices",href:"/news",children:[]},{id:"more-events",label:"Events",href:"/events",children:[]},{id:"more-gallery",label:"Gallery",href:"/gallery",children:[]},{id:"more-experiences",label:"Student Experiences",href:"/experiences",children:[]},{id:"more-faq",label:"FAQs",href:"/faq",children:[]},{id:"more-contact",label:"Contact",href:"/contact",children:[]}]}
+];
+export async function getPublicNavigationItems(): Promise<PublicNavigationItem[]> {
+ const db=await clientOrNull();
+ if(!db)return fallbackNavigation;
+ const {data,error}=await db.from("oa_cms_navigation_items").select("id,label,href,parent_id,sort_order").eq("visible",true).order("sort_order");
+ if(error)return fallbackNavigation;
+ const records=data??[];
+ const children=new Map<string,PublicNavigationItem[]>();
+ for(const row of records)if(row.parent_id){const items=children.get(row.parent_id)??[];items.push({id:row.id,label:row.label,href:row.href,children:[]});children.set(row.parent_id,items);}
+ return records.filter(row=>!row.parent_id).map(row=>({id:row.id,label:row.label,href:row.href,children:children.get(row.id)??[]}));
+}
+export type PublicHomeContent = { eyebrow:string; title:string; accent:string; description:string; primaryCta:string; secondaryCta:string };
+const defaultHomeContent:PublicHomeContent={eyebrow:"OXFORD ACADEMIC INSTRUCTION PVT. LTD.",title:"Build Your Future",accent:"With Confidence.",description:"Explore language learning, examination preparation and practical guidance for your next academic or professional step.",primaryCta:"Explore Programs",secondaryCta:"Contact Oxford"};
+export async function getPublicHomeContent():Promise<PublicHomeContent>{
+ const db=await clientOrNull();if(!db)return defaultHomeContent;
+ const {data,error}=await db.from("oa_cms_site_settings").select("setting_value").eq("setting_key","homepage").maybeSingle();
+ if(error||!data)return defaultHomeContent;
+ const value=settingObject(data.setting_value);
+ const text=(key:keyof PublicHomeContent)=>typeof value[key]==="string"?(value[key] as string).trim():defaultHomeContent[key];
+ return {eyebrow:text("eyebrow"),title:text("title"),accent:text("accent"),description:text("description"),primaryCta:text("primaryCta"),secondaryCta:text("secondaryCta")};
+}

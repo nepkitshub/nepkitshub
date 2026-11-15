@@ -1,14 +1,22 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
-import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
-import type { PublicSiteSettings } from "@/lib/public-content";
-const nav=[
- {label:"About",href:"/about"},
- {label:"Programs",href:"/programs",children:[{label:"Japanese Language N5–N1",href:"/programs"},{label:"Korean Language",href:"/programs/korean-language"}]},
- {label:"Services",href:"/services"},
- {label:"Examinations",href:"/examinations"},
- {label:"Branches",href:"/branches"},
- {label:"More",href:"/news",children:[{label:"Our Team",href:"/team"},{label:"Nepali Calendar",href:"/calendar"},{label:"News & Notices",href:"/news"},{label:"Events",href:"/events"},{label:"Gallery",href:"/gallery"},{label:"Student Experiences",href:"/experiences"},{label:"FAQs",href:"/faq"},{label:"Contact",href:"/contact"}]}
-];
-export function SiteHeader({settings}:{settings:PublicSiteSettings}){const[mobileOpen,setMobileOpen]=useState(false);const[expanded,setExpanded]=useState<string|null>(null);return <header className="site-header"><div className="topline"><div className="container topline-inner"><span>Language learning · Examination preparation · Japan guidance</span><span>Serving learners in Kushma and Baglung</span></div></div><div className="container nav-shell"><Link href="/" className="brand" aria-label="Oxford Academic Instruction home"><img className="brand-logo" src={settings.logoUrl} alt={`${settings.brandName} logo`}/><span className="brand-wordmark"><strong>{settings.brandName}</strong><small>{settings.legalName}</small></span></Link><nav className="desktop-nav" aria-label="Primary navigation">{nav.map(item=><div className="nav-item" key={item.label}><Link href={item.href} className="nav-link">{item.label}{item.children?<ChevronDown size={14}/>:null}</Link>{item.children?<div className="nav-dropdown">{item.children.map(child=><Link key={child.href} href={child.href}>{child.label}</Link>)}</div>:null}</div>)}</nav><Link className="button button-red nav-cta" href="/admission">Enquire Now <ArrowUpRight size={16}/></Link><button className="mobile-menu-button" onClick={()=>setMobileOpen(v=>!v)} aria-label={mobileOpen?"Close navigation":"Open navigation"} aria-expanded={mobileOpen}>{mobileOpen?<X/>:<Menu/>}</button></div>{mobileOpen?<div className="mobile-panel"><nav aria-label="Mobile navigation">{nav.map(item=><div className="mobile-nav-group" key={item.label}>{item.children?<><button className="mobile-nav-toggle" onClick={()=>setExpanded(expanded===item.label?null:item.label)} aria-expanded={expanded===item.label}>{item.label}<ChevronDown size={16}/></button>{expanded===item.label?item.children.map(child=><Link key={child.href} href={child.href} onClick={()=>setMobileOpen(false)}>{child.label}</Link>):null}</>:<Link href={item.href} onClick={()=>setMobileOpen(false)}>{item.label}</Link>}</div>)}<Link className="button button-red mobile-enquire" href="/admission" onClick={()=>setMobileOpen(false)}>Enquire Now <ArrowUpRight size={16}/></Link></nav></div>:null}</header>;}
+import {useState} from "react";
+import {ArrowUpRight,ChevronDown,Menu,X}from"lucide-react";
+import type{PublicNavigationItem,PublicSiteSettings}from"@/lib/public-content";
+function NavigationLink({item,onNavigate}:{item:PublicNavigationItem;onNavigate?:()=>void}){
+ const external=/^https?:\/\//i.test(item.href);
+ return external?<a href={item.href} target="_blank" rel="noreferrer" onClick={onNavigate}>{item.label}</a>:<Link href={item.href} onClick={onNavigate}>{item.label}</Link>;
+}
+export function SiteHeader({settings,navigation}:{settings:PublicSiteSettings;navigation:PublicNavigationItem[]}){
+ const[mobileOpen,setMobileOpen]=useState(false);const[expanded,setExpanded]=useState<string|null>(null);
+ return <header className="site-header">
+  <div className="topline"><div className="container topline-inner"><span>Language learning · Examination preparation · Japan guidance</span><span>Serving learners in Kushma and Baglung</span></div></div>
+  <div className="container nav-shell">
+   <Link href="/" className="brand" aria-label="Oxford Academic Instruction home"><img className="brand-logo" src={settings.logoUrl} alt={`${settings.brandName} logo`}/><span className="brand-wordmark"><strong>{settings.brandName}</strong><small>{settings.legalName}</small></span></Link>
+   <nav className="desktop-nav" aria-label="Primary navigation">{navigation.map(item=><div className="nav-item" key={item.id}><NavigationLink item={item}/>{item.children.length?<><span className="nav-chevron"><ChevronDown size={14}/></span><div className="nav-dropdown">{item.children.map(child=><NavigationLink key={child.id} item={child}/>)}</div></>:null}</div>)}</nav>
+   <Link className="button button-red nav-cta" href="/admission">Enquire Now <ArrowUpRight size={16}/></Link>
+   <button className="mobile-menu-button" onClick={()=>setMobileOpen(v=>!v)} aria-label={mobileOpen?"Close navigation":"Open navigation"} aria-expanded={mobileOpen}>{mobileOpen?<X/>:<Menu/>}</button>
+  </div>
+  {mobileOpen?<div className="mobile-panel"><nav aria-label="Mobile navigation">{navigation.map(item=><div className="mobile-nav-group" key={item.id}>{item.children.length?<><button className="mobile-nav-toggle" onClick={()=>setExpanded(expanded===item.id?null:item.id)} aria-expanded={expanded===item.id}><NavigationLink item={item} onNavigate={()=>setMobileOpen(false)}/><ChevronDown size={16}/></button>{expanded===item.id?item.children.map(child=><NavigationLink key={child.id} item={child} onNavigate={()=>setMobileOpen(false)}/>):null}</>:<NavigationLink item={item} onNavigate={()=>setMobileOpen(false)}/>}</div>)}<Link className="button button-red mobile-enquire" href="/admission" onClick={()=>setMobileOpen(false)}>Enquire Now <ArrowUpRight size={16}/></Link></nav></div>:null}
+ </header>;
+}
