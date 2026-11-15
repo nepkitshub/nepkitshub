@@ -518,3 +518,23 @@ with check (bucket_id='oa-academy-media' and private.oa_cms_has_permission('medi
 create policy oa_cms_media_delete on storage.objects
 for delete to authenticated
 using (bucket_id='oa-academy-media' and private.oa_cms_has_permission('media.manage'));
+
+-- Public visitors may request a consultation, but cannot set staff-controlled appointment fields.
+alter table public.oa_cms_consultation_requests
+  add column if not exists message text not null default '';
+grant insert(full_name,email,phone,branch_slug,requested_at,message)
+on public.oa_cms_consultation_requests to anon,authenticated;
+create policy oa_cms_consultation_public_insert
+on public.oa_cms_consultation_requests
+for insert to anon,authenticated
+with check (
+  status='requested'
+  and proposed_at is null
+  and confirmed_at is null
+  and staff_notes=''
+  and char_length(btrim(full_name)) between 2 and 120
+  and char_length(btrim(email)) between 5 and 254
+  and position('@' in email)>1
+  and char_length(btrim(phone)) between 7 and 32
+  and char_length(message)<=3000
+);
