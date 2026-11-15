@@ -84,25 +84,3 @@ export async function getPublicHomeContent():Promise<PublicHomeContent>{
  const text=(key:keyof PublicHomeContent)=>typeof value[key]==="string"?(value[key] as string).trim():defaultHomeContent[key];
  return {eyebrow:text("eyebrow"),title:text("title"),accent:text("accent"),description:text("description"),primaryCta:text("primaryCta"),secondaryCta:text("secondaryCta")};
 }
-
-export type PublicSiteSettings = { logoUrl:string; brandName:string; legalName:string; tagline:string };
-const fallbackSiteSettings:PublicSiteSettings={
- logoUrl:"https://gsfhhvkipvoutqqgyick.supabase.co/storage/v1/object/public/oa-academy-media/branding/1794111699180-WhatsApp-Image-2026-11-08-at-9.03.23-AM.jpeg",
- brandName:"OXFORD",legalName:"ACADEMIC INSTRUCTION PVT. LTD.",tagline:"Learn. Prepare. Progress."
-};
-function settingObject(value:unknown):Record<string,unknown>{return value&&typeof value==="object"&&!Array.isArray(value)?value as Record<string,unknown>:{};}
-function safePublicUrl(value:unknown,fallback:string):string{if(typeof value!=="string"||!value.trim())return fallback;try{const url=new URL(value.trim());return url.protocol==="https:"||url.protocol==="http:"?url.toString():fallback;}catch{return fallback;}}
-export async function getPublicSiteSettings():Promise<PublicSiteSettings>{
- const db=await clientOrNull();if(!db)return fallbackSiteSettings;
- const{data,error}=await db.from("oa_cms_site_settings").select("setting_key,setting_value").in("setting_key",["branding","company","site"]);
- if(error||!data?.length)return fallbackSiteSettings;
- const settings=new Map(data.map(row=>[row.setting_key,settingObject(row.setting_value)]));
- const branding=settings.get("branding")??{},companySettings=settings.get("company")??{},site=settings.get("site")??{};
- const pick=(objects:Record<string,unknown>[],keys:string[],fallback:string)=>{for(const object of objects)for(const key of keys){const value=object[key];if(typeof value==="string"&&value.trim())return value.trim();}return fallback;};
- return{
-  logoUrl:safePublicUrl(pick([branding],["logo_url","logoUrl"],fallbackSiteSettings.logoUrl),fallbackSiteSettings.logoUrl),
-  brandName:pick([branding,companySettings,site],["brand_name","brandName","short_name","shortName"],fallbackSiteSettings.brandName),
-  legalName:pick([companySettings,branding,site],["legal_name","legalName","company_name","companyName"],fallbackSiteSettings.legalName),
-  tagline:pick([branding,site],["tagline","short_description"],fallbackSiteSettings.tagline)
- };
-}
